@@ -32,7 +32,7 @@ const OS_MODULES_BY_ROLE = {
   ],
 };
 
-const TIER1_CITIES = ['All India', 'Gurgaon', 'Mumbai', 'Navi Mumbai', 'Bangalore', 'Delhi', 'Hyderabad', 'Ahmedabad', 'Kolkata'];
+const TIER1_CITIES = ['All India', 'Gurgaon', 'Delhi', 'Mumbai', 'Navi Mumbai', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Kolkata', 'Chandigarh', 'Lucknow', 'Ludhiana', 'Indore', 'Vrindavan', 'Faridabad', 'Greater Noida', 'Noida', 'Ghaziabad'];
 
 export default function Header() {
   const {
@@ -150,37 +150,39 @@ export default function Header() {
 
         {/* Header Actions */}
         <div className="ig-header-actions">
-          {/* Role Switcher */}
-          <div className="role-switcher" ref={roleRef}>
-            <button
-              className="role-switcher-btn"
-              style={{ '--role-color': roleColor }}
-              onClick={() => { setRoleMenuOpen(!roleMenuOpen); setOsMenuOpen(false); }}
-            >
-              <span className="role-dot" style={{ background: roleColor }} />
-              <span>{ROLE_LABELS[role]}</span>
-              <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M4 6l4 4 4-4" />
-              </svg>
-            </button>
-            {roleMenuOpen && (
-              <div className="role-menu">
-                <div className="role-menu-title">Switch Role</div>
-                {Object.values(ROLES).map(r => (
-                  <button
-                    key={r}
-                    className={`role-menu-item ${role === r ? 'active' : ''}`}
-                    onClick={() => { switchRole(r); setRoleMenuOpen(false); }}
-                    style={{ '--rc': ROLE_COLORS[r] }}
-                  >
-                    <span className="role-dot" style={{ background: ROLE_COLORS[r] }} />
-                    {ROLE_LABELS[r]}
-                    {role === r && <span className="role-check">✓</span>}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Role Switcher — only shown when more than one role exists */}
+          {Object.keys(ROLES).length > 1 && (
+            <div className="role-switcher" ref={roleRef}>
+              <button
+                className="role-switcher-btn"
+                style={{ '--role-color': roleColor }}
+                onClick={() => { setRoleMenuOpen(!roleMenuOpen); setOsMenuOpen(false); }}
+              >
+                <span className="role-dot" style={{ background: roleColor }} />
+                <span>{ROLE_LABELS[role]}</span>
+                <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M4 6l4 4 4-4" />
+                </svg>
+              </button>
+              {roleMenuOpen && (
+                <div className="role-menu">
+                  <div className="role-menu-title">Switch Role</div>
+                  {Object.values(ROLES).map(r => (
+                    <button
+                      key={r}
+                      className={`role-menu-item ${role === r ? 'active' : ''}`}
+                      onClick={() => { switchRole(r); setRoleMenuOpen(false); }}
+                      style={{ '--rc': ROLE_COLORS[r] }}
+                    >
+                      <span className="role-dot" style={{ background: ROLE_COLORS[r] }} />
+                      {ROLE_LABELS[r]}
+                      {role === r && <span className="role-check">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* City Dropdown */}
           <div className="ig-city-dropdown" ref={cityRef}>

@@ -19,6 +19,11 @@ export function deriveCity(loc = '') {
   if (l.includes('pune')) return 'Pune';
   if (l.includes('ahmedabad')) return 'Ahmedabad';
   if (l.includes('kolkata')) return 'Kolkata';
+  if (l.includes('chandigarh') || l.includes('mohali')) return 'Chandigarh';
+  if (l.includes('lucknow')) return 'Lucknow';
+  if (l.includes('ludhiana')) return 'Ludhiana';
+  if (l.includes('indore')) return 'Indore';
+  if (l.includes('vrindavan') || l.includes('mathura')) return 'Vrindavan';
   // "Dwarka Expressway" (any abbreviation: exp / expwy / expressway) is a GURGAON corridor
   const isDwarkaExpwy = l.includes('dwarka') && /\bexp/.test(l);
   // Delhi — only the bare "Dwarka" sub-city (e.g., "Sector 23, Dwarka"), NOT the Gurgaon expressway

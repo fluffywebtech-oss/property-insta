@@ -92,10 +92,10 @@ export default function HeroBanner() {
       <div className="hero-banner-content">
         <div className="hero-content-left">
           <h1 className="hero-banner-title">
-            Discover Your <span>Dream Property</span>
+            with PropertyInsta — Look · Visit · Book
           </h1>
           <p className="hero-banner-subtitle">
-            Explore premium listings with virtual tours, reels, and AI-powered recommendations
+            Premium listings with virtual tours, reels & AI-powered recommendations
           </p>
 
           <div className="hero-search-box">
