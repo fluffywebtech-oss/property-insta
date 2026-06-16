@@ -47,8 +47,11 @@ export default function MapView() {
         {/* Property Pins */}
         <div className="ig-map-pins">
           {filtered.map((prop, idx) => {
-            const top = 25 + (idx % 5) * 15 + Math.random() * 5;
-            const left = 15 + Math.floor(idx / 5) * 16 + Math.random() * 5;
+            // Deterministic jitter (stable across re-renders) from the index
+            const jitterT = ((idx * 37) % 10) / 2;   // 0–4.5
+            const jitterL = ((idx * 53) % 10) / 2;   // 0–4.5
+            const top = 25 + (idx % 5) * 15 + jitterT;
+            const left = 15 + Math.floor(idx / 5) * 16 + jitterL;
             return (
               <button
                 key={prop.id}

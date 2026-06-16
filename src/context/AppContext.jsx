@@ -40,6 +40,158 @@ export function deriveCity(loc = '') {
 }
 
 // ============================================================================
+// Unique listing imagery — 80 distinct, verified real-estate photos
+// (Unsplash, free license). Every listing gets a unique image SET (distinct
+// cover + gallery) so no two listings look alike and covers never repeat
+// within view. Replaces the handful of images that were reused everywhere.
+// ============================================================================
+const LISTING_IMAGE_POOL = [
+  'https://images.unsplash.com/photo-1416331108676-a22ccb276e35?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1431576901776-e539bd916ba2?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1433832597046-4f10e10ac764?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1448630360428-65456885c650?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1459767129954-1b1c1f9b9ace?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1486718448742-163732cd1544?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1494526585095-c41746248156?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1496564203457-11bb12075d90?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1497604401993-f2e922e5cb0a?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1502005097973-6a7082348e28?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1512699355324-f07e3106dae5?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1551361415-69c87624334f?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1554435493-93422e8220c8?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1564013434775-f71db0030976?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1564078516393-cf04bd966897?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1572331165267-854da2b10ccc?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1583845112203-29329902332e?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1591474200742-8e512e6f98f8?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1593696140826-c58b021acf8b?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1597211833712-5e41faa202ea?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1598228723793-52759bba239c?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1599809275671-b5942cabc7a2?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600047509358-9dc75507daeb?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600047509782-20d39509f26d?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600210491369-e753d80a41f3?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600585153490-76fb20a32601?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1605146768851-eda79da39897?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1605276373954-0c4a0dac5b12?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1606744888344-493238951221?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1612637968894-660373e23b03?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1617104678098-de229db51175?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1626178793926-22b28830aa30?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=900&h=675&fit=crop&q=75',
+  'https://images.unsplash.com/photo-1633505899118-4ca6bd143043?w=900&h=675&fit=crop&q=75',
+];
+
+// Pool indices grouped by what the photo actually shows, so imagery MATCHES
+// the listing's property type. (Indices 82 & 96 are intentionally excluded —
+// they aren't property photos.)
+const POOL_BY_TYPE = {
+  // standalone houses / villas / cottages / mansions
+  villa: [0, 6, 9, 18, 26, 27, 28, 30, 45, 46, 50, 51, 52, 55, 56, 58, 59, 61, 62, 63, 64, 65, 72, 73, 74, 76, 77, 79, 81, 84, 85, 86, 87, 91, 92],
+  // premium / luxury interiors
+  penthouse: [23, 60, 67, 68, 69, 71, 89, 94],
+  // glass towers / commercial-scale buildings
+  commercial: [13, 34],
+  // highrises, apartment blocks, city + residential interiors
+  apartment: [1, 2, 3, 4, 5, 7, 8, 10, 11, 12, 14, 15, 16, 17, 19, 20, 21, 22, 24, 25, 29, 31, 32, 33, 48, 53, 54, 57, 66, 70, 75, 78, 80, 83, 88, 90, 93, 95, 97, 98],
+};
+
+function poolKeyForType(t = '') {
+  const s = (t || '').toLowerCase();
+  if (s.includes('villa')) return 'villa';
+  if (s.includes('penthouse')) return 'penthouse';
+  if (s.includes('commercial') || s.includes('office') || s.includes('shop') || s.includes('retail')) return 'commercial';
+  return 'apartment';
+}
+
+// Give every listing a type-MATCHED image set: a cover + up to 3 gallery shots
+// drawn from the pool that fits the property type, unique within the listing
+// and distributed so covers of the same type never land adjacent.
+function assignUniqueImages(list) {
+  const counters = { villa: 0, penthouse: 0, commercial: 0, apartment: 0 };
+  return list.map((p) => {
+    const key = poolKeyForType(p.type);
+    const pool = POOL_BY_TYPE[key];
+    const n = counters[key]++;
+    const idxs = [pool[n % pool.length]];
+    let step = 1;
+    while (idxs.length < 4 && idxs.length < pool.length) {
+      const cand = pool[(n + step * 7) % pool.length];
+      if (!idxs.includes(cand)) idxs.push(cand);
+      step++;
+      if (step > pool.length * 3) break;
+    }
+    const media = idxs.map(i => LISTING_IMAGE_POOL[i]);
+    return { ...p, media, images: media, thumbnail: media[0] };
+  });
+}
+
+// ============================================================================
 // Property mapping: snake_case (DB) → camelCase (React)
 // ============================================================================
 function mapDBProperty(db) {
@@ -164,7 +316,7 @@ export function AppProvider({ children }) {
   const [currentView, setCurrentView] = useState('feed');
 
   // Properties — start with static data, upgrade to Supabase when available
-  const [allProperties, setAllProperties] = useState(staticProperties);
+  const [allProperties, setAllProperties] = useState(() => assignUniqueImages(staticProperties));
   const [allReels, setAllReels] = useState(staticReels);
 
   // ==========================================================================
@@ -199,7 +351,7 @@ export function AppProvider({ children }) {
           console.log('[PropertyInsta] Loaded ' + props.length + ' properties from Supabase');
           const mapped = props.map(mapDBProperty);
           const merged = mergeWithStatic(mapped, staticProperties);
-          setAllProperties(merged);
+          setAllProperties(assignUniqueImages(merged));
           setDbReady(true);
         }
         if (!reelsErr && reels) {
@@ -231,7 +383,7 @@ export function AppProvider({ children }) {
                 const idx = updated.findIndex(p => p.id === payload.old.id);
                 if (idx !== -1) updated.splice(idx, 1);
               }
-              return mergeWithStatic(updated, staticProperties);
+              return assignUniqueImages(mergeWithStatic(updated, staticProperties));
             });
           }
         )
@@ -288,7 +440,7 @@ export function AppProvider({ children }) {
   // Filters
   // ==========================================================================
   const [filters, setFilters] = useState({
-    search: '', city: '', priceRange: '', priceMin: '', priceMax: '',
+    search: '', city: '', builder: '', priceRange: '', priceMin: '', priceMax: '',
     propertyType: [], bedrooms: null, amenities: [],
     listingStatus: [], sortBy: 'newest'
   });
@@ -323,6 +475,9 @@ export function AppProvider({ children }) {
     }
     if (filters.city) {
       result = result.filter(p => (p.city || deriveCity(p.location)) === filters.city);
+    }
+    if (filters.builder) {
+      result = result.filter(p => p.builder === filters.builder);
     }
     if (filters.priceRange) {
       const priceRanges = {

@@ -78,7 +78,7 @@ export default function HeroBanner() {
       <video
         ref={videoRef}
         className="hero-video"
-        src="/33.mp4"
+        src="/hero.mp4"
         autoPlay
         muted
         loop
@@ -86,11 +86,19 @@ export default function HeroBanner() {
         id="heroVideo"
       />
       <div className="hero-overlay-gradient" />
+      <div className="hero-mesh" />
       <div className="hero-floating-orb hero-orb-1" />
       <div className="hero-floating-orb hero-orb-2" />
+      <div className="hero-floating-orb hero-orb-3" />
 
       <div className="hero-banner-content">
         <div className="hero-content-left">
+          <div className="hero-eyebrow">
+            <span className="hero-eyebrow-dot" />
+            India&apos;s most visual property platform
+            <span className="hero-eyebrow-sep">·</span>
+            <span className="hero-eyebrow-accent">RERA Verified</span>
+          </div>
           <h1 className="hero-banner-title">
             with PropertyInsta — Look · Visit · Book
           </h1>
@@ -169,6 +177,22 @@ export default function HeroBanner() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Trust strip */}
+          <div className="hero-trust-strip">
+            <span className="hero-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4" /><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.66 0 3.22.45 4.56 1.24" /></svg>
+              100% Verified Listings
+            </span>
+            <span className="hero-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></svg>
+              HD Virtual Tours
+            </span>
+            <span className="hero-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21.4 8 14 2 9.4h7.6z" /></svg>
+              Zero Brokerage Options
+            </span>
           </div>
         </div>
 

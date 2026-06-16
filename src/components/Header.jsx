@@ -80,14 +80,26 @@ export default function Header() {
       <div className="ig-header-inner">
         {/* Logo */}
         <a className="ig-logo" onClick={() => setCurrentView('feed')}>
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <rect width="32" height="32" rx="8" fill="url(#logoGrad)" />
-            <path d="M8 12h16v12H8z" fill="white" opacity="0.9" />
-            <path d="M11 12v12M21 12v12M8 16h16" stroke="white" strokeWidth="1.5" />
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-label="PropertyInsta">
+            <rect width="34" height="34" rx="9.5" fill="url(#logoGrad)" />
+            <rect width="34" height="34" rx="9.5" fill="url(#logoGloss)" />
+            {/* House */}
+            <path d="M17 8.2l8 6.6c.32.27.5.66.5 1.08V25.2A1.8 1.8 0 0 1 23.7 27H10.3A1.8 1.8 0 0 1 8.5 25.2v-9.34c0-.42.18-.81.5-1.08L17 8.2z" fill="#fff" />
+            {/* Orange play badge — Look · Visit · Book */}
+            <circle cx="17" cy="18.6" r="4.6" fill="url(#logoAccent)" />
+            <path d="M15.5 16.3l3.2 2.3-3.2 2.3z" fill="#fff" />
             <defs>
-              <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32">
-                <stop stopColor="#E02D5C" />
-                <stop offset="1" stopColor="#FF6B35" />
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="34" y2="34">
+                <stop stopColor="#1b4db1" />
+                <stop offset="1" stopColor="#2e6fe0" />
+              </linearGradient>
+              <linearGradient id="logoGloss" x1="17" y1="0" x2="17" y2="34">
+                <stop stopColor="#fff" stopOpacity="0.28" />
+                <stop offset="0.55" stopColor="#fff" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient id="logoAccent" x1="12" y1="14" x2="22" y2="23">
+                <stop stopColor="#fb8c3a" />
+                <stop offset="1" stopColor="#ea6a0c" />
               </linearGradient>
             </defs>
           </svg>

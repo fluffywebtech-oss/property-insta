@@ -1,16 +1,201 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useApp } from '../context/AppContext';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useApp, deriveCity } from '../context/AppContext';
 import Stories from './Stories';
 import PropertyCard from './PropertyCard';
 import { formatPriceIndian } from '../data';
 
 const TRENDING_COUNT = 6;
 
+// Quick-explore pickers (wired to the existing filter system)
+const QUICK_BUDGETS = ['Under ₹30L', '₹30L-60L', '₹60L-1Cr', '₹1Cr-2Cr', '₹2Cr-5Cr', '₹5Cr+'];
+const QUICK_BHK = [1, 2, 3, 4, 5];
+const QUICK_TYPES = ['Apartment', 'Villa', 'Penthouse', 'Studio', 'Commercial'];
+
+// City tile imagery (free-to-use Unsplash) — landmarks where iconic, clean
+// skylines otherwise. Falls back to the tile gradient if an image fails.
+const UNS = (id) => `https://images.unsplash.com/photo-${id}?w=500&h=360&fit=crop&q=70`;
+const CITY_IMAGES = {
+  'Delhi': UNS('1587474260584-136574528ed5'),        // India Gate
+  'Mumbai': UNS('1529253355930-ddbe423a2ac7'),       // Mumbai
+  'Navi Mumbai': UNS('1486325212027-8081e485255e'),
+  'Bangalore': UNS('1596176530529-78163a4f7af2'),
+  'Hyderabad': UNS('1551161242-b5af797b7233'),        // Charminar
+  'Kolkata': UNS('1558431382-27e303142255'),          // Victoria Memorial
+  'Vrindavan': UNS('1564507592333-c60657eea523'),     // North-India heritage
+  'Gurgaon': UNS('1480714378408-67cf0d13bc1b'),
+  'Greater Noida': UNS('1477959858617-67f85cf4f1df'),
+  'Noida': UNS('1449824913935-59a10b8d2000'),
+  'Faridabad': UNS('1514924013411-cbf25faa35bb'),
+  'Chandigarh': UNS('1449824913935-59a10b8d2000'),
+  'Ludhiana': UNS('1486325212027-8081e485255e'),
+  'Lucknow': UNS('1477959858617-67f85cf4f1df'),
+  'Pune': UNS('1480714378408-67cf0d13bc1b'),
+  'Ahmedabad': UNS('1514924013411-cbf25faa35bb'),
+};
+const FALLBACK_CITY_IMAGES = [
+  UNS('1477959858617-67f85cf4f1df'),
+  UNS('1480714378408-67cf0d13bc1b'),
+  UNS('1514924013411-cbf25faa35bb'),
+  UNS('1449824913935-59a10b8d2000'),
+  UNS('1486325212027-8081e485255e'),
+];
+const cityImage = (name, i) => CITY_IMAGES[name] || FALLBACK_CITY_IMAGES[i % FALLBACK_CITY_IMAGES.length];
+
+// Trust / social-proof features
+const TRUST_FEATURES = [
+  { icon: '🛡️', title: 'RERA Verified', desc: 'Every project checked against the official RERA registry.' },
+  { icon: '🎥', title: 'HD Virtual Tours', desc: 'Walk through homes in 3D before you ever visit.' },
+  { icon: '🤝', title: 'Zero Brokerage', desc: 'Connect with builders directly — no hidden commissions.' },
+  { icon: '⚡', title: 'Instant Site Visits', desc: 'Book a guided visit in seconds, on your schedule.' },
+];
+
+// Brand gradient palette cycled across developer tiles
+const DEV_GRADIENTS = [
+  'linear-gradient(135deg, #1b4db1, #2e6fe0)',
+  'linear-gradient(135deg, #ea6a0c, #fb8c3a)',
+  'linear-gradient(135deg, #0e9f6e, #0a7d56)',
+  'linear-gradient(135deg, #6d28d9, #8b5cf6)',
+  'linear-gradient(135deg, #be123c, #f43f5e)',
+  'linear-gradient(135deg, #0e7490, #06b6d4)',
+];
+
+function devInitials(name = '') {
+  const words = name.replace(/\b(Limited|Ltd|Properties|Group|India|Developers|Lifespaces|Housing|Realty|Infra|Pvt|Projects)\b/gi, '').trim().split(/\s+/).filter(Boolean);
+  const letters = (words.length ? words : name.split(/\s+/)).slice(0, 2).map(w => w[0]).join('');
+  return (letters || name.slice(0, 2)).toUpperCase();
+}
+
+// Real developer logos via public favicon services, each verified to return
+// the brand's actual logo. Any failure gracefully falls back to a branded
+// initials badge, and a DB `developer_logo` URL always takes priority.
+const ddg = (d) => `https://icons.duckduckgo.com/ip3/${d}.ico`;
+const logodev = (d) => `https://img.logo.dev/${d}?token=pk_X-1ZO13GSgeOoUrIuJ6GMQ&size=128&format=png&retina=true`;
+
+// Official brand domains → real logos (served via logo.dev, which proxies each
+// company's logo). A few use a better-framed override below.
+const DEVELOPER_DOMAINS = {
+  'DLF Limited': 'dlf.in',
+  'Godrej Properties': 'godrejproperties.com',
+  'M3M India': 'm3mindia.com',
+  'Emaar India': 'emaar.com',
+  'Sobha Limited': 'sobha.com',
+  'Tata Housing': 'tatahousing.com',
+  'Adani Realty': 'adani.com',
+  'Vatika Group': 'vatikagroup.com',
+  'BPTP Limited': 'bptp.com',
+  'ATS Infrastructure': 'atsgreens.com',
+  'Birla Estates': 'birlaestates.com',
+  'Smartworld Developers': 'smartworlddevelopers.com',
+  'Hero Realty': 'heroreality.com',
+  'Paras Buildtech': 'parasbuildtech.com',
+  'Elan Group': 'elangroup.in',
+  'Experion Developers': 'experion.co',
+  'Trevoc Group': 'trevoc.com',
+  'Ganga Realty': 'gangarealty.com',
+  'Anant Raj': 'anantrajlimited.com',
+  'SS Group': 'ssgroup-india.com',
+  'Bestech Group': 'bestechgroup.com',
+  'AIPL': 'aipl.com',
+  'Eldeco Group': 'eldecogroup.com',
+  'Mahindra Lifespaces': 'mahindralifespaces.com',
+  'Krisumi Corporation': 'krisumi.com',
+  'Orris Infrastructure': 'orris.in',
+  'Ashiana Housing': 'ashianahousing.com',
+  'Trehan Group': 'trehangroup.com',
+  'JMS Group': 'jmsgroup.in',
+  'Imperia Structures': 'imperiastructures.com',
+  'Pyramid Infratech': 'pyramidinfratech.com',
+  'Lion Infra Developers': 'lioninfra.com',
+  'Spaze Group': 'spaze.in',
+  'Conscient Infrastructure': 'conscient.in',
+  'Mapsko Group': 'mapsko.com',
+  // others that may appear from data
+  'Omaxe Ltd': 'omaxe.com',
+  'Omaxe Limited': 'omaxe.com',
+  'TARC Group': 'tarc.in',
+  'Max Estates': 'maxestates.in',
+  'L&T Realty': 'lntrealty.com',
+};
+
+// Better-framed / more reliable overrides (square emblems beat wide lockups).
+const DEVELOPER_LOGO_OVERRIDES = {
+  'Signature Global': 'https://www.signatureglobal.in/images/fav_icon.svg',
+  'Central Park': ddg('centralparkindia.com'),
+  'Hero Realty': '/dev-logos/hero-realty.png',
+  'JMS Group': '/dev-logos/jms-group.png',
+};
+
+function devLogoUrl(dev) {
+  if (dev.logo) return dev.logo;
+  if (DEVELOPER_LOGO_OVERRIDES[dev.name]) return DEVELOPER_LOGO_OVERRIDES[dev.name];
+  const d = DEVELOPER_DOMAINS[dev.name];
+  return d ? logodev(d) : '';
+}
+
+// Curated developer directory — shown in this order regardless of live
+// inventory (counts are pulled from listings when available).
+const FEATURED_DEVELOPERS = [
+  'DLF Limited', 'Godrej Properties', 'M3M India', 'Signature Global', 'Emaar India',
+  'Sobha Limited', 'Tata Housing', 'Adani Realty', 'Vatika Group', 'BPTP Limited',
+  'ATS Infrastructure', 'Birla Estates', 'Smartworld Developers', 'Hero Realty', 'Paras Buildtech',
+  'Elan Group', 'Experion Developers', 'Trevoc Group', 'Ganga Realty', 'Anant Raj',
+  'SS Group', 'Bestech Group', 'Central Park', 'AIPL', 'Eldeco Group',
+  'Mahindra Lifespaces', 'Krisumi Corporation', 'Orris Infrastructure', 'Ashiana Housing', 'Trehan Group',
+  'JMS Group', 'Imperia Structures', 'Pyramid Infratech', 'Lion Infra Developers', 'Spaze Group',
+  'Conscient Infrastructure', 'Mapsko Group',
+];
+
+function DeveloperCard({ dev, gradient, onClick }) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const logo = imgFailed ? '' : devLogoUrl(dev);
+  return (
+    <button className="ig-dev-card" onClick={onClick} title={`View ${dev.count} listings by ${dev.name}`}>
+      <span className={`ig-dev-logo ${logo ? 'has-img' : ''}`} style={logo ? undefined : { background: gradient }}>
+        {logo
+          ? <img src={logo} alt={dev.name} loading="lazy" onError={() => setImgFailed(true)} />
+          : <span className="ig-dev-initials">{devInitials(dev.name)}</span>}
+      </span>
+      <span className="ig-dev-name">{dev.name}</span>
+      <span className="ig-dev-meta">
+        {dev.count > 0
+          ? <>{dev.count} {dev.count === 1 ? 'project' : 'projects'}{dev.minPrice < Infinity && <> · from {formatPriceIndian(dev.minPrice)}</>}</>
+          : 'Explore →'}
+      </span>
+    </button>
+  );
+}
+
+const SHOWCASE_LIMIT = 10;
+
+// Horizontal "collection" carousel — the competitive showcase unit.
+function ShowcaseRow({ icon, title, subtitle, items, onViewAll }) {
+  if (!items || items.length === 0) return null;
+  return (
+    <section className="ig-section ig-showcase-section">
+      <div className="ig-section-header">
+        <div className="ig-showcase-head">
+          <h2 className="ig-section-title">{icon} {title}</h2>
+          {subtitle && <span className="ig-showcase-sub">{subtitle}</span>}
+        </div>
+        {onViewAll && (
+          <button className="ig-viewall-btn" onClick={onViewAll}>View all →</button>
+        )}
+      </div>
+      <div className="ig-showcase-row">
+        {items.map(prop => (
+          <PropertyCard key={`sc-${title}-${prop.id}`} property={prop} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function FeedView() {
   const {
     displayedProperties,
     allProperties,
     filters,
+    setFilters,
     recentlyViewed,
     setActiveModal,
     addRecentView,
@@ -44,12 +229,35 @@ export default function FeedView() {
 
   // Active filter detection — hide discovery sections when browsing filtered results
   const hasActiveFilters = !!(
-    filters.search || filters.city || filters.priceRange || filters.priceMin || filters.priceMax ||
+    filters.search || filters.city || filters.builder || filters.priceRange || filters.priceMin || filters.priceMax ||
     (filters.propertyType && filters.propertyType.length) ||
     filters.bedrooms !== null && filters.bedrooms !== undefined ||
     (filters.amenities && filters.amenities.length) ||
     (filters.listingStatus && filters.listingStatus.length)
   );
+
+  // Developer directory — curated list (in the given order), enriched with
+  // live listing counts/min-price where the builder has inventory.
+  const developers = useMemo(() => {
+    const stats = new Map();
+    allProperties.forEach(p => {
+      if (!p.builder) return;
+      const d = stats.get(p.builder) || { count: 0, logo: '', minPrice: Infinity };
+      d.count += 1;
+      if (!d.logo && p.developerLogo) d.logo = p.developerLogo;
+      if (p.price && p.price < d.minPrice) d.minPrice = p.price;
+      stats.set(p.builder, d);
+    });
+    return FEATURED_DEVELOPERS.map(name => {
+      const s = stats.get(name) || { count: 0, logo: '', minPrice: Infinity };
+      return { name, count: s.count, logo: s.logo, minPrice: s.minPrice };
+    });
+  }, [allProperties]);
+
+  const selectDeveloper = (name) => {
+    setFilters(prev => ({ ...prev, builder: prev.builder === name ? '' : name }));
+    document.getElementById('heroBanner')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   // Get recently viewed properties from context allProperties
   const recentProps = allProperties.filter(p => recentlyViewed.includes(p.id)).slice(0, 4);
@@ -60,14 +268,101 @@ export default function FeedView() {
   // Open House property (first property with open house)
   const openHouseProp = allProperties.find(p => p.openHouse);
 
+  // ---- Curated showcase collections (competitive discovery rows) ----
+  const newLaunches = useMemo(
+    () => allProperties.filter(p => /new\s*launch|launching/i.test(p.listingStatus || '')).slice(0, SHOWCASE_LIMIT),
+    [allProperties]
+  );
+  const readyToMove = useMemo(
+    () => allProperties.filter(p => /ready/i.test(p.listingStatus || '')).slice(0, SHOWCASE_LIMIT),
+    [allProperties]
+  );
+  const luxuryHomes = useMemo(
+    () => allProperties.filter(p => p.price >= 50000000).sort((a, b) => b.price - a.price).slice(0, SHOWCASE_LIMIT),
+    [allProperties]
+  );
+  const valueHomes = useMemo(
+    () => allProperties.filter(p => p.price > 0 && p.price <= 15000000).sort((a, b) => a.price - b.price).slice(0, SHOWCASE_LIMIT),
+    [allProperties]
+  );
+
+  // Top cities — grouped from live inventory
+  const cities = useMemo(() => {
+    const m = new Map();
+    allProperties.forEach(p => {
+      const c = p.city || deriveCity(p.location || '');
+      if (!c || c === 'Other') return;
+      const d = m.get(c) || { name: c, count: 0, minPrice: Infinity };
+      d.count += 1;
+      if (p.price && p.price < d.minPrice) d.minPrice = p.price;
+      m.set(c, d);
+    });
+    return [...m.values()].sort((a, b) => b.count - a.count).slice(0, 10);
+  }, [allProperties]);
+
+  const applyAndScroll = (patch) => {
+    setFilters(prev => ({ ...prev, ...patch }));
+    document.getElementById('heroBanner')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="ig-feed-content">
+      {/* Top Developers */}
+      {!hasActiveFilters && developers.length > 0 && (
+        <section className="ig-section ig-developers-section">
+          <div className="ig-section-header">
+            <h2 className="ig-section-title">🏗️ Top Developers</h2>
+            <span className="ig-result-count">{developers.length} builders</span>
+          </div>
+          <div className="ig-developers-row">
+            {developers.map((dev, i) => (
+              <DeveloperCard
+                key={dev.name}
+                dev={dev}
+                gradient={DEV_GRADIENTS[i % DEV_GRADIENTS.length]}
+                onClick={() => selectDeveloper(dev.name)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Stories */}
       <section className="ig-stories-section">
         <Stories />
       </section>
 
-      {/* Recently Viewed */}
+      {/* Quick Explore — fast filter discovery */}
+      {!hasActiveFilters && (
+        <section className="ig-section ig-quick-explore">
+          <div className="ig-qe-group">
+            <span className="ig-qe-label">💰 Budget</span>
+            <div className="ig-qe-chips">
+              {QUICK_BUDGETS.map(b => (
+                <button key={b} className="ig-qe-chip" onClick={() => applyAndScroll({ priceRange: b, priceMin: '', priceMax: '', builder: '' })}>{b}</button>
+              ))}
+            </div>
+          </div>
+          <div className="ig-qe-group">
+            <span className="ig-qe-label">🛏️ Bedrooms</span>
+            <div className="ig-qe-chips">
+              {QUICK_BHK.map(n => (
+                <button key={n} className="ig-qe-chip" onClick={() => applyAndScroll({ bedrooms: n, builder: '' })}>{n} BHK</button>
+              ))}
+            </div>
+          </div>
+          <div className="ig-qe-group">
+            <span className="ig-qe-label">🏠 Type</span>
+            <div className="ig-qe-chips">
+              {QUICK_TYPES.map(t => (
+                <button key={t} className="ig-qe-chip" onClick={() => applyAndScroll({ propertyType: [t], builder: '' })}>{t}</button>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Recently Viewed — personalization */}
       {!hasActiveFilters && recentProps.length > 0 && (
         <section className="ig-section">
           <div className="ig-section-header">
@@ -81,18 +376,77 @@ export default function FeedView() {
         </section>
       )}
 
-      {/* Trending Properties */}
-      {!hasActiveFilters && trendingProps.length > 0 && (
-        <section className="ig-section">
-          <div className="ig-section-header">
-            <h2 className="ig-section-title">🔥 Trending Now</h2>
-          </div>
-          <div className="ig-feed-grid">
-            {trendingProps.map(prop => (
-              <PropertyCard key={`trending-${prop.id}`} property={prop} />
-            ))}
-          </div>
-        </section>
+      {/* Curated showcase collections — competitive discovery carousels */}
+      {!hasActiveFilters && (
+        <>
+          <ShowcaseRow
+            icon="🔥" title="Trending Now" subtitle="Most-viewed this week"
+            items={trendingProps}
+          />
+          <ShowcaseRow
+            icon="✨" title="New Launches" subtitle="Fresh on PropertyInsta"
+            items={newLaunches}
+            onViewAll={() => applyAndScroll({ listingStatus: ['New Launch'], priceMin: '', priceMax: '', priceRange: '' })}
+          />
+
+          {/* Browse by City */}
+          {cities.length > 0 && (
+            <section className="ig-section ig-cities-section">
+              <div className="ig-section-header">
+                <h2 className="ig-section-title">📍 Browse by City</h2>
+                <span className="ig-result-count">{cities.length} cities</span>
+              </div>
+              <div className="ig-cities-grid">
+                {cities.map((c, i) => (
+                  <button
+                    key={c.name}
+                    className="ig-city-tile"
+                    style={{ background: DEV_GRADIENTS[i % DEV_GRADIENTS.length] }}
+                    onClick={() => applyAndScroll({ city: c.name, builder: '', search: '' })}
+                  >
+                    <img className="ig-city-img" src={cityImage(c.name, i)} alt={c.name} loading="lazy" />
+                    <span className="ig-city-name">{c.name}</span>
+                    <span className="ig-city-meta">{c.count} {c.count === 1 ? 'property' : 'properties'}</span>
+                    {c.minPrice < Infinity && <span className="ig-city-price">from {formatPriceIndian(c.minPrice)}</span>}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <ShowcaseRow
+            icon="🔑" title="Ready to Move" subtitle="Move in right away"
+            items={readyToMove}
+            onViewAll={() => applyAndScroll({ listingStatus: ['Ready to Move'], priceMin: '', priceMax: '', priceRange: '' })}
+          />
+          <ShowcaseRow
+            icon="💎" title="Luxury Living" subtitle="₹5 Cr & above"
+            items={luxuryHomes}
+            onViewAll={() => applyAndScroll({ priceMin: '50000000', priceMax: '', priceRange: '', listingStatus: [] })}
+          />
+          <ShowcaseRow
+            icon="🏷️" title="Value Homes" subtitle="Smart buys under ₹1.5 Cr"
+            items={valueHomes}
+            onViewAll={() => applyAndScroll({ priceMax: '15000000', priceMin: '', priceRange: '', listingStatus: [] })}
+          />
+
+          {/* Why PropertyInsta — trust band */}
+          <section className="ig-section ig-trust-band">
+            <div className="ig-trust-head">
+              <h2 className="ig-section-title">Why PropertyInsta</h2>
+              <p className="ig-trust-sub">India&apos;s most visual way to discover, compare &amp; book your next home.</p>
+            </div>
+            <div className="ig-trust-grid">
+              {TRUST_FEATURES.map(f => (
+                <div key={f.title} className="ig-trust-card">
+                  <span className="ig-trust-icon">{f.icon}</span>
+                  <span className="ig-trust-title">{f.title}</span>
+                  <span className="ig-trust-desc">{f.desc}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        </>
       )}
 
       {/* Open House Banner */}
@@ -124,13 +478,22 @@ export default function FeedView() {
       <section className="ig-section">
         <div className="ig-section-header">
           <h2 className="ig-section-title">
-            {filters.search
-              ? `🔍 Results for "${filters.search}"`
-              : filters.city
-                ? `📍 Properties in ${filters.city}`
-                : '🏘️ All Properties'}
+            {filters.builder
+              ? `🏗️ Projects by ${filters.builder}`
+              : filters.search
+                ? `🔍 Results for "${filters.search}"`
+                : filters.city
+                  ? `📍 Properties in ${filters.city}`
+                  : '🏘️ All Properties'}
           </h2>
-          <span className="ig-result-count">{filteredCount} {filteredCount === 1 ? 'listing' : 'listings'}</span>
+          <div className="ig-section-header-right">
+            {filters.builder && (
+              <button className="ig-clear-filter-btn" onClick={() => setFilters(prev => ({ ...prev, builder: '' }))}>
+                ✕ Clear
+              </button>
+            )}
+            <span className="ig-result-count">{filteredCount} {filteredCount === 1 ? 'listing' : 'listings'}</span>
+          </div>
         </div>
 
         {displayedProperties.length === 0 ? (

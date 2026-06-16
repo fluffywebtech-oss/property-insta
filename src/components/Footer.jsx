@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 
 // ==================== Mobile Navigation ====================
 export function MobileNav() {
-  const { currentView, setCurrentView, toggleSearchPanel } = useApp();
+  const { currentView, setCurrentView } = useApp();
 
   const tabs = [
     { id: 'feed', icon: 'home', label: 'Feed' },
