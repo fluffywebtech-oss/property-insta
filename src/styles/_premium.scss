@@ -292,6 +292,17 @@ body.dark .ig-card {
 .ig-section-title { font-size: 21px; }
 .ig-feed-content { gap: 38px; }
 
+// Compact sections (recent + trending mini-cards) need tighter spacing
+.ig-recent-section { margin-bottom: 12px; }
+.ig-recent-section + .ig-recent-section { margin-top: -12px; }
+
+@media (max-width: 767px) {
+  .ig-feed-content { gap: 22px; }
+  .ig-section { margin-bottom: 22px; }
+  .ig-recent-section { margin-bottom: 6px; }
+  .ig-recent-section + .ig-recent-section { margin-top: -6px; }
+}
+
 // =====================================================================
 // BUTTONS — shine sweep on primary CTAs
 // =====================================================================
@@ -774,6 +785,399 @@ textarea:focus-visible {
 
 @media (max-width: 767px) { .ig-trust-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 480px) { .ig-trust-grid { grid-template-columns: 1fr; } }
+
+// =====================================================================
+// GOOGLE MAP VIEW
+// =====================================================================
+.ig-gmap-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px 24px 90px;
+
+  .ig-map-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    h3 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  }
+}
+.ig-gmap-count { font-size: 13px; font-weight: 600; color: var(--ig-text-secondary); }
+
+.ig-gmap-wrap {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 16px;
+  height: calc(100vh - 180px);
+  min-height: 520px;
+}
+
+.ig-gmap-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--ig-border);
+  box-shadow: var(--shadow-lg);
+  background: var(--muted-bg);
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+}
+
+// Selected property overlay on the map
+.ig-gmap-selected {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  width: min(360px, calc(100% - 32px));
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: var(--glass);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-xl);
+  animation: pi-rise 0.4s cubic-bezier(0.16,1,0.3,1) both;
+}
+.ig-gmap-selected-img { width: 92px; height: 92px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+.ig-gmap-selected-info { min-width: 0; display: flex; flex-direction: column; gap: 3px;
+  h4 { font-size: 14px; font-weight: 700; color: var(--ig-text); line-height: 1.25; }
+}
+.ig-gmap-selected-loc { font-size: 11.5px; color: var(--ig-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ig-gmap-selected-price { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--ig-link); }
+.ig-gmap-selected-specs { display: flex; gap: 8px; font-size: 11px; color: var(--ig-text-secondary); font-weight: 600; }
+.ig-gmap-view-btn {
+  margin-top: 6px;
+  align-self: flex-start;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ig-gradient-warm);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(234,88,12,0.35); }
+}
+.ig-gmap-selected-close {
+  position: absolute; top: 8px; right: 8px;
+  width: 22px; height: 22px; border-radius: 50%;
+  border: none; background: rgba(0,0,0,0.12); color: var(--ig-text);
+  font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  &:hover { background: var(--ig-danger); color: #fff; }
+}
+
+// Property list beside the map
+.ig-gmap-list {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+}
+.ig-gmap-item {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding: 9px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--ig-border);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.28s cubic-bezier(0.16,1,0.3,1), border-color 0.2s ease, box-shadow 0.3s ease;
+
+  &:hover { transform: translateX(2px); box-shadow: 0 6px 16px rgba(20,22,43,0.08); border-color: rgba(31,86,196,0.25); }
+  &.active { border-color: var(--ig-link); box-shadow: 0 6px 18px rgba(31,86,196,0.18); background: rgba(31,86,196,0.04); }
+}
+.ig-gmap-item-img { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+.ig-gmap-item-info { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ig-gmap-item-title { font-size: 13px; font-weight: 700; color: var(--ig-text); line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.ig-gmap-item-loc { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ig-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; svg { flex-shrink: 0; color: var(--ig-link); } }
+.ig-gmap-item-price { font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; font-weight: 700; color: var(--ig-link); }
+
+@media (max-width: 900px) {
+  .ig-gmap-wrap { grid-template-columns: 1fr; height: auto; }
+  .ig-gmap-frame { height: 56vh; min-height: 360px; }
+  .ig-gmap-list { flex-direction: row; overflow-x: auto; overflow-y: hidden; padding-bottom: 8px; }
+  .ig-gmap-item { flex: 0 0 250px; }
+}
+
+// =====================================================================
+// HEADER — premium, modern refinement
+// =====================================================================
+.ig-header {
+  background: color-mix(in srgb, var(--ig-white) 78%, transparent);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid color-mix(in srgb, var(--ig-border) 70%, transparent);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 6px 24px rgba(20,22,43,0.06);
+
+  // hairline brand gradient accent at the very bottom edge
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(31,86,196,0.45) 30%, rgba(234,106,12,0.45) 70%, transparent);
+    opacity: 0.55;
+  }
+}
+.ig-header-inner { height: 64px; gap: 20px; }
+
+// Nav tabs — refined segmented control
+.ig-nav-tabs {
+  background: var(--muted-bg);
+  border: 1px solid var(--ig-border);
+  padding: 4px;
+  box-shadow: 0 1px 2px rgba(20,22,43,0.04) inset;
+}
+.ig-nav-tab {
+  padding: 8px 15px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease, background 0.25s ease, box-shadow 0.3s ease;
+
+  &:hover:not(.active) { transform: translateY(-1px); }
+  &.active {
+    background: var(--ig-gradient);
+    box-shadow: 0 6px 16px rgba(31,86,196,0.32), 0 1px 0 rgba(255,255,255,0.25) inset;
+  }
+}
+
+// Icon buttons — glass with hover ring + lift
+.ig-icon-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid transparent;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.22s ease, border-color 0.22s ease, color 0.2s ease;
+
+  &:hover {
+    background: var(--card-bg);
+    border-color: var(--ig-border);
+    color: var(--ig-link);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(20,22,43,0.10);
+  }
+}
+
+// City selector — refined pill
+.ig-city-btn {
+  border-radius: 999px !important;
+  border: 1.5px solid var(--ig-border);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(31,86,196,0.35);
+    box-shadow: 0 6px 16px rgba(31,86,196,0.12);
+  }
+}
+
+// Avatar — premium gradient ring + spring
+.ig-avatar-btn {
+  width: 38px;
+  height: 38px;
+  background: conic-gradient(from 220deg, #1b4db1, #2e6fe0, #ea6a0c, #fb8c3a, #1b4db1);
+  box-shadow: 0 4px 12px rgba(31,86,196,0.28);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+  &:hover { transform: translateY(-2px) scale(1.06); box-shadow: 0 8px 20px rgba(31,86,196,0.38); }
+}
+
+// Notification badge — softer, glowing
+.ig-badge {
+  background: var(--ig-gradient-warm);
+  box-shadow: 0 0 0 0 rgba(234,106,12,0.5);
+  animation: pi-pulse-glow 2.6s ease-in-out infinite;
+}
+
+// Platform / OS dropdown trigger lift
+.ig-os-dropdown:hover { transform: translateY(-1px); }
+
+@media (max-width: 767px) {
+  .ig-header-inner { height: 58px; gap: 12px; }
+  .ig-header::after { opacity: 0.4; }
+}
+
+// =====================================================================
+// FILTER TOGGLE — prominent header button
+// =====================================================================
+.ig-filter-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  color: var(--ig-link);
+  background: var(--badge-bg);
+  border: 1.5px solid rgba(31, 86, 196, 0.25);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.25s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
+
+  svg { flex-shrink: 0; }
+
+  &:hover {
+    transform: translateY(-1px);
+    background: var(--ig-gradient);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 6px 18px rgba(31, 86, 196, 0.28);
+    svg { stroke: #fff; }
+  }
+  &.active {
+    background: var(--ig-gradient);
+    color: #fff;
+    border-color: transparent;
+    svg { stroke: #fff; }
+  }
+}
+@media (max-width: 480px) {
+  .ig-filter-toggle-btn span { display: none; }
+  .ig-filter-toggle-btn { padding: 8px 10px; }
+}
+
+// =====================================================================
+// FILTER — property type icon buttons
+// =====================================================================
+.ig-filter-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.ig-filter-type-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 6px 10px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--ig-border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, border-color 0.2s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(31,86,196,0.35);
+    box-shadow: 0 6px 16px rgba(31,86,196,0.12);
+  }
+  &.active {
+    background: rgba(31,86,196,0.08);
+    border-color: var(--ig-link);
+    box-shadow: 0 4px 14px rgba(31,86,196,0.18);
+    .ig-filter-type-label { color: var(--ig-link); }
+  }
+}
+.ig-filter-type-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+.ig-filter-type-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ig-text);
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+// =====================================================================
+// RECENTLY VIEWED — compact horizontal mini-cards
+// =====================================================================
+.ig-recent-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 2px 12px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar { height: 6px; }
+}
+
+.ig-recent-card {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 280px;
+  padding: 8px 12px 8px 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--ig-border);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  scroll-snap-align: start;
+  box-shadow: 0 2px 10px rgba(20,22,43,0.05);
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease, border-color 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(20,22,43,0.13), 0 4px 14px rgba(31,86,196,0.10);
+    border-color: rgba(31,86,196,0.25);
+  }
+}
+
+.ig-recent-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ig-recent-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ig-recent-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ig-text);
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ig-recent-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ig-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  svg { flex-shrink: 0; color: var(--ig-link); }
+}
+
+.ig-recent-price {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ig-link);
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 480px) {
+  .ig-recent-card { width: 250px; }
+  .ig-recent-img { width: 60px; height: 60px; }
+}
 
 // =====================================================================
 // SHOWCASE COLLECTIONS — horizontal property carousels

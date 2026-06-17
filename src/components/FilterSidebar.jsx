@@ -10,18 +10,26 @@ const SORT_OPTIONS = [
 
 const PRICE_PRESETS = [
   { value: '', label: 'All' },
-  { value: 'Under ₹30L', label: '<₹30L' },
-  { value: '₹30L-60L', label: '₹30-60L' },
-  { value: '₹60L-1Cr', label: '₹60L-1Cr' },
-  { value: '₹1Cr-2Cr', label: '₹1-2Cr' },
-  { value: '₹2Cr-5Cr', label: '₹2-5Cr' },
+  { value: 'Under ₹30L', label: 'Under ₹30L' },
+  { value: '₹30L-60L', label: '₹30L–60L' },
+  { value: '₹60L-1Cr', label: '₹60L–1Cr' },
+  { value: '₹1Cr-2Cr', label: '₹1Cr–2Cr' },
+  { value: '₹2Cr-5Cr', label: '₹2Cr–5Cr' },
   { value: '₹5Cr+', label: '₹5Cr+' },
 ];
 
-const PROPERTY_TYPES = ['Apartment', 'Villa', 'Penthouse', 'Cottage', 'Farmhouse', 'Studio', 'Commercial'];
+const PROPERTY_TYPES = [
+  { value: 'Apartment', label: 'Apartment', icon: '🏢' },
+  { value: 'Villa', label: 'Villa', icon: '🏡' },
+  { value: 'Penthouse', label: 'Penthouse', icon: '🌆' },
+  { value: 'Studio', label: 'Studio', icon: '🏠' },
+  { value: 'Commercial', label: 'Commercial', icon: '🏬' },
+  { value: 'Cottage', label: 'Cottage', icon: '🛖' },
+  { value: 'Farmhouse', label: 'Farmhouse', icon: '🌾' },
+];
 const BEDROOMS = [1, 2, 3, 4, 5];
 const AMENITIES = ['Pool', 'Gym', 'Parking', 'Garden', 'Security', 'Smart Home'];
-const LISTING_STATUS = ['Ready to Move', 'Under Construction'];
+const LISTING_STATUS = ['Ready to Move', 'Under Construction', 'New Launch'];
 
 export default function FilterSidebar() {
   const {
@@ -48,6 +56,8 @@ export default function FilterSidebar() {
   const resetFilters = () => {
     setFilters({
       search: '',
+      city: '',
+      builder: '',
       priceRange: '',
       priceMin: '',
       priceMax: '',
@@ -131,17 +141,18 @@ export default function FilterSidebar() {
               </div>
             </div>
 
-            {/* Property Type — chip buttons */}
+            {/* Property Type — icon filter buttons */}
             <div className="ig-filter-row">
               <span className="ig-filter-chip-label">Type</span>
-              <div className="ig-filter-chips">
-                {PROPERTY_TYPES.map(type => (
+              <div className="ig-filter-type-grid">
+                {PROPERTY_TYPES.map(t => (
                   <button
-                    key={type}
-                    className={`ig-filter-chip ${filters.propertyType?.includes(type) ? 'active' : ''}`}
-                    onClick={() => toggleArrayFilter('propertyType', type)}
+                    key={t.value}
+                    className={`ig-filter-type-btn ${filters.propertyType?.includes(t.value) ? 'active' : ''}`}
+                    onClick={() => toggleArrayFilter('propertyType', t.value)}
                   >
-                    {type}
+                    <span className="ig-filter-type-icon">{t.icon}</span>
+                    <span className="ig-filter-type-label">{t.label}</span>
                   </button>
                 ))}
               </div>

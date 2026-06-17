@@ -307,6 +307,31 @@ export default function FeedView() {
 
   return (
     <div className="ig-feed-content">
+      {/* Browse by City */}
+      {!hasActiveFilters && cities.length > 0 && (
+        <section className="ig-section ig-cities-section">
+          <div className="ig-section-header">
+            <h2 className="ig-section-title">📍 Browse by City</h2>
+            <span className="ig-result-count">{cities.length} cities</span>
+          </div>
+          <div className="ig-cities-grid">
+            {cities.map((c, i) => (
+              <button
+                key={c.name}
+                className="ig-city-tile"
+                style={{ background: DEV_GRADIENTS[i % DEV_GRADIENTS.length] }}
+                onClick={() => applyAndScroll({ city: c.name, builder: '', search: '' })}
+              >
+                <img className="ig-city-img" src={cityImage(c.name, i)} alt={c.name} loading="lazy" />
+                <span className="ig-city-name">{c.name}</span>
+                <span className="ig-city-meta">{c.count} {c.count === 1 ? 'property' : 'properties'}</span>
+                {c.minPrice < Infinity && <span className="ig-city-price">from {formatPriceIndian(c.minPrice)}</span>}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Top Developers */}
       {!hasActiveFilters && developers.length > 0 && (
         <section className="ig-section ig-developers-section">
@@ -327,50 +352,35 @@ export default function FeedView() {
         </section>
       )}
 
-      {/* Stories */}
-      <section className="ig-stories-section">
-        <Stories />
-      </section>
 
-      {/* Quick Explore — fast filter discovery */}
-      {!hasActiveFilters && (
-        <section className="ig-section ig-quick-explore">
-          <div className="ig-qe-group">
-            <span className="ig-qe-label">💰 Budget</span>
-            <div className="ig-qe-chips">
-              {QUICK_BUDGETS.map(b => (
-                <button key={b} className="ig-qe-chip" onClick={() => applyAndScroll({ priceRange: b, priceMin: '', priceMax: '', builder: '' })}>{b}</button>
-              ))}
-            </div>
-          </div>
-          <div className="ig-qe-group">
-            <span className="ig-qe-label">🛏️ Bedrooms</span>
-            <div className="ig-qe-chips">
-              {QUICK_BHK.map(n => (
-                <button key={n} className="ig-qe-chip" onClick={() => applyAndScroll({ bedrooms: n, builder: '' })}>{n} BHK</button>
-              ))}
-            </div>
-          </div>
-          <div className="ig-qe-group">
-            <span className="ig-qe-label">🏠 Type</span>
-            <div className="ig-qe-chips">
-              {QUICK_TYPES.map(t => (
-                <button key={t} className="ig-qe-chip" onClick={() => applyAndScroll({ propertyType: [t], builder: '' })}>{t}</button>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Recently Viewed — personalization */}
+      {/* Recently Viewed — compact horizontal strip */}
       {!hasActiveFilters && recentProps.length > 0 && (
-        <section className="ig-section">
+        <section className="ig-section ig-recent-section">
           <div className="ig-section-header">
             <h2 className="ig-section-title">🕐 Recently Viewed</h2>
           </div>
-          <div className="ig-feed-grid">
+          <div className="ig-recent-row">
             {recentProps.map(prop => (
-              <PropertyCard key={`recent-${prop.id}`} property={prop} />
+              <button
+                key={`recent-${prop.id}`}
+                className="ig-recent-card"
+                onClick={() => { addRecentView(prop.id); setActiveModal({ type: 'property', data: { propertyId: prop.id } }); }}
+              >
+                <img
+                  className="ig-recent-img"
+                  src={prop.media?.[0] || prop.thumbnail || ''}
+                  alt={prop.title}
+                  loading="lazy"
+                />
+                <div className="ig-recent-info">
+                  <span className="ig-recent-title">{prop.title}</span>
+                  <span className="ig-recent-location">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    {prop.location}
+                  </span>
+                  <span className="ig-recent-price">{formatPriceIndian(prop.price)}</span>
+                </div>
+              </button>
             ))}
           </div>
         </section>
@@ -379,40 +389,49 @@ export default function FeedView() {
       {/* Curated showcase collections — competitive discovery carousels */}
       {!hasActiveFilters && (
         <>
-          <ShowcaseRow
-            icon="🔥" title="Trending Now" subtitle="Most-viewed this week"
-            items={trendingProps}
-          />
-          <ShowcaseRow
-            icon="✨" title="New Launches" subtitle="Fresh on PropertyInsta"
-            items={newLaunches}
-            onViewAll={() => applyAndScroll({ listingStatus: ['New Launch'], priceMin: '', priceMax: '', priceRange: '' })}
-          />
-
-          {/* Browse by City */}
-          {cities.length > 0 && (
-            <section className="ig-section ig-cities-section">
+          {/* Trending Now — compact mini-cards */}
+          {trendingProps.length > 0 && (
+            <section className="ig-section ig-recent-section">
               <div className="ig-section-header">
-                <h2 className="ig-section-title">📍 Browse by City</h2>
-                <span className="ig-result-count">{cities.length} cities</span>
+                <h2 className="ig-section-title">🔥 Trending Now</h2>
+                <span className="ig-showcase-sub">Most-viewed this week</span>
               </div>
-              <div className="ig-cities-grid">
-                {cities.map((c, i) => (
+              <div className="ig-recent-row">
+                {trendingProps.map(prop => (
                   <button
-                    key={c.name}
-                    className="ig-city-tile"
-                    style={{ background: DEV_GRADIENTS[i % DEV_GRADIENTS.length] }}
-                    onClick={() => applyAndScroll({ city: c.name, builder: '', search: '' })}
+                    key={`trend-${prop.id}`}
+                    className="ig-recent-card"
+                    onClick={() => { addRecentView(prop.id); setActiveModal({ type: 'property', data: { propertyId: prop.id } }); }}
                   >
-                    <img className="ig-city-img" src={cityImage(c.name, i)} alt={c.name} loading="lazy" />
-                    <span className="ig-city-name">{c.name}</span>
-                    <span className="ig-city-meta">{c.count} {c.count === 1 ? 'property' : 'properties'}</span>
-                    {c.minPrice < Infinity && <span className="ig-city-price">from {formatPriceIndian(c.minPrice)}</span>}
+                    <img
+                      className="ig-recent-img"
+                      src={prop.media?.[0] || prop.thumbnail || ''}
+                      alt={prop.title}
+                      loading="lazy"
+                    />
+                    <div className="ig-recent-info">
+                      <span className="ig-recent-title">{prop.title}</span>
+                      <span className="ig-recent-location">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        {prop.location}
+                      </span>
+                      <span className="ig-recent-price">{formatPriceIndian(prop.price)}</span>
+                    </div>
                   </button>
                 ))}
               </div>
             </section>
           )}
+
+          {/* Stories */}
+          <section className="ig-stories-section">
+            <Stories />
+          </section>
+          <ShowcaseRow
+            icon="✨" title="New Launches" subtitle="Fresh on PropertyInsta"
+            items={newLaunches}
+            onViewAll={() => applyAndScroll({ listingStatus: ['New Launch'], priceMin: '', priceMax: '', priceRange: '' })}
+          />
 
           <ShowcaseRow
             icon="🔑" title="Ready to Move" subtitle="Move in right away"

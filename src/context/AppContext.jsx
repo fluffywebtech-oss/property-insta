@@ -147,6 +147,34 @@ const LISTING_IMAGE_POOL = [
   'https://images.unsplash.com/photo-1633505899118-4ca6bd143043?w=900&h=675&fit=crop&q=75',
 ];
 
+// Pexels CDN helper — free license, verified property photos
+const PEX = (id) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=900&h=675&fit=crop`;
+
+// Extra verified Pexels property images (apartments, buildings, interiors, villas)
+const PEXELS_APARTMENT = [
+  PEX(1546168), PEX(1396122), PEX(323780), PEX(271624), PEX(209296),
+  PEX(462235), PEX(1370704), PEX(1571460), PEX(1396132), PEX(2102587),
+  PEX(1571459), PEX(323705), PEX(1029599), PEX(2440008), PEX(2059535),
+  PEX(280229), PEX(280221), PEX(290275), PEX(534151), PEX(534174),
+  PEX(1643389), PEX(443383), PEX(443380), PEX(443378), PEX(443373),
+  // second batch — buildings + interiors
+  PEX(2079234), PEX(1115804), PEX(2462015), PEX(271816), PEX(1571463),
+  PEX(1571468), PEX(1571470), PEX(2079246), PEX(2079249), PEX(4119832),
+  PEX(4119833), PEX(3935350), PEX(3935352), PEX(8089087), PEX(8146322),
+  PEX(1879061), PEX(276724), PEX(276551), PEX(2030037), PEX(2089698),
+];
+const PEXELS_VILLA = [
+  PEX(1396122), PEX(209296), PEX(1370704), PEX(1396132), PEX(2102587),
+  PEX(1029599), PEX(280229), PEX(280221), PEX(1643389), PEX(1643384),
+  // second batch — houses
+  PEX(1438832), PEX(2476632), PEX(3935333), PEX(5997993), PEX(6585764),
+  PEX(7031607), PEX(7061662), PEX(106399), PEX(210617), PEX(271643),
+];
+const PEXELS_PENTHOUSE = [
+  PEX(1571459), PEX(534151), PEX(2059535), PEX(462235), PEX(1396127),
+  PEX(276551), PEX(1879061), PEX(2079246),
+];
+
 // Pool indices grouped by what the photo actually shows, so imagery MATCHES
 // the listing's property type. (Indices 82 & 96 are intentionally excluded —
 // they aren't property photos.)
@@ -169,24 +197,53 @@ function poolKeyForType(t = '') {
   return 'apartment';
 }
 
-// Give every listing a type-MATCHED image set: a cover + up to 3 gallery shots
-// drawn from the pool that fits the property type, unique within the listing
-// and distributed so covers of the same type never land adjacent.
+// A listing has its OWN real photos when its images aren't the generic stock
+// placeholders (i.e. uploaded to storage or set to any non-Unsplash URL).
+function hasRealProjectImages(p) {
+  const imgs = p.media || p.images || [];
+  return imgs.length > 0 && imgs.some(u => u && !/images\.unsplash\.com/i.test(u));
+}
+
+// Combined pools: Unsplash (indexed) + Pexels (direct URLs)
+const COMBINED_POOL = {
+  apartment: [
+    ...POOL_BY_TYPE.apartment.map(i => LISTING_IMAGE_POOL[i]),
+    ...PEXELS_APARTMENT,
+  ],
+  villa: [
+    ...POOL_BY_TYPE.villa.map(i => LISTING_IMAGE_POOL[i]),
+    ...PEXELS_VILLA,
+  ],
+  penthouse: [
+    ...POOL_BY_TYPE.penthouse.map(i => LISTING_IMAGE_POOL[i]),
+    ...PEXELS_PENTHOUSE,
+  ],
+  commercial: POOL_BY_TYPE.commercial.map(i => LISTING_IMAGE_POOL[i]),
+};
+
+// Real, project-specific photos (uploaded via admin → Supabase Storage)
+// ALWAYS win. Only listings without real photos get a type-MATCHED unique set.
 function assignUniqueImages(list) {
   const counters = { villa: 0, penthouse: 0, commercial: 0, apartment: 0 };
   return list.map((p) => {
-    const key = poolKeyForType(p.type);
-    const pool = POOL_BY_TYPE[key];
-    const n = counters[key]++;
-    const idxs = [pool[n % pool.length]];
-    let step = 1;
-    while (idxs.length < 4 && idxs.length < pool.length) {
-      const cand = pool[(n + step * 7) % pool.length];
-      if (!idxs.includes(cand)) idxs.push(cand);
-      step++;
-      if (step > pool.length * 3) break;
+    if (hasRealProjectImages(p)) {
+      const imgs = (p.media && p.media.length ? p.media : p.images) || [];
+      return { ...p, media: imgs, images: imgs, thumbnail: imgs[0] };
     }
-    const media = idxs.map(i => LISTING_IMAGE_POOL[i]);
+    const key = poolKeyForType(p.type);
+    const pool = COMBINED_POOL[key];
+    const n = counters[key]++;
+    // Cover = unique slot; gallery = 3 more picked with spread so no repeats
+    const cover = pool[n % pool.length];
+    const gallery = [];
+    let step = 1;
+    while (gallery.length < 3) {
+      const cand = pool[(n + step * Math.ceil(pool.length / 4)) % pool.length];
+      if (cand !== cover && !gallery.includes(cand)) gallery.push(cand);
+      step++;
+      if (step > pool.length * 2) break;
+    }
+    const media = [cover, ...gallery];
     return { ...p, media, images: media, thumbnail: media[0] };
   });
 }
