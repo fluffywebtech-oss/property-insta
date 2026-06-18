@@ -15,6 +15,7 @@ import './styles/styles.scss';
 // Lazy: every secondary view + all 17 OS modules + the modal stack.
 // Cuts the initial JS bundle to roughly the feed-only experience and
 // streams in everything else on demand.
+const BuilderView        = lazy(() => import('./components/BuilderView'));
 const ReelsView          = lazy(() => import('./components/ReelsView'));
 const MapView            = lazy(() => import('./components/MapView'));
 const SavedView          = lazy(() => import('./components/SavedView'));
@@ -62,6 +63,7 @@ function AppLayout() {
             </main>
           </div>
         );
+      case 'builder': return <BuilderView />;
       case 'reels': return <ReelsView />;
       case 'mapView': return <MapView />;
       case 'saved': return <SavedView />;
@@ -96,7 +98,7 @@ function AppLayout() {
     }
   };
 
-  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog'].includes(currentView);
+  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'builder'].includes(currentView);
 
   return (
     <div className={`app-root ${darkMode ? 'dark' : ''}`}>

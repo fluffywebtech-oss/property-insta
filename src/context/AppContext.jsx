@@ -371,6 +371,15 @@ export function AppProvider({ children }) {
 
   // View management
   const [currentView, setCurrentView] = useState('feed');
+  // Which builder's microsite is being shown (set when `currentView === 'builder'`)
+  const [selectedBuilder, setSelectedBuilder] = useState(null);
+
+  // Convenience: navigate to a builder's dedicated page.
+  const openBuilder = useCallback((name) => {
+    setSelectedBuilder(name);
+    setCurrentView('builder');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
 
   // Properties — start with static data, upgrade to Supabase when available
   const [allProperties, setAllProperties] = useState(() => assignUniqueImages(staticProperties));
@@ -716,6 +725,7 @@ export function AppProvider({ children }) {
 
   const value = {
     currentView, setCurrentView,
+    selectedBuilder, openBuilder,
     darkMode, toggleDarkMode,
     filters, setFilters,
     filteredProperties, displayedProperties,

@@ -100,7 +100,7 @@ export default function HeroBanner() {
             <span className="hero-eyebrow-accent">RERA Verified</span>
           </div>
           <h1 className="hero-banner-title">
-            with PropertyInsta — Look · Visit · Book
+            Look Visit Book
           </h1>
           <p className="hero-banner-subtitle">
             Premium listings with virtual tours, reels & AI-powered recommendations

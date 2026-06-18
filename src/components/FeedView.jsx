@@ -202,6 +202,7 @@ export default function FeedView() {
     hasMore,
     loadMore,
     filteredCount,
+    openBuilder,
   } = useApp();
 
   const [openHouseCountdown, setOpenHouseCountdown] = useState({ hours: 0, minutes: 0, seconds: 0 });
@@ -254,9 +255,9 @@ export default function FeedView() {
     });
   }, [allProperties]);
 
+  // Open the builder's dedicated microsite (not just a filter on the feed).
   const selectDeveloper = (name) => {
-    setFilters(prev => ({ ...prev, builder: prev.builder === name ? '' : name }));
-    document.getElementById('heroBanner')?.scrollIntoView({ behavior: 'smooth' });
+    openBuilder(name);
   };
 
   // Get recently viewed properties from context allProperties
