@@ -1,35 +1,52 @@
+import { lazy, Suspense } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { AuthProvider } from './context/AuthContext';
 import { RoleProvider } from './context/RoleContext';
 import { ToastProvider } from './hooks/useToast';
+
+// Eager: the bits that are always on the initial render
 import Header from './components/Header';
 import HeroBanner from './components/HeroBanner';
 import FeedView from './components/FeedView';
 import FilterSidebar from './components/FilterSidebar';
-import ReelsView from './components/ReelsView';
-import MapView from './components/MapView';
-import SavedView from './components/SavedView';
-import BlogView from './components/BlogView';
-import Modals from './components/Modals';
 import Footer, { MobileNav, ChatWidget } from './components/Footer';
-import OSDashboard from './components/os/OSDashboard';
-import TrustLayer from './components/os/TrustLayer';
-import PropertyPassport from './components/os/PropertyPassport';
-import TransactionLayer from './components/os/TransactionLayer';
-import CRMView from './components/os/CRMView';
-import ChannelPartnerView from './components/os/ChannelPartnerView';
-import AICopilotView from './components/os/AICopilotView';
-import FinancingView from './components/os/FinancingView';
-import LegalView from './components/os/LegalView';
-import InfraView from './components/os/InfraView';
-import DataCloudView from './components/os/DataCloudView';
-import InvestmentView from './components/os/InvestmentView';
-import RentalView from './components/os/RentalView';
-import LocalCommerceView from './components/os/LocalCommerceView';
-import SocialView from './components/os/SocialView';
-import GovIntView from './components/os/GovIntView';
-import AIExchangeView from './components/os/AIExchangeView';
 import './styles/styles.scss';
+
+// Lazy: every secondary view + all 17 OS modules + the modal stack.
+// Cuts the initial JS bundle to roughly the feed-only experience and
+// streams in everything else on demand.
+const ReelsView          = lazy(() => import('./components/ReelsView'));
+const MapView            = lazy(() => import('./components/MapView'));
+const SavedView          = lazy(() => import('./components/SavedView'));
+const BlogView           = lazy(() => import('./components/BlogView'));
+const Modals             = lazy(() => import('./components/Modals'));
+const OSDashboard        = lazy(() => import('./components/os/OSDashboard'));
+const TrustLayer         = lazy(() => import('./components/os/TrustLayer'));
+const PropertyPassport   = lazy(() => import('./components/os/PropertyPassport'));
+const TransactionLayer   = lazy(() => import('./components/os/TransactionLayer'));
+const CRMView            = lazy(() => import('./components/os/CRMView'));
+const ChannelPartnerView = lazy(() => import('./components/os/ChannelPartnerView'));
+const AICopilotView      = lazy(() => import('./components/os/AICopilotView'));
+const FinancingView      = lazy(() => import('./components/os/FinancingView'));
+const LegalView          = lazy(() => import('./components/os/LegalView'));
+const InfraView          = lazy(() => import('./components/os/InfraView'));
+const DataCloudView      = lazy(() => import('./components/os/DataCloudView'));
+const InvestmentView     = lazy(() => import('./components/os/InvestmentView'));
+const RentalView         = lazy(() => import('./components/os/RentalView'));
+const LocalCommerceView  = lazy(() => import('./components/os/LocalCommerceView'));
+const SocialView         = lazy(() => import('./components/os/SocialView'));
+const GovIntView         = lazy(() => import('./components/os/GovIntView'));
+const AIExchangeView     = lazy(() => import('./components/os/AIExchangeView'));
+
+// Lightweight loading skeleton shown while a lazy chunk streams in.
+function ViewLoader() {
+  return (
+    <div className="app-view-loader" aria-busy="true">
+      <div className="app-view-loader-spinner" />
+      <span>Loading…</span>
+    </div>
+  );
+}
 
 function AppLayout() {
   const { currentView, darkMode } = useApp();
@@ -85,11 +102,15 @@ function AppLayout() {
     <div className={`app-root ${darkMode ? 'dark' : ''}`}>
       <Header />
       {currentView === 'feed' && <HeroBanner />}
-      {renderView()}
+      <Suspense fallback={<ViewLoader />}>
+        {renderView()}
+      </Suspense>
       {!isOsView && <Footer />}
       <MobileNav />
       <ChatWidget />
-      <Modals />
+      <Suspense fallback={null}>
+        <Modals />
+      </Suspense>
     </div>
   );
 }

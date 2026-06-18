@@ -2318,6 +2318,30 @@ textarea:focus-visible {
 }
 
 // =====================================================================
+// Lazy-route Suspense fallback (shown briefly while a chunk streams in)
+// =====================================================================
+.app-view-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 60vh;
+  color: var(--ig-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.app-view-loader-spinner {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2.5px solid var(--ig-border);
+  border-top-color: var(--ig-link);
+  animation: app-spin 0.9s linear infinite;
+}
+@keyframes app-spin { to { transform: rotate(360deg); } }
+
+// =====================================================================
 // HEADER — premium, modern refinement
 // =====================================================================
 .ig-header {

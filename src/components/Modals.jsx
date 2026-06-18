@@ -1402,9 +1402,9 @@ function AdminPanelModal() {
 export default function Modals() {
   const { activeModal, setActiveModal } = useApp();
 
-  if (!activeModal) return null;
-
-  // Handle Escape key
+  // Handle Escape — hook MUST run on every render, so it sits above the
+  // early-return below. (Previously this hook was conditional, which
+  // violated Rules of Hooks and could cause stale listeners.)
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape') setActiveModal(null);
@@ -1412,6 +1412,8 @@ export default function Modals() {
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, [setActiveModal]);
+
+  if (!activeModal) return null;
 
   const { type } = activeModal;
 
