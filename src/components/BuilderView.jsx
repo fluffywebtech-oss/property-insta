@@ -129,9 +129,8 @@ export default function BuilderView() {
     return arr;
   }, [listings, sort, statusFilter]);
 
-  // Stats
+  // Stats — works for any inventory count, including zero.
   const stats = useMemo(() => {
-    if (!listings.length) return null;
     const prices = listings.map(p => p.price).filter(Boolean);
     const cities = [...new Set(listings.map(p => p.city || deriveCity(p.location || '')).filter(c => c && c !== 'Other'))];
     const ready = listings.filter(p => /ready/i.test(p.listingStatus || '')).length;
@@ -139,8 +138,8 @@ export default function BuilderView() {
     return {
       total: listings.length,
       cities,
-      minPrice: Math.min(...prices),
-      maxPrice: Math.max(...prices),
+      minPrice: prices.length ? Math.min(...prices) : null,
+      maxPrice: prices.length ? Math.max(...prices) : null,
       ready,
       launching,
     };
@@ -151,17 +150,6 @@ export default function BuilderView() {
       <div className="pi-builder-empty">
         <span>🏗️</span>
         <h3>No builder selected</h3>
-        <button className="pi-builder-back" onClick={() => setCurrentView('feed')}>← Back to home</button>
-      </div>
-    );
-  }
-
-  if (!listings.length) {
-    return (
-      <div className="pi-builder-empty">
-        <span>🏗️</span>
-        <h3>{selectedBuilder}</h3>
-        <p>We don&apos;t have any active projects from this builder in our inventory yet.</p>
         <button className="pi-builder-back" onClick={() => setCurrentView('feed')}>← Back to home</button>
       </div>
     );
@@ -215,11 +203,11 @@ export default function BuilderView() {
             <span className="pi-builder-stat-lbl">{stats.cities.length === 1 ? 'City' : 'Cities'}</span>
           </div>
           <div className="pi-builder-stat">
-            <span className="pi-builder-stat-num">{formatPriceIndian(stats.minPrice)}</span>
+            <span className="pi-builder-stat-num">{stats.minPrice ? formatPriceIndian(stats.minPrice) : '—'}</span>
             <span className="pi-builder-stat-lbl">Starting Price</span>
           </div>
           <div className="pi-builder-stat">
-            <span className="pi-builder-stat-num">{formatPriceIndian(stats.maxPrice)}</span>
+            <span className="pi-builder-stat-num">{stats.maxPrice ? formatPriceIndian(stats.maxPrice) : '—'}</span>
             <span className="pi-builder-stat-lbl">Top Price</span>
           </div>
           <div className="pi-builder-stat">
@@ -234,46 +222,69 @@ export default function BuilderView() {
       </section>
 
       {/* ───── Market presence (cities) ───── */}
-      <section className="pi-builder-section">
-        <h2>📍 Market Presence</h2>
-        <p className="pi-builder-section-sub">{selectedBuilder} has projects in {stats.cities.length} {stats.cities.length === 1 ? 'city' : 'cities'} across India.</p>
-        <div className="pi-builder-cities">
-          {stats.cities.map(c => {
-            const cityCount = listings.filter(p => (p.city || deriveCity(p.location || '')) === c).length;
-            return (
-              <div key={c} className="pi-builder-city-chip">
-                <strong>{c}</strong>
-                <span>{cityCount} {cityCount === 1 ? 'project' : 'projects'}</span>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      {stats.cities.length > 0 && (
+        <section className="pi-builder-section">
+          <h2>📍 Market Presence</h2>
+          <p className="pi-builder-section-sub">{selectedBuilder} has projects in {stats.cities.length} {stats.cities.length === 1 ? 'city' : 'cities'} across India.</p>
+          <div className="pi-builder-cities">
+            {stats.cities.map(c => {
+              const cityCount = listings.filter(p => (p.city || deriveCity(p.location || '')) === c).length;
+              return (
+                <div key={c} className="pi-builder-city-chip">
+                  <strong>{c}</strong>
+                  <span>{cityCount} {cityCount === 1 ? 'project' : 'projects'}</span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* ───── Projects grid ───── */}
       <section className="pi-builder-section">
         <div className="pi-builder-section-head">
           <div>
             <h2>🏗️ Projects by {selectedBuilder}</h2>
-            <p className="pi-builder-section-sub">{filteredAndSorted.length} of {listings.length} projects</p>
+            {listings.length > 0 && (
+              <p className="pi-builder-section-sub">{filteredAndSorted.length} of {listings.length} projects</p>
+            )}
           </div>
-          <div className="pi-builder-controls">
-            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              <option value="all">All projects</option>
-              <option value="ready">Ready to Move</option>
-              <option value="launch">New Launch</option>
-              <option value="construction">Under Construction</option>
-            </select>
-            <select value={sort} onChange={(e) => setSort(e.target.value)}>
-              <option value="newest">Featured</option>
-              <option value="price_asc">Price: Low → High</option>
-              <option value="price_desc">Price: High → Low</option>
-              <option value="area_desc">Largest Area</option>
-            </select>
-          </div>
+          {listings.length > 0 && (
+            <div className="pi-builder-controls">
+              <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                <option value="all">All projects</option>
+                <option value="ready">Ready to Move</option>
+                <option value="launch">New Launch</option>
+                <option value="construction">Under Construction</option>
+              </select>
+              <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                <option value="newest">Featured</option>
+                <option value="price_asc">Price: Low → High</option>
+                <option value="price_desc">Price: High → Low</option>
+                <option value="area_desc">Largest Area</option>
+              </select>
+            </div>
+          )}
         </div>
 
-        {filteredAndSorted.length === 0 ? (
+        {listings.length === 0 ? (
+          <div className="pi-builder-coming-soon">
+            <span>🚀</span>
+            <h3>Projects launching soon</h3>
+            <p>
+              {selectedBuilder} doesn&apos;t have active projects in our inventory right now.
+              Get notified the moment they launch their next project on PropertyInsta.
+            </p>
+            <div className="pi-builder-coming-actions">
+              <button className="pi-builder-cta-btn primary" onClick={() => setActiveModal({ type: 'alerts' })}>
+                🔔 Notify me on new launches
+              </button>
+              <button className="pi-builder-cta-btn ghost" onClick={() => setCurrentView('feed')}>
+                Browse other developers →
+              </button>
+            </div>
+          </div>
+        ) : filteredAndSorted.length === 0 ? (
           <div className="pi-builder-empty-inline">
             <p>No projects match this filter. <button onClick={() => { setStatusFilter('all'); setSort('newest'); }}>Reset</button></p>
           </div>
