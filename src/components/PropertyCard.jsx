@@ -8,8 +8,7 @@ export default function PropertyCard({ property }) {
     toggleSave,
     likedIds,
     toggleLike,
-    addRecentView,
-    setActiveModal,
+    openProperty,
     compareIds,
     toggleCompare,
   } = useApp();
@@ -20,10 +19,9 @@ export default function PropertyCard({ property }) {
   const maxIdx = media.length - 1;
 
   const handleCardClick = (e) => {
-    // Don't open modal if clicking interactive elements
+    // Don't navigate if clicking interactive elements within the card
     if (e.target.closest('button, .card-save-btn, .ig-card-media-nav, .ig-card-badge')) return;
-    addRecentView(property.id);
-    setActiveModal({ type: 'property', data: { propertyId: property.id } });
+    openProperty(property.id);
   };
 
   const prevSlide = (e) => {

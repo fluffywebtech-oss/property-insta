@@ -16,6 +16,7 @@ import './styles/styles.scss';
 // Cuts the initial JS bundle to roughly the feed-only experience and
 // streams in everything else on demand.
 const BuilderView        = lazy(() => import('./components/BuilderView'));
+const PropertyView       = lazy(() => import('./components/PropertyView'));
 const ReelsView          = lazy(() => import('./components/ReelsView'));
 const MapView            = lazy(() => import('./components/MapView'));
 const SavedView          = lazy(() => import('./components/SavedView'));
@@ -64,6 +65,7 @@ function AppLayout() {
           </div>
         );
       case 'builder': return <BuilderView />;
+      case 'property': return <PropertyView />;
       case 'reels': return <ReelsView />;
       case 'mapView': return <MapView />;
       case 'saved': return <SavedView />;
@@ -98,7 +100,7 @@ function AppLayout() {
     }
   };
 
-  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'builder'].includes(currentView);
+  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'builder', 'property'].includes(currentView);
 
   return (
     <div className={`app-root ${darkMode ? 'dark' : ''}`}>

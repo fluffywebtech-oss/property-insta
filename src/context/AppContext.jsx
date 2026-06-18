@@ -381,6 +381,17 @@ export function AppProvider({ children }) {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
+  // Which property's dedicated page is being shown (set when `currentView === 'property'`).
+  const [selectedPropertyId, setSelectedPropertyId] = useState(null);
+
+  // Open the full project page for a property. Records a recent view + scrolls
+  // to top. Use this instead of opening the modal for a richer experience.
+  const openProperty = useCallback((id) => {
+    setSelectedPropertyId(id);
+    setCurrentView('property');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   // Properties — start with static data, upgrade to Supabase when available
   const [allProperties, setAllProperties] = useState(() => assignUniqueImages(staticProperties));
   const [allReels, setAllReels] = useState(staticReels);
@@ -726,6 +737,7 @@ export function AppProvider({ children }) {
   const value = {
     currentView, setCurrentView,
     selectedBuilder, openBuilder,
+    selectedPropertyId, openProperty,
     darkMode, toggleDarkMode,
     filters, setFilters,
     filteredProperties, displayedProperties,

@@ -122,7 +122,7 @@ const PRICE_LEGEND = [
 
 // ============================================================================
 export default function MapView() {
-  const { allProperties, addRecentView, setActiveModal, savedIds, toggleSave } = useApp();
+  const { allProperties, addRecentView, openProperty, savedIds, toggleSave } = useApp();
 
   // ---- View state ----
   const [styleKey, setStyleKey] = useState('3d');        // '3d' | 'map' | 'satellite'
@@ -432,7 +432,7 @@ export default function MapView() {
             </div>
             <button
               className="pi-selected-cta"
-              onClick={() => setActiveModal({ type: 'property', data: { propertyId: selected.id } })}
+              onClick={() => openProperty(selected.id)}
             >
               View full details →
             </button>

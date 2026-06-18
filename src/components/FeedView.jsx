@@ -365,7 +365,7 @@ export default function FeedView() {
               <button
                 key={`recent-${prop.id}`}
                 className="ig-recent-card"
-                onClick={() => { addRecentView(prop.id); setActiveModal({ type: 'property', data: { propertyId: prop.id } }); }}
+                onClick={() => openProperty(prop.id)}
               >
                 <img
                   className="ig-recent-img"
@@ -402,7 +402,7 @@ export default function FeedView() {
                   <button
                     key={`trend-${prop.id}`}
                     className="ig-recent-card"
-                    onClick={() => { addRecentView(prop.id); setActiveModal({ type: 'property', data: { propertyId: prop.id } }); }}
+                    onClick={() => openProperty(prop.id)}
                   >
                     <img
                       className="ig-recent-img"
@@ -483,10 +483,7 @@ export default function FeedView() {
             </div>
             <button
               className="ohb-btn"
-              onClick={() => {
-                addRecentView(openHouseProp.id);
-                setActiveModal({ type: 'property', data: { propertyId: openHouseProp.id } });
-              }}
+              onClick={() => openProperty(openHouseProp.id)}
             >
               View Property →
             </button>

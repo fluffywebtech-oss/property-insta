@@ -655,7 +655,7 @@ function AlertsModal() {
 
 // ==================== AI Quiz Modal ====================
 function QuizModal() {
-  const { setActiveModal } = useApp();
+  const { setActiveModal, openProperty } = useApp();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [results, setResults] = useState(null);
@@ -718,7 +718,7 @@ function QuizModal() {
                 <div className="quiz-matches">
                   {results.matches.map(p => (
                     <div key={p.id} className="quiz-match-card"
-                      onClick={() => setActiveModal({ type: 'property', data: { propertyId: p.id } })}
+                      onClick={() => { setActiveModal(null); openProperty(p.id); }}
                     >
                       <img src={p.media?.[0]} alt={p.title} />
                       <div>
@@ -1095,7 +1095,7 @@ function CompareModal() {
 
 // ==================== Agent Profile Modal ====================
 function AgentModal() {
-  const { activeModal, setActiveModal, allProperties } = useApp();
+  const { activeModal, setActiveModal, allProperties, openProperty } = useApp();
   const { agentId } = activeModal.data || {};
 
   const agent = agents[agentId];
@@ -1142,7 +1142,7 @@ function AgentModal() {
                   <div
                     key={p.id}
                     className="ig-saved-card"
-                    onClick={() => setActiveModal({ type: 'property', data: { propertyId: p.id } })}
+                    onClick={() => { setActiveModal(null); openProperty(p.id); }}
                   >
                     <div className="ig-card-media">
                       <img src={p.media?.[0]} alt={p.title} />
