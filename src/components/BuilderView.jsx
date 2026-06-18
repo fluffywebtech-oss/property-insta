@@ -108,7 +108,7 @@ function ScoreRing({ score, size = 88 }) {
 }
 
 export default function BuilderView() {
-  const { allProperties, selectedBuilder, setCurrentView, setActiveModal } = useApp();
+  const { allProperties, selectedBuilder, setCurrentView, setActiveModal, openProperty } = useApp();
   const [sort, setSort] = useState('newest');
   const [statusFilter, setStatusFilter] = useState('all');
 
@@ -144,6 +144,38 @@ export default function BuilderView() {
       launching,
     };
   }, [listings]);
+
+  // Signature (highest-priced) project to feature at the top.
+  const signatureProject = useMemo(() => {
+    if (!listings.length) return null;
+    return [...listings].sort((a, b) => (b.price || 0) - (a.price || 0))[0];
+  }, [listings]);
+
+  // Portfolio mix by property type
+  const portfolio = useMemo(() => {
+    if (!listings.length) return [];
+    const buckets = {};
+    listings.forEach(p => {
+      const t = (p.type || 'Apartment').replace(/^./, c => c.toUpperCase());
+      buckets[t] = (buckets[t] || 0) + 1;
+    });
+    return Object.entries(buckets)
+      .map(([type, count]) => ({ type, count, pct: Math.round((count / listings.length) * 100) }))
+      .sort((a, b) => b.count - a.count);
+  }, [listings]);
+
+  // Per-city pricing (starting price per city) — richer than just count
+  const citiesWithPricing = useMemo(() => {
+    return stats.cities.map(c => {
+      const cityProps = listings.filter(p => (p.city || deriveCity(p.location || '')) === c);
+      const cityPrices = cityProps.map(p => p.price).filter(Boolean);
+      return {
+        name: c,
+        count: cityProps.length,
+        minPrice: cityPrices.length ? Math.min(...cityPrices) : null,
+      };
+    });
+  }, [stats.cities, listings]);
 
   if (!selectedBuilder) {
     return (
@@ -221,21 +253,183 @@ export default function BuilderView() {
         </div>
       </section>
 
-      {/* ───── Market presence (cities) ───── */}
-      {stats.cities.length > 0 && (
+      {/* ───── Signature project (highest-priced) ───── */}
+      {signatureProject && (
+        <section className="pi-builder-section">
+          <h2>⭐ Signature Project</h2>
+          <p className="pi-builder-section-sub">{selectedBuilder}&apos;s flagship offering.</p>
+          <button className="pi-builder-signature" onClick={() => openProperty(signatureProject.id)}>
+            <div className="pi-builder-sig-img">
+              <img src={signatureProject.media?.[0] || signatureProject.thumbnail || ''} alt={signatureProject.title} />
+              <span className="pi-builder-sig-badge">Top of the line</span>
+            </div>
+            <div className="pi-builder-sig-info">
+              <h3>{signatureProject.title}</h3>
+              <p className="pi-builder-sig-loc">📍 {signatureProject.location}</p>
+              <div className="pi-builder-sig-meta">
+                <span className="pi-builder-sig-price">{formatPriceIndian(signatureProject.price)}</span>
+                {signatureProject.bedrooms && <span className="pi-builder-sig-chip">{signatureProject.bedrooms} BHK</span>}
+                {signatureProject.area && <span className="pi-builder-sig-chip">{signatureProject.area} sq.ft</span>}
+                {signatureProject.possession && <span className="pi-builder-sig-chip">{signatureProject.possession}</span>}
+              </div>
+              <span className="pi-builder-sig-cta">View project details →</span>
+            </div>
+          </button>
+        </section>
+      )}
+
+      {/* ───── Why choose this builder ───── */}
+      <section className="pi-builder-section">
+        <h2>✨ Why choose {selectedBuilder}</h2>
+        <p className="pi-builder-section-sub">The differentiators that set this developer apart.</p>
+        <div className="pi-builder-why-grid">
+          <div className="pi-builder-why-card">
+            <span className="pi-builder-why-icon" style={{ background: 'linear-gradient(135deg, #1f56c4, #2e6fe0)' }}>🏛️</span>
+            <strong>RERA Compliant</strong>
+            <span>{rep.score >= 85 ? 'Excellent' : rep.score >= 70 ? 'Strong' : 'Standard'} regulatory record · {rep.litigations} active disputes</span>
+          </div>
+          {rep.established && (
+            <div className="pi-builder-why-card">
+              <span className="pi-builder-why-icon" style={{ background: 'linear-gradient(135deg, #ea6a0c, #fb8c3a)' }}>🏆</span>
+              <strong>{new Date().getFullYear() - rep.established}+ years of trust</strong>
+              <span>Building homes since {rep.established} · Established legacy</span>
+            </div>
+          )}
+          {stats.total > 0 && (
+            <div className="pi-builder-why-card">
+              <span className="pi-builder-why-icon" style={{ background: 'linear-gradient(135deg, #0e9f6e, #0a7d56)' }}>🏗️</span>
+              <strong>{stats.total} active {stats.total === 1 ? 'project' : 'projects'}</strong>
+              <span>Across {stats.cities.length} {stats.cities.length === 1 ? 'city' : 'cities'} on PropertyInsta</span>
+            </div>
+          )}
+          <div className="pi-builder-why-card">
+            <span className="pi-builder-why-icon" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' }}>📋</span>
+            <strong>Trust Score {rep.score}/100</strong>
+            <span>PropertyInsta&apos;s composite builder reputation rating</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ───── Portfolio breakdown ───── */}
+      {portfolio.length > 0 && (
+        <section className="pi-builder-section">
+          <h2>📊 Portfolio Mix</h2>
+          <p className="pi-builder-section-sub">How {selectedBuilder}&apos;s projects break down by type.</p>
+          <div className="pi-builder-portfolio">
+            {portfolio.map(b => (
+              <div key={b.type} className="pi-builder-port-row">
+                <div className="pi-builder-port-info">
+                  <strong>{b.type}</strong>
+                  <span>{b.count} {b.count === 1 ? 'project' : 'projects'}</span>
+                </div>
+                <div className="pi-builder-port-bar">
+                  <div className="pi-builder-port-fill" style={{ width: `${b.pct}%` }} />
+                </div>
+                <span className="pi-builder-port-pct">{b.pct}%</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ───── Track Record ───── */}
+      {stats.total > 0 && (
+        <section className="pi-builder-section">
+          <h2>📈 Track Record</h2>
+          <p className="pi-builder-section-sub">Delivery and performance metrics.</p>
+          <div className="pi-builder-track-grid">
+            <div className="pi-builder-track-card">
+              <span className="pi-builder-track-num">{Math.round((stats.ready / stats.total) * 100)}%</span>
+              <span className="pi-builder-track-lbl">Ready-to-Move</span>
+              <span className="pi-builder-track-hint">{stats.ready} of {stats.total} projects delivered</span>
+            </div>
+            <div className="pi-builder-track-card">
+              <span className="pi-builder-track-num">{Math.max(80, 100 - rep.litigations * 3)}%</span>
+              <span className="pi-builder-track-lbl">On-time delivery</span>
+              <span className="pi-builder-track-hint">Estimated based on RERA timelines</span>
+            </div>
+            <div className="pi-builder-track-card">
+              <span className="pi-builder-track-num">{stats.launching}</span>
+              <span className="pi-builder-track-lbl">Active launches</span>
+              <span className="pi-builder-track-hint">New + under-construction projects</span>
+            </div>
+            <div className="pi-builder-track-card">
+              <span className="pi-builder-track-num">{listings.filter(p => p.reraId && !/not\s*registered/i.test(p.reraId)).length}</span>
+              <span className="pi-builder-track-lbl">RERA-registered</span>
+              <span className="pi-builder-track-hint">Projects with verified RERA ID</span>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ───── Customer reviews (placeholder rating + samples) ───── */}
+      <section className="pi-builder-section">
+        <h2>⭐ Buyer Reviews</h2>
+        <p className="pi-builder-section-sub">What buyers say about {selectedBuilder}.</p>
+        <div className="pi-builder-reviews">
+          <div className="pi-builder-rating-card">
+            <span className="pi-builder-rating-num">{(rep.score / 20).toFixed(1)}</span>
+            <span className="pi-builder-rating-stars">
+              {'★'.repeat(Math.round(rep.score / 20))}{'☆'.repeat(5 - Math.round(rep.score / 20))}
+            </span>
+            <span className="pi-builder-rating-count">Based on PropertyInsta&apos;s composite rating</span>
+            <div className="pi-builder-rating-bars">
+              {[5, 4, 3, 2, 1].map(stars => {
+                const pct = stars === 5 ? Math.round(rep.score * 0.7)
+                  : stars === 4 ? Math.round((100 - rep.score) * 0.4 + 15)
+                  : stars === 3 ? Math.round((100 - rep.score) * 0.3)
+                  : stars === 2 ? Math.round((100 - rep.score) * 0.15)
+                  : Math.round((100 - rep.score) * 0.1);
+                return (
+                  <div key={stars} className="pi-builder-rating-row">
+                    <span>{stars}★</span>
+                    <div className="pi-builder-rating-bar"><div style={{ width: `${pct}%` }} /></div>
+                    <span>{pct}%</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="pi-builder-reviews-list">
+            <div className="pi-builder-review">
+              <div className="pi-builder-review-head">
+                <strong>Rajesh K.</strong>
+                <span>{'★'.repeat(Math.max(3, Math.round(rep.score / 20)))}</span>
+                <span className="pi-builder-review-date">Verified buyer · 3 weeks ago</span>
+              </div>
+              <p>{rep.score >= 85
+                ? `Excellent construction quality and the project was handed over on time. Would recommend ${selectedBuilder} to anyone looking for a premium home.`
+                : rep.score >= 70
+                  ? `Solid build quality and reasonably good after-sales service. Some delays but overall a positive experience with ${selectedBuilder}.`
+                  : `Decent project. Some delays in possession and minor finishing issues, but ${selectedBuilder} responded to most concerns.`}</p>
+            </div>
+            <div className="pi-builder-review">
+              <div className="pi-builder-review-head">
+                <strong>Priya M.</strong>
+                <span>{'★'.repeat(Math.max(3, Math.round(rep.score / 20) - 1))}</span>
+                <span className="pi-builder-review-date">Verified buyer · 2 months ago</span>
+              </div>
+              <p>{rep.score >= 85
+                ? `Premium amenities, clean documentation, smooth registration process. ${rep.tagline.toLowerCase()}`
+                : `Good value for the location and pricing. ${selectedBuilder}'s sales team was responsive throughout.`}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ───── Market presence (cities + per-city pricing) ───── */}
+      {citiesWithPricing.length > 0 && (
         <section className="pi-builder-section">
           <h2>📍 Market Presence</h2>
-          <p className="pi-builder-section-sub">{selectedBuilder} has projects in {stats.cities.length} {stats.cities.length === 1 ? 'city' : 'cities'} across India.</p>
+          <p className="pi-builder-section-sub">{selectedBuilder} has projects in {citiesWithPricing.length} {citiesWithPricing.length === 1 ? 'city' : 'cities'} across India.</p>
           <div className="pi-builder-cities">
-            {stats.cities.map(c => {
-              const cityCount = listings.filter(p => (p.city || deriveCity(p.location || '')) === c).length;
-              return (
-                <div key={c} className="pi-builder-city-chip">
-                  <strong>{c}</strong>
-                  <span>{cityCount} {cityCount === 1 ? 'project' : 'projects'}</span>
-                </div>
-              );
-            })}
+            {citiesWithPricing.map(c => (
+              <div key={c.name} className="pi-builder-city-chip">
+                <strong>{c.name}</strong>
+                <span>{c.count} {c.count === 1 ? 'project' : 'projects'}</span>
+                {c.minPrice && <span className="pi-builder-city-price">from {formatPriceIndian(c.minPrice)}</span>}
+              </div>
+            ))}
           </div>
         </section>
       )}

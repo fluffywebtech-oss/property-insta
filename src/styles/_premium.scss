@@ -1653,6 +1653,256 @@ textarea:focus-visible {
   }
 }
 
+// Signature project banner
+.pi-builder-signature {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background:
+    radial-gradient(70% 100% at 0% 0%, rgba(234,106,12,0.06), transparent 60%),
+    var(--card-bg);
+  border: 1.5px solid var(--ig-border);
+  border-radius: 22px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.32s cubic-bezier(0.16,1,0.3,1), border-color 0.2s ease, box-shadow 0.3s ease;
+  align-items: center;
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--ig-link);
+    box-shadow: 0 18px 40px rgba(31,86,196,0.14);
+    .pi-builder-sig-img img { transform: scale(1.05); }
+    .pi-builder-sig-cta { color: var(--ig-link); transform: translateX(4px); }
+  }
+}
+.pi-builder-sig-img {
+  position: relative;
+  flex-shrink: 0;
+  width: 280px; height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--muted-bg);
+  img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+}
+.pi-builder-sig-badge {
+  position: absolute; top: 12px; left: 12px;
+  padding: 5px 12px;
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.02em;
+  color: #fff;
+  background: linear-gradient(135deg, #ea580c, #fb8c3a);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(234,88,12,0.45);
+  text-transform: uppercase;
+}
+.pi-builder-sig-info {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 8px;
+  h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px; font-weight: 800; letter-spacing: -0.02em;
+    color: var(--ig-text); line-height: 1.2;
+  }
+}
+.pi-builder-sig-loc { font-size: 13px; color: var(--ig-text-secondary); font-weight: 600; }
+.pi-builder-sig-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 4px; }
+.pi-builder-sig-price {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px; font-weight: 800; letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #1f56c4, #2e6fe0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.pi-builder-sig-chip {
+  padding: 4px 11px;
+  font-size: 11.5px; font-weight: 700;
+  color: var(--ig-text);
+  background: var(--muted-bg);
+  border-radius: 999px;
+}
+.pi-builder-sig-cta {
+  margin-top: 8px;
+  font-size: 13px; font-weight: 800;
+  color: var(--ig-text-secondary);
+  transition: color 0.2s ease, transform 0.25s ease;
+}
+
+// Why-choose cards
+.pi-builder-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.pi-builder-why-card {
+  padding: 18px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--ig-border);
+  border-radius: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), border-color 0.2s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-3px);
+    border-color: rgba(31,86,196,0.3);
+    box-shadow: 0 12px 28px rgba(20,22,43,0.10);
+  }
+  strong {
+    font-size: 14.5px; font-weight: 800; letter-spacing: -0.01em;
+    color: var(--ig-text);
+  }
+  span { font-size: 12.5px; color: var(--ig-text-secondary); line-height: 1.5; font-weight: 500; }
+}
+.pi-builder-why-icon {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(20,22,43,0.18);
+}
+
+// Portfolio breakdown bars
+.pi-builder-portfolio {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 20px 24px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--ig-border);
+  border-radius: 16px;
+}
+.pi-builder-port-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 50px;
+  gap: 16px; align-items: center;
+}
+.pi-builder-port-info {
+  display: flex; flex-direction: column; gap: 2px;
+  strong { font-size: 13.5px; font-weight: 800; color: var(--ig-text); }
+  span { font-size: 11.5px; color: var(--ig-text-secondary); font-weight: 600; }
+}
+.pi-builder-port-bar {
+  height: 10px;
+  background: var(--muted-bg);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.pi-builder-port-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1f56c4, #2e6fe0, #ea6a0c);
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.pi-builder-port-pct {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px; font-weight: 800; text-align: right;
+  color: var(--ig-text); letter-spacing: -0.02em;
+}
+
+// Track record grid
+.pi-builder-track-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+.pi-builder-track-card {
+  padding: 22px 18px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--ig-border);
+  border-radius: 16px;
+  display: flex; flex-direction: column; gap: 4px;
+  text-align: center;
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), border-color 0.2s ease, box-shadow 0.3s ease;
+  &:hover { transform: translateY(-3px); border-color: rgba(31,86,196,0.3); box-shadow: 0 10px 22px rgba(20,22,43,0.10); }
+}
+.pi-builder-track-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px; font-weight: 800; letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #1f56c4, #2e6fe0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.pi-builder-track-lbl {
+  font-size: 12px; font-weight: 800;
+  color: var(--ig-text);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.pi-builder-track-hint {
+  font-size: 11.5px; color: var(--ig-text-secondary); font-weight: 500;
+  line-height: 1.4;
+}
+
+// Reviews
+.pi-builder-reviews {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 18px;
+}
+.pi-builder-rating-card {
+  padding: 22px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--ig-border);
+  border-radius: 16px;
+  display: flex; flex-direction: column; gap: 6px;
+  text-align: center;
+}
+.pi-builder-rating-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 48px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ea580c, #fb8c3a);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.pi-builder-rating-stars {
+  font-size: 18px;
+  color: #ea580c;
+  letter-spacing: 2px;
+}
+.pi-builder-rating-count {
+  font-size: 11.5px; color: var(--ig-text-secondary);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.pi-builder-rating-bars { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+.pi-builder-rating-row {
+  display: grid;
+  grid-template-columns: 30px 1fr 36px;
+  gap: 8px; align-items: center;
+  font-size: 11px; font-weight: 700; color: var(--ig-text-secondary);
+}
+.pi-builder-rating-bar {
+  height: 6px; background: var(--muted-bg); border-radius: 999px; overflow: hidden;
+  > div { height: 100%; background: linear-gradient(90deg, #ea580c, #fb8c3a); border-radius: 999px; transition: width 0.6s ease; }
+}
+
+.pi-builder-reviews-list { display: flex; flex-direction: column; gap: 12px; }
+.pi-builder-review {
+  padding: 16px 18px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--ig-border);
+  border-radius: 14px;
+  display: flex; flex-direction: column; gap: 8px;
+  p { font-size: 13px; line-height: 1.55; color: var(--ig-text); font-weight: 500; }
+}
+.pi-builder-review-head {
+  display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap;
+  strong { font-size: 13px; font-weight: 800; color: var(--ig-text); }
+  > span:nth-child(2) { color: #ea580c; font-size: 13px; letter-spacing: 1px; }
+}
+.pi-builder-review-date { font-size: 11px; color: var(--ig-text-secondary); font-weight: 600; }
+
+// Enhance city chip with optional price line
+.pi-builder-city-price {
+  display: block;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--ig-link) !important;
+  margin-top: 2px;
+}
+
+@media (max-width: 900px) {
+  .pi-builder-signature { flex-direction: column; }
+  .pi-builder-sig-img { width: 100%; height: 200px; }
+  .pi-builder-port-row { grid-template-columns: 1fr 70px; > div:nth-child(2) { grid-column: 1 / -1; } }
+  .pi-builder-reviews { grid-template-columns: 1fr; }
+}
+
 // "Projects coming soon" state for builders without inventory
 .pi-builder-coming-soon {
   padding: 50px 30px;
