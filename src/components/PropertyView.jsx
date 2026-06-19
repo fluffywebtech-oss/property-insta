@@ -55,6 +55,7 @@ export default function PropertyView() {
   const [activeImg, setActiveImg] = useState(0);
   const [tourOpen, setTourOpen] = useState(false);
   const [show3d, setShow3d] = useState(false);
+  const [mode3d, setMode3d] = useState('exterior');
 
   useEffect(() => {
     if (property?.id) addRecentView(property.id);
@@ -62,6 +63,8 @@ export default function PropertyView() {
     setTourOpen(false);
     setShow3d(false);
   }, [property?.id, addRecentView]);
+
+  const open3d = (mode) => { setMode3d(mode); setShow3d(true); };
 
   const similar = useMemo(() => {
     if (!property) return [];
@@ -126,12 +129,22 @@ export default function PropertyView() {
             </button>
             <button
               className="pi-prop-tour-launch pi-prop-3d-launch"
-              onClick={(e) => { e.stopPropagation(); setShow3d(true); }}
+              onClick={(e) => { e.stopPropagation(); open3d('exterior'); }}
             >
               <span className="pi-prop-tour-launch-icon cube">◧</span>
               <span className="pi-prop-tour-launch-text">
                 <strong>View in 3D</strong>
                 <small>Rotate the building · AI 3D advisor</small>
+              </span>
+            </button>
+            <button
+              className="pi-prop-tour-launch pi-prop-int-launch"
+              onClick={(e) => { e.stopPropagation(); open3d('interior'); }}
+            >
+              <span className="pi-prop-tour-launch-icon room">⌂</span>
+              <span className="pi-prop-tour-launch-text">
+                <strong>Interior tour</strong>
+                <small>Walk the furnished home · with voice</small>
               </span>
             </button>
           </div>
@@ -216,8 +229,11 @@ export default function PropertyView() {
           <section className="pi-prop-section pi-prop-tools">
             <h2>🛠️ Tools</h2>
             <div className="pi-prop-tools-grid">
-              <button className="pi-prop-tool-3d" onClick={() => setShow3d(true)}>
+              <button className="pi-prop-tool-3d" onClick={() => open3d('exterior')}>
                 <span>🧊</span><strong>3D Showcase</strong><span className="hint">Rotate + AI 3D advisor</span>
+              </button>
+              <button className="pi-prop-tool-int" onClick={() => open3d('interior')}>
+                <span>🛋️</span><strong>Interior Tour</strong><span className="hint">Walk the furnished home</span>
               </button>
               <button className="pi-prop-tool-tour" onClick={() => setTourOpen(true)}>
                 <span>🎧</span><strong>Guided Tour</strong><span className="hint">Agent narrates with voice</span>
@@ -249,8 +265,11 @@ export default function PropertyView() {
             {property.emiEstimate > 0 && (
               <span className="pi-prop-emi-line">EMI from ₹{property.emiEstimate.toLocaleString('en-IN')}/mo</span>
             )}
-            <button className="pi-prop-cta three-d" onClick={() => setShow3d(true)}>
+            <button className="pi-prop-cta three-d" onClick={() => open3d('exterior')}>
               🧊 View in 3D + Advisor
+            </button>
+            <button className="pi-prop-cta interior" onClick={() => open3d('interior')}>
+              🛋️ Walk the Interior
             </button>
             <button className="pi-prop-cta tour" onClick={() => setTourOpen(true)}>
               🎧 Play Guided Tour
@@ -331,6 +350,8 @@ export default function PropertyView() {
         <Suspense fallback={null}>
           <Property3DShowcase
             property={property}
+            coverImg={media[0]}
+            initialMode={mode3d}
             saved={isSaved}
             onClose={() => setShow3d(false)}
             onSave={() => toggleSave(property.id)}

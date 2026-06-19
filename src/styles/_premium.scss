@@ -1123,6 +1123,13 @@ textarea:focus-visible {
   font-size: 18px !important;
   &::after { border-color: rgba(20,184,166,0.5) !important; }
 }
+// Interior tour launcher accent
+.pi-prop-int-launch .pi-prop-tour-launch-icon {
+  background: linear-gradient(135deg, #b45309, #d97706) !important;
+  box-shadow: 0 4px 14px rgba(180,83,9,0.55) !important;
+  font-size: 18px !important;
+  &::after { border-color: rgba(217,119,6,0.5) !important; }
+}
 
 // Guided-tour launcher pill on the gallery hero
 .pi-prop-tour-launch {
@@ -1367,6 +1374,12 @@ textarea:focus-visible {
     box-shadow: 0 8px 22px rgba(13,148,136,0.32);
     &:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(13,148,136,0.45); }
   }
+  &.interior {
+    color: #fff;
+    background: linear-gradient(135deg, #b45309, #d97706);
+    box-shadow: 0 8px 22px rgba(180,83,9,0.32);
+    &:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(180,83,9,0.45); }
+  }
 }
 
 // Highlight the guided-tour tool card
@@ -1378,6 +1391,11 @@ textarea:focus-visible {
 .pi-prop-tool-3d {
   border-color: rgba(20,184,166,0.35) !important;
   background: linear-gradient(135deg, rgba(13,148,136,0.08), rgba(20,184,166,0.04)) !important;
+  > span:first-child { filter: saturate(1.2); }
+}
+.pi-prop-tool-int {
+  border-color: rgba(217,119,6,0.35) !important;
+  background: linear-gradient(135deg, rgba(180,83,9,0.08), rgba(217,119,6,0.04)) !important;
   > span:first-child { filter: saturate(1.2); }
 }
 
@@ -4142,6 +4160,29 @@ body.dark .ig-dev-logo.has-img { background: #f4f6fb; }
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
   &:hover { background: rgba(255,255,255,0.24); transform: rotate(90deg); }
+}
+
+// Exterior / Interior mode toggle
+.pi-3d-modes {
+  display: flex; gap: 4px;
+  padding: 4px;
+  background: rgba(8,11,20,0.55);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 999px;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  button {
+    padding: 7px 15px;
+    font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,0.7);
+    background: transparent; border: none; border-radius: 999px;
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.2s ease, color 0.2s ease;
+    &:hover { color: #fff; }
+    &.active { color: #fff; background: linear-gradient(135deg, #0e7490, #14b8a6); box-shadow: 0 4px 12px rgba(13,148,136,0.4); }
+  }
+}
+@media (max-width: 680px) {
+  .pi-3d-title span { display: none; }
+  .pi-3d-modes button { padding: 7px 11px; font-size: 11.5px; }
 }
 
 // Hotspot markers (projected from 3D)
