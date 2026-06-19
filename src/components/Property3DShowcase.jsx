@@ -3,6 +3,12 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { formatPriceIndian } from '../data';
 
 // =============================================================================
@@ -440,7 +446,22 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
     else { const S = Math.max(built.presets.overview.pos.length(), 20); controls.minDistance = 6; controls.maxDistance = S * 2.4; controls.maxPolarAngle = Math.PI / 2 - 0.03; controls.autoRotate = true; controls.autoRotateSpeed = 0.6; }
     controls.addEventListener('start', () => { flyTarget.current = null; });
 
-    sceneApi.current = { scene, camera, renderer, controls, anchors, presets, mount, pmrem, ring, pin };
+    // ── Post-processing for photoreal depth: GTAO (ambient occlusion) + bloom + SMAA ──
+    const pr = renderer.getPixelRatio();
+    const composer = new EffectComposer(renderer);
+    composer.setSize(W, H);
+    composer.addPass(new RenderPass(scene, camera));
+    const gtao = new GTAOPass(scene, camera, W, H);
+    gtao.output = GTAOPass.OUTPUT.Default;
+    gtao.updateGtaoMaterial({ radius: mode === 'interior' ? 0.6 : 3.2, distanceExponent: 1, thickness: 1, scale: 1.1, samples: 16, screenSpaceRadius: false });
+    gtao.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 4, rings: 4, samples: 16 });
+    composer.addPass(gtao);
+    const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.16, 0.6, 0.9);
+    composer.addPass(bloom);
+    composer.addPass(new SMAAPass(W * pr, H * pr));
+    composer.addPass(new OutputPass());
+
+    sceneApi.current = { scene, camera, renderer, composer, controls, anchors, presets, mount, pmrem, ring, pin };
 
     let raf; const tmpV = new THREE.Vector3();
     const animate = () => {
@@ -452,19 +473,19 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
       }
       if (ring) ring.rotation.z += 0.01;
       if (pin) pin.position.y += Math.sin(performance.now() * 0.003) * 0.004;
-      controls.update(); renderer.render(scene, camera);
+      controls.update(); composer.render();
       const rect = mount.getBoundingClientRect(); const next = [];
       for (const [id, pos] of Object.entries(anchors)) { tmpV.copy(pos).project(camera); next.push({ id, x: (tmpV.x * 0.5 + 0.5) * rect.width, y: (-tmpV.y * 0.5 + 0.5) * rect.height, visible: tmpV.z < 1 }); }
       setHotspots(next);
     };
     animate(); setReady(true);
 
-    const onResize = () => { const w = mount.clientWidth, h = mount.clientHeight; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); };
+    const onResize = () => { const w = mount.clientWidth, h = mount.clientHeight; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); composer.setSize(w, h); };
     window.addEventListener('resize', onResize);
     return () => {
       cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); controls.dispose();
       scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => { m.map?.dispose?.(); m.dispose(); }); });
-      pmrem.dispose(); renderer.dispose();
+      composer.dispose?.(); pmrem.dispose(); renderer.dispose();
       if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement);
       sceneApi.current = null;
     };
