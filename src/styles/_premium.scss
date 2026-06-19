@@ -1108,6 +1108,22 @@ textarea:focus-visible {
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
 
+// Stack of launcher pills (guided tour + 3D) on the gallery hero
+.pi-prop-launch-stack {
+  position: absolute; bottom: 16px; left: 18px;
+  display: flex; flex-direction: column; gap: 10px;
+  align-items: flex-start;
+}
+.pi-prop-launch-stack .pi-prop-tour-launch { position: static; }
+
+// 3D launcher accent
+.pi-prop-3d-launch .pi-prop-tour-launch-icon {
+  background: linear-gradient(135deg, #0ea5a3, #14b8a6) !important;
+  box-shadow: 0 4px 14px rgba(13,148,136,0.55) !important;
+  font-size: 18px !important;
+  &::after { border-color: rgba(20,184,166,0.5) !important; }
+}
+
 // Guided-tour launcher pill on the gallery hero
 .pi-prop-tour-launch {
   position: absolute; bottom: 16px; left: 18px;
@@ -1345,12 +1361,23 @@ textarea:focus-visible {
     box-shadow: 0 8px 22px rgba(109,40,217,0.32);
     &:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(109,40,217,0.45); }
   }
+  &.three-d {
+    color: #fff;
+    background: linear-gradient(135deg, #0e7490, #14b8a6);
+    box-shadow: 0 8px 22px rgba(13,148,136,0.32);
+    &:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(13,148,136,0.45); }
+  }
 }
 
 // Highlight the guided-tour tool card
 .pi-prop-tool-tour {
   border-color: rgba(109,40,217,0.35) !important;
   background: linear-gradient(135deg, rgba(109,40,217,0.07), rgba(139,92,246,0.04)) !important;
+  > span:first-child { filter: saturate(1.2); }
+}
+.pi-prop-tool-3d {
+  border-color: rgba(20,184,166,0.35) !important;
+  background: linear-gradient(135deg, rgba(13,148,136,0.08), rgba(20,184,166,0.04)) !important;
   > span:first-child { filter: saturate(1.2); }
 }
 
@@ -4063,6 +4090,213 @@ body.dark .ig-dev-logo.has-img { background: #f4f6fb; }
   border-radius: 999px;
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   white-space: nowrap;
+}
+
+// =====================================================================
+// 3D PROPERTY SHOWCASE + AI ADVISOR — full-screen three.js overlay
+// =====================================================================
+.pi-3d {
+  position: fixed; inset: 0; z-index: 4000;
+  background: #0a0e17;
+  overflow: hidden;
+  animation: pi-tour-in 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.pi-3d-canvas {
+  position: absolute; inset: 0;
+  cursor: grab;
+  &:active { cursor: grabbing; }
+  canvas { display: block; }
+}
+
+// Top bar
+.pi-3d-topbar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 6;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px;
+  background: linear-gradient(to bottom, rgba(8,11,20,0.7), transparent);
+  pointer-events: none;
+  > * { pointer-events: auto; }
+}
+.pi-3d-title {
+  display: flex; align-items: center; gap: 12px;
+  color: #fff;
+  strong { display: block; font-size: 15px; font-weight: 800; letter-spacing: -0.01em; }
+  span { font-size: 12px; opacity: 0.75; }
+}
+.pi-3d-badge {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, #0e7490, #14b8a6);
+  border-radius: 11px;
+  box-shadow: 0 6px 16px rgba(13,148,136,0.5);
+}
+.pi-3d-close {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #fff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  &:hover { background: rgba(255,255,255,0.24); transform: rotate(90deg); }
+}
+
+// Hotspot markers (projected from 3D)
+.pi-3d-hotspot {
+  position: absolute; z-index: 5;
+  transform: translate(-50%, -50%);
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 11px 5px 6px;
+  background: rgba(8,11,20,0.74);
+  border: 1.5px solid rgba(20,184,166,0.55);
+  border-radius: 999px;
+  color: #fff; font-size: 11.5px; font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.18s ease, border-color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+  &:hover, &.active { transform: translate(-50%, -50%) scale(1.08); background: rgba(13,148,136,0.85); border-color: #2dd4bf; }
+}
+.pi-3d-hotspot-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: #2dd4bf;
+  box-shadow: 0 0 0 0 rgba(45,212,191,0.7);
+  animation: pi-3d-pulse 1.8s ease-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pi-3d-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(45,212,191,0.6); }
+  100% { box-shadow: 0 0 0 9px rgba(45,212,191,0); }
+}
+
+// Advisor panel (right)
+.pi-3d-advisor {
+  position: absolute; top: 72px; right: 18px; z-index: 6;
+  width: 300px; max-width: calc(100vw - 36px);
+  padding: 16px;
+  background: rgba(12,16,26,0.82);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.pi-3d-advisor-head {
+  display: flex; align-items: center; gap: 11px;
+}
+.pi-3d-avatar {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex-shrink: 0;
+  font-size: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0e7490, #14b8a6);
+  box-shadow: 0 4px 16px rgba(13,148,136,0.5);
+}
+.pi-3d-avatar.speaking::after {
+  content: ''; position: absolute; inset: -4px;
+  border-radius: 50%; border: 2px solid rgba(45,212,191,0.7);
+  animation: pi-tour-ring 1.3s ease-out infinite;
+}
+.pi-3d-advisor-head div {
+  display: flex; flex-direction: column; line-height: 1.3;
+  strong { color: #fff; font-size: 14px; font-weight: 800; }
+  span { color: rgba(255,255,255,0.65); font-size: 11.5px; font-weight: 600; }
+}
+.pi-3d-topics { display: flex; flex-direction: column; gap: 7px; }
+.pi-3d-topic {
+  display: flex; align-items: center; gap: 11px;
+  padding: 9px 11px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  cursor: pointer; text-align: left;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  &:hover { background: rgba(255,255,255,0.11); transform: translateX(2px); }
+  &.active { background: rgba(20,184,166,0.18); border-color: rgba(45,212,191,0.5); }
+}
+.pi-3d-topic-icon { font-size: 18px; flex-shrink: 0; width: 24px; text-align: center; }
+.pi-3d-topic-text {
+  display: flex; flex-direction: column; line-height: 1.3; min-width: 0;
+  strong { color: #fff; font-size: 13px; font-weight: 800; }
+  small { color: rgba(255,255,255,0.6); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+.pi-3d-play-full {
+  padding: 11px;
+  font-size: 13px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, #0e7490, #14b8a6);
+  border: none; border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(13,148,136,0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  &:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(13,148,136,0.55); }
+}
+.pi-3d-cta-row {
+  display: flex; gap: 8px;
+  button {
+    flex: 1;
+    padding: 10px;
+    font-size: 12.5px; font-weight: 800;
+    border-radius: 11px; cursor: pointer;
+    transition: transform 0.18s ease;
+    &.primary { color: #fff; background: linear-gradient(135deg, #1f56c4, #2e6fe0); border: none; }
+    &.ghost { color: #fff; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.25); }
+    &:hover { transform: translateY(-2px); }
+  }
+}
+
+// Bottom controls
+.pi-3d-controls {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, rgba(8,11,20,0.72), transparent);
+  pointer-events: none;
+  > * { pointer-events: auto; }
+  button {
+    padding: 9px 16px;
+    font-size: 12.5px; font-weight: 700; color: #fff;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.18s ease;
+    &:hover { background: rgba(255,255,255,0.24); }
+    &.on { background: rgba(20,184,166,0.3); border-color: rgba(45,212,191,0.5); }
+  }
+}
+.pi-3d-hint {
+  margin-left: auto;
+  font-size: 11.5px; font-weight: 600;
+  color: rgba(255,255,255,0.6);
+}
+
+.pi-3d-loading {
+  position: absolute; inset: 0; z-index: 7;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  color: #fff; font-size: 14px; font-weight: 600;
+  background: #0a0e17;
+}
+.pi-3d-spinner {
+  width: 38px; height: 38px;
+  border: 3px solid rgba(255,255,255,0.18);
+  border-top-color: #14b8a6;
+  border-radius: 50%;
+  animation: pi-3d-spin 0.8s linear infinite;
+}
+@keyframes pi-3d-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 680px) {
+  .pi-3d-advisor {
+    top: auto; bottom: 78px; right: 12px; left: 12px;
+    width: auto; max-width: none;
+    flex-direction: column;
+  }
+  .pi-3d-topics { display: grid; grid-template-columns: 1fr 1fr; }
+  .pi-3d-hint { display: none; }
 }
 
 // =====================================================================

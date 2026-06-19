@@ -4,6 +4,7 @@ import { formatPriceIndian } from '../data';
 import PropertyCard from './PropertyCard';
 
 const PropertyTour = lazy(() => import('./PropertyTour'));
+const Property3DShowcase = lazy(() => import('./Property3DShowcase'));
 
 // =============================================================================
 // PropertyView — full dedicated page for a single property/project listing.
@@ -53,11 +54,13 @@ export default function PropertyView() {
 
   const [activeImg, setActiveImg] = useState(0);
   const [tourOpen, setTourOpen] = useState(false);
+  const [show3d, setShow3d] = useState(false);
 
   useEffect(() => {
     if (property?.id) addRecentView(property.id);
     setActiveImg(0);
     setTourOpen(false);
+    setShow3d(false);
   }, [property?.id, addRecentView]);
 
   const similar = useMemo(() => {
@@ -110,16 +113,28 @@ export default function PropertyView() {
             {property.rera && <span className="pi-prop-badge rera">🏛️ RERA</span>}
             {property.trending && <span className="pi-prop-badge hot">🔥 Trending</span>}
           </div>
-          <button
-            className="pi-prop-tour-launch"
-            onClick={(e) => { e.stopPropagation(); setTourOpen(true); }}
-          >
-            <span className="pi-prop-tour-launch-icon">▶</span>
-            <span className="pi-prop-tour-launch-text">
-              <strong>Play guided tour</strong>
-              <small>An agent walks you through · with voice</small>
-            </span>
-          </button>
+          <div className="pi-prop-launch-stack">
+            <button
+              className="pi-prop-tour-launch"
+              onClick={(e) => { e.stopPropagation(); setTourOpen(true); }}
+            >
+              <span className="pi-prop-tour-launch-icon">▶</span>
+              <span className="pi-prop-tour-launch-text">
+                <strong>Play guided tour</strong>
+                <small>An agent walks you through · with voice</small>
+              </span>
+            </button>
+            <button
+              className="pi-prop-tour-launch pi-prop-3d-launch"
+              onClick={(e) => { e.stopPropagation(); setShow3d(true); }}
+            >
+              <span className="pi-prop-tour-launch-icon cube">◧</span>
+              <span className="pi-prop-tour-launch-text">
+                <strong>View in 3D</strong>
+                <small>Rotate the building · AI 3D advisor</small>
+              </span>
+            </button>
+          </div>
           <span className="pi-prop-gallery-count">{activeImg + 1} / {media.length || 1}</span>
         </div>
         {media.length > 1 && (
@@ -201,6 +216,9 @@ export default function PropertyView() {
           <section className="pi-prop-section pi-prop-tools">
             <h2>🛠️ Tools</h2>
             <div className="pi-prop-tools-grid">
+              <button className="pi-prop-tool-3d" onClick={() => setShow3d(true)}>
+                <span>🧊</span><strong>3D Showcase</strong><span className="hint">Rotate + AI 3D advisor</span>
+              </button>
               <button className="pi-prop-tool-tour" onClick={() => setTourOpen(true)}>
                 <span>🎧</span><strong>Guided Tour</strong><span className="hint">Agent narrates with voice</span>
               </button>
@@ -231,6 +249,9 @@ export default function PropertyView() {
             {property.emiEstimate > 0 && (
               <span className="pi-prop-emi-line">EMI from ₹{property.emiEstimate.toLocaleString('en-IN')}/mo</span>
             )}
+            <button className="pi-prop-cta three-d" onClick={() => setShow3d(true)}>
+              🧊 View in 3D + Advisor
+            </button>
             <button className="pi-prop-cta tour" onClick={() => setTourOpen(true)}>
               🎧 Play Guided Tour
             </button>
@@ -299,6 +320,19 @@ export default function PropertyView() {
             property={property}
             saved={isSaved}
             onClose={() => setTourOpen(false)}
+            onSave={() => toggleSave(property.id)}
+            onSchedule={() => setActiveModal({ type: 'tour', data: { propertyId: property.id } })}
+          />
+        </Suspense>
+      )}
+
+      {/* ─────── 3D showcase + AI advisor overlay ─────── */}
+      {show3d && (
+        <Suspense fallback={null}>
+          <Property3DShowcase
+            property={property}
+            saved={isSaved}
+            onClose={() => setShow3d(false)}
             onSave={() => toggleSave(property.id)}
             onSchedule={() => setActiveModal({ type: 'tour', data: { propertyId: property.id } })}
           />
