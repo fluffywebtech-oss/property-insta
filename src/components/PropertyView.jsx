@@ -1,7 +1,9 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, lazy, Suspense } from 'react';
 import { useApp, deriveCity } from '../context/AppContext';
 import { formatPriceIndian } from '../data';
 import PropertyCard from './PropertyCard';
+
+const PropertyTour = lazy(() => import('./PropertyTour'));
 
 // =============================================================================
 // PropertyView — full dedicated page for a single property/project listing.
@@ -50,10 +52,12 @@ export default function PropertyView() {
   );
 
   const [activeImg, setActiveImg] = useState(0);
+  const [tourOpen, setTourOpen] = useState(false);
 
   useEffect(() => {
     if (property?.id) addRecentView(property.id);
     setActiveImg(0);
+    setTourOpen(false);
   }, [property?.id, addRecentView]);
 
   const similar = useMemo(() => {
@@ -106,6 +110,16 @@ export default function PropertyView() {
             {property.rera && <span className="pi-prop-badge rera">🏛️ RERA</span>}
             {property.trending && <span className="pi-prop-badge hot">🔥 Trending</span>}
           </div>
+          <button
+            className="pi-prop-tour-launch"
+            onClick={(e) => { e.stopPropagation(); setTourOpen(true); }}
+          >
+            <span className="pi-prop-tour-launch-icon">▶</span>
+            <span className="pi-prop-tour-launch-text">
+              <strong>Play guided tour</strong>
+              <small>An agent walks you through · with voice</small>
+            </span>
+          </button>
           <span className="pi-prop-gallery-count">{activeImg + 1} / {media.length || 1}</span>
         </div>
         {media.length > 1 && (
@@ -187,6 +201,9 @@ export default function PropertyView() {
           <section className="pi-prop-section pi-prop-tools">
             <h2>🛠️ Tools</h2>
             <div className="pi-prop-tools-grid">
+              <button className="pi-prop-tool-tour" onClick={() => setTourOpen(true)}>
+                <span>🎧</span><strong>Guided Tour</strong><span className="hint">Agent narrates with voice</span>
+              </button>
               <button onClick={() => setActiveModal({ type: 'mortgage', data: { propertyId: property.id } })}>
                 <span>🏦</span><strong>EMI Calculator</strong><span className="hint">Calculate monthly payment</span>
               </button>
@@ -214,6 +231,9 @@ export default function PropertyView() {
             {property.emiEstimate > 0 && (
               <span className="pi-prop-emi-line">EMI from ₹{property.emiEstimate.toLocaleString('en-IN')}/mo</span>
             )}
+            <button className="pi-prop-cta tour" onClick={() => setTourOpen(true)}>
+              🎧 Play Guided Tour
+            </button>
             <button className="pi-prop-cta primary" onClick={() => setActiveModal({ type: 'tour', data: { propertyId: property.id } })}>
               📅 Schedule Site Visit
             </button>
@@ -271,6 +291,19 @@ export default function PropertyView() {
         onSchedule={() => setActiveModal({ type: 'tour', data: { propertyId: property.id } })}
         onMortgage={() => setActiveModal({ type: 'mortgage', data: { propertyId: property.id } })}
       />
+
+      {/* ─────── Guided audio-visual tour overlay ─────── */}
+      {tourOpen && (
+        <Suspense fallback={null}>
+          <PropertyTour
+            property={property}
+            saved={isSaved}
+            onClose={() => setTourOpen(false)}
+            onSave={() => toggleSave(property.id)}
+            onSchedule={() => setActiveModal({ type: 'tour', data: { propertyId: property.id } })}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }
