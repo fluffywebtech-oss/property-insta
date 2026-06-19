@@ -70,6 +70,30 @@ function makeWood() {
   }
   const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 2); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
+// Vertical wood-slat accent wall.
+function makeSlats() {
+  const c = document.createElement('canvas'); c.width = c.height = 512; const x = c.getContext('2d');
+  x.fillStyle = '#2c1d12'; x.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 512; i += 26) { const t = 92 + Math.random() * 30 | 0; x.fillStyle = `rgb(${t * 0.8 | 0},${t * 0.52 | 0},${t * 0.34 | 0})`; x.fillRect(i, 0, 21, 512); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2.2, 1); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+// Woven rug with border.
+function makeRug() {
+  const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
+  x.fillStyle = '#c4b298'; x.fillRect(0, 0, 256, 256);
+  x.strokeStyle = 'rgba(120,100,72,0.55)'; x.lineWidth = 7; x.strokeRect(13, 13, 230, 230);
+  x.strokeStyle = 'rgba(150,130,98,0.35)'; x.lineWidth = 2; x.strokeRect(24, 24, 208, 208);
+  for (let i = 0; i < 2600; i++) { x.fillStyle = `rgba(150,130,100,${Math.random() * 0.16})`; x.fillRect(Math.random() * 256, Math.random() * 256, 2, 2); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+// Veined marble for counters.
+function makeMarble() {
+  const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
+  x.fillStyle = '#eef0f2'; x.fillRect(0, 0, 256, 256);
+  x.strokeStyle = 'rgba(110,120,135,0.4)';
+  for (let i = 0; i < 14; i++) { x.lineWidth = 0.5 + Math.random() * 2; x.beginPath(); let px = Math.random() * 256, py = 0; x.moveTo(px, py); while (py < 256) { px += (Math.random() - 0.5) * 40; py += 8 + Math.random() * 18; x.lineTo(px, py); } x.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
 // Project-name signage (also used as billboard fallback before the photo loads).
 function makeSign(text, sub, photo = false) {
   const c = document.createElement('canvas'); c.width = 1024; c.height = photo ? 640 : 256; const x = c.getContext('2d');
@@ -247,123 +271,158 @@ function buildVilla(group, dim, mats) {
 // =============================================================================
 // INTERIOR — a walkable furnished home
 // =============================================================================
-function createInterior(scene, build, coverImg) {
-  // brighter indoor lighting
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x9a9a8a, 0.85));
-  const key = new THREE.DirectionalLight(0xffffff, 1.7);
-  key.position.set(6, 12, 12); key.castShadow = true;
-  key.shadow.mapSize.set(2048, 2048); key.shadow.camera.near = 1; key.shadow.camera.far = 60;
-  key.shadow.camera.left = -16; key.shadow.camera.right = 16; key.shadow.camera.top = 16; key.shadow.camera.bottom = -16;
-  key.shadow.bias = -0.0004; key.shadow.radius = 4; scene.add(key);
-  const warm = new THREE.PointLight(0xffd9a8, 22, 22, 2); warm.position.set(-3, 2.7, 0); scene.add(warm);
-
+function createInterior(scene, build, coverImg, property) {
   const X = 13, Z = 9, WH = 3; // footprint + wall height
-  const floorMat = new THREE.MeshStandardMaterial({ map: makeWood(), roughness: 0.55, metalness: 0.05 });
-  const wallMat = new THREE.MeshStandardMaterial({ color: 0xf3efe8, roughness: 0.95 });
-  const accentMat = new THREE.MeshStandardMaterial({ color: build.luxury ? 0x355c6b : 0x6f7f8c, roughness: 0.9 });
-  const wood = new THREE.MeshStandardMaterial({ color: 0x6e4a2d, roughness: 0.5, metalness: 0.1 });
-  const fabric = new THREE.MeshStandardMaterial({ color: 0x8a93a6, roughness: 0.95 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x1c2026, roughness: 0.5, metalness: 0.3 });
-  const metal = new THREE.MeshStandardMaterial({ color: 0xb8c0c8, metalness: 0.85, roughness: 0.3 });
-  const railGlass = new THREE.MeshPhysicalMaterial({ color: 0xbfe0f5, roughness: 0.08, transmission: 0.75, transparent: true, opacity: 0.5, ior: 1.45 });
-  const rugMat = new THREE.MeshStandardMaterial({ color: 0xc9b79c, roughness: 1 });
+
+  // ── Cinematic interior lighting (warm key through the window + soft fill) ──
+  scene.add(new THREE.HemisphereLight(0xdfe9ff, 0x3a2f24, 0.36));
+  const winL = new THREE.DirectionalLight(0xfff0d6, 2.6);
+  winL.position.set(3, 8, 20); winL.target.position.set(0, 1.2, 0); scene.add(winL.target);
+  winL.castShadow = true; winL.shadow.mapSize.set(2048, 2048);
+  winL.shadow.camera.near = 1; winL.shadow.camera.far = 60;
+  winL.shadow.camera.left = -12; winL.shadow.camera.right = 12; winL.shadow.camera.top = 11; winL.shadow.camera.bottom = -6;
+  winL.shadow.bias = -0.0004; winL.shadow.radius = 6; scene.add(winL);
+
+  // ── Materials (PBR with procedural textures) ──
+  const floorMat = new THREE.MeshStandardMaterial({ map: makeWood(), roughness: 0.4, metalness: 0.0, envMapIntensity: 0.55 });
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0xefe9df, roughness: 0.97 });
+  const ceilMat = new THREE.MeshStandardMaterial({ color: 0xf6f3ec, roughness: 1 });
+  const slatMat = new THREE.MeshStandardMaterial({ map: makeSlats(), roughness: 0.55, metalness: 0.05 });
+  const accentMat = new THREE.MeshStandardMaterial({ color: build.luxury ? 0x2f4f5c : 0x5e6b78, roughness: 0.85 });
+  const wood = new THREE.MeshStandardMaterial({ color: 0x4f3422, roughness: 0.42, metalness: 0.08, envMapIntensity: 0.5 });
+  const fabric = new THREE.MeshStandardMaterial({ color: 0x8b94a3, roughness: 1 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x14171c, roughness: 0.5, metalness: 0.3 });
+  const metal = new THREE.MeshStandardMaterial({ color: 0xc7ced6, metalness: 0.9, roughness: 0.18 });
+  // NB: OPAQUE reflective "glass" — both transmission AND transparency render black through
+  // the GTAO EffectComposer, so glass is faked with low-roughness reflective opaque materials.
+  const glassTop = new THREE.MeshStandardMaterial({ color: 0x27343c, roughness: 0.07, metalness: 0.5, envMapIntensity: 1.5 });
+  const railGlass = new THREE.MeshStandardMaterial({ color: 0xb4c6d2, roughness: 0.14, metalness: 0.35, envMapIntensity: 1.2 });
+  const rugMat = new THREE.MeshStandardMaterial({ map: makeRug(), roughness: 1 });
+  const marble = new THREE.MeshStandardMaterial({ map: makeMarble(), roughness: 0.25, metalness: 0.1, envMapIntensity: 0.8 });
+  const curtainMat = new THREE.MeshStandardMaterial({ color: 0xeae1d2, roughness: 1 });
+  const bedding = new THREE.MeshStandardMaterial({ color: 0xf2ede3, roughness: 1 });
+  const duvet = new THREE.MeshStandardMaterial({ color: build.luxury ? 0x355c6b : 0x9aa6b2, roughness: 1 });
+  const artMat = new THREE.MeshBasicMaterial({ color: 0xdfe4ec });
+  const tvMat = new THREE.MeshStandardMaterial({ color: 0x05070b, roughness: 0.15, metalness: 0.6, envMapIntensity: 1 });
 
   const root = new THREE.Group(); scene.add(root);
+  const loadInto = (mat, url) => { if (!url) return; new THREE.TextureLoader().load(url, (tex) => { tex.colorSpace = THREE.SRGBColorSpace; mat.map = tex; mat.color.set(0xffffff); mat.needsUpdate = true; }, undefined, () => {}); };
+  const downlight = (x, z, shadow = false) => {
+    mk(root, new THREE.CylinderGeometry(0.13, 0.13, 0.04, 20), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffe6c0, emissiveIntensity: 0.9 }), x, WH - 0.06, z, { cast: false, recv: false });
+    const s = new THREE.SpotLight(0xffdcb0, shadow ? 22 : 14, 13, 0.7, 0.85, 1.4);
+    s.position.set(x, WH - 0.1, z); s.target.position.set(x, 0, z); root.add(s); root.add(s.target);
+    if (shadow) { s.castShadow = true; s.shadow.mapSize.set(1024, 1024); s.shadow.bias = -0.0006; s.shadow.radius = 4; }
+  };
+  const pendant = (x, z, y = 1.78) => {
+    mk(root, new THREE.CylinderGeometry(0.015, 0.015, WH - y), metal, x, (WH + y) / 2, z, { cast: false });
+    mk(root, new THREE.CylinderGeometry(0.2, 0.26, 0.28, 20), dark, x, y, z);
+    mk(root, new THREE.SphereGeometry(0.1, 16, 12), new THREE.MeshStandardMaterial({ color: 0xfff1cf, emissive: 0xffd596, emissiveIntensity: 1.3 }), x, y - 0.12, z, { cast: false });
+    const p = new THREE.PointLight(0xffd9a8, 5, 7, 2); p.position.set(x, y - 0.2, z); root.add(p);
+  };
 
-  // floor + skirting
+  // ── Shell: floor, ceiling, walls ──
   mk(root, new THREE.BoxGeometry(X, 0.2, Z), floorMat, 0, -0.1, 0);
-  // back + side walls (front kept open as glass to the balcony for the view)
-  mk(root, new THREE.BoxGeometry(X, WH, 0.2), wallMat, 0, WH / 2, -Z / 2);       // back
-  mk(root, new THREE.BoxGeometry(0.2, WH, Z), wallMat, -X / 2, WH / 2, 0);        // left
-  mk(root, new THREE.BoxGeometry(0.2, WH, Z), wallMat, X / 2, WH / 2, 0);         // right
-  // accent wall behind TV (left)
-  mk(root, new THREE.BoxGeometry(0.22, WH, Z * 0.55), accentMat, -X / 2 + 0.01, WH / 2, Z * 0.12);
+  mk(root, new THREE.BoxGeometry(X + 0.2, 0.16, Z + 0.2), ceilMat, 0, WH, 0, { cast: false });
+  mk(root, new THREE.BoxGeometry(X, WH, 0.2), wallMat, 0, WH / 2, -Z / 2);
+  mk(root, new THREE.BoxGeometry(0.2, WH, Z), wallMat, -X / 2, WH / 2, 0);
+  mk(root, new THREE.BoxGeometry(0.2, WH, Z), wallMat, X / 2, WH / 2, 0);
+  mk(root, new THREE.BoxGeometry(0.24, WH - 0.1, Z * 0.62), slatMat, -X / 2 + 0.02, (WH - 0.1) / 2, Z * 0.08); // TV slat wall
+  mk(root, new THREE.BoxGeometry(X, 0.12, 0.06), wood, 0, 0.06, -Z / 2 + 0.13, { cast: false }); // skirting
 
-  // bedroom partition (right rear quadrant): walls with a door gap
-  const bx0 = 1.8;
-  mk(root, new THREE.BoxGeometry(X / 2 - bx0, WH, 0.16), wallMat, (bx0 + X / 2) / 2, WH / 2, -0.6); // partition along z=-0.6
-  mk(root, new THREE.BoxGeometry(0.16, WH, Z / 2 - 1.4), wallMat, bx0, WH / 2, -Z / 2 + (Z / 2 - 1.4) / 2 + 0.0); // partition along x=bx0 (with gap = door near front)
+  const bx0 = 1.8; // bedroom partition with a door gap near the front
+  mk(root, new THREE.BoxGeometry(X / 2 - bx0, WH, 0.16), wallMat, (bx0 + X / 2) / 2, WH / 2, -0.6);
+  mk(root, new THREE.BoxGeometry(0.16, WH, Z / 2 - 1.4), wallMat, bx0, WH / 2, -Z / 2 + (Z / 2 - 1.4) / 2);
 
-  // ── Living room (front-left) ──
-  // rug
-  mk(root, new THREE.BoxGeometry(4.6, 0.04, 3.2), rugMat, -3.4, 0.02, 1.4, { cast: false });
-  // sofa (L-shape): base + back + cushions
-  mk(root, new RoundedBoxGeometry(4.2, 0.7, 1.5, 2, 0.12), fabric, -3.6, 0.45, 2.7);
-  mk(root, new RoundedBoxGeometry(4.2, 0.8, 0.4, 2, 0.12), fabric, -3.6, 0.85, 3.35);
-  mk(root, new RoundedBoxGeometry(1.5, 0.7, 3.0, 2, 0.12), fabric, -5.45, 0.45, 1.6);
-  for (let i = 0; i < 3; i++) mk(root, new RoundedBoxGeometry(0.9, 0.5, 0.3, 2, 0.1), new THREE.MeshStandardMaterial({ color: i % 2 ? 0x6f7c92 : 0xb98a64, roughness: 1 }), -4.9 + i * 1.3, 0.95, 3.1);
-  // coffee table
-  mk(root, new RoundedBoxGeometry(1.8, 0.12, 0.9, 2, 0.05), wood, -3.4, 0.42, 1.4);
-  mk(root, new THREE.CylinderGeometry(0.05, 0.05, 0.4), metal, -4.1, 0.2, 1.0, { cast: false });
-  mk(root, new THREE.CylinderGeometry(0.05, 0.05, 0.4), metal, -2.7, 0.2, 1.8, { cast: false });
-  // TV unit + TV on accent wall
-  mk(root, new RoundedBoxGeometry(3, 0.5, 0.5, 2, 0.06), wood, -X / 2 + 0.5, 0.3, 1.4);
-  mk(root, new THREE.BoxGeometry(0.08, 1.4, 2.4), dark, -X / 2 + 0.35, 1.7, 1.4, { cast: false });
-  // floor lamp + plant
-  mk(root, new THREE.CylinderGeometry(0.04, 0.04, 1.8), metal, -5.8, 0.9, 3.4, { cast: false });
-  mk(root, new THREE.ConeGeometry(0.35, 0.4, 16), new THREE.MeshStandardMaterial({ color: 0xfff1cf, emissive: 0xffe6b0, emissiveIntensity: 0.5 }), -5.8, 1.95, 3.4, { cast: false });
-  potPlant(root, -5.9, 0, -2.0, metal);
+  downlight(-3.4, 1.6, true); downlight(4.6, -3.0);
 
-  // ── Dining (center-rear) ──
-  mk(root, new RoundedBoxGeometry(2.2, 0.12, 1.1, 2, 0.05), wood, -0.6, 0.78, -2.6);
-  [[-1.4, -3.2], [0.2, -3.2], [-1.4, -2.0], [0.2, -2.0]].forEach(([x, z]) => { mk(root, new RoundedBoxGeometry(0.5, 0.5, 0.5, 2, 0.06), fabric, x, 0.45, z); mk(root, new THREE.BoxGeometry(0.5, 0.5, 0.06), wood, x, 0.95, z - 0.22, { cast: false }); });
+  // ── Living room ──
+  mk(root, new THREE.BoxGeometry(4.8, 0.04, 3.4), rugMat, -3.3, 0.02, 1.5, { cast: false });
+  mk(root, new RoundedBoxGeometry(4.2, 0.4, 1.5, 3, 0.1), fabric, -3.6, 0.4, 2.7);             // seat base
+  mk(root, new RoundedBoxGeometry(4.2, 0.45, 0.42, 3, 0.14), fabric, -3.6, 0.78, 3.36);         // backrest
+  mk(root, new RoundedBoxGeometry(0.4, 0.55, 1.5, 3, 0.14), fabric, -5.55, 0.55, 2.7);          // left arm
+  mk(root, new RoundedBoxGeometry(0.4, 0.55, 1.5, 3, 0.14), fabric, -1.65, 0.55, 2.7);          // right arm
+  mk(root, new RoundedBoxGeometry(1.4, 0.5, 3.0, 3, 0.12), fabric, -5.5, 0.4, 1.5);             // chaise
+  for (let i = 0; i < 2; i++) mk(root, new RoundedBoxGeometry(1.7, 0.2, 1.4, 3, 0.1), new THREE.MeshStandardMaterial({ color: 0x99a2b1, roughness: 1 }), -4.5 + i * 1.8, 0.66, 2.7, { recv: false });
+  for (let i = 0; i < 3; i++) mk(root, new RoundedBoxGeometry(0.66, 0.66, 0.22, 3, 0.12), new THREE.MeshStandardMaterial({ color: i === 1 ? 0xb98a64 : 0x6f7c92, roughness: 1 }), -4.7 + i * 1.4, 0.95, 3.16, { recv: false });
+  for (const [lx, lz] of [[-5.4, 3.3], [-1.8, 3.3], [-5.4, 2.1], [-1.8, 2.1]]) mk(root, new THREE.CylinderGeometry(0.05, 0.04, 0.3), metal, lx, 0.15, lz, { cast: false });
+  mk(root, new RoundedBoxGeometry(1.9, 0.3, 1.0, 3, 0.06), wood, -3.3, 0.2, 1.4);               // coffee base
+  mk(root, new THREE.BoxGeometry(2.0, 0.05, 1.1), glassTop, -3.3, 0.42, 1.4, { cast: false });  // glass top
+  mk(root, new THREE.CylinderGeometry(0.12, 0.16, 0.3, 16), new THREE.MeshStandardMaterial({ color: 0x2b6b6b, roughness: 0.3 }), -2.9, 0.6, 1.5, { cast: false });
+  mk(root, new THREE.BoxGeometry(0.5, 0.08, 0.34), new THREE.MeshStandardMaterial({ color: 0xb04a3a, roughness: 0.8 }), -3.7, 0.5, 1.4, { cast: false });
+  mk(root, new RoundedBoxGeometry(3, 0.45, 0.5, 3, 0.06), wood, -X / 2 + 0.55, 0.28, 1.4);      // TV console
+  mk(root, new THREE.BoxGeometry(0.1, 1.45, 2.5), dark, -X / 2 + 0.34, 1.7, 1.4, { cast: false });
+  mk(root, new THREE.PlaneGeometry(2.3, 1.3), tvMat, -X / 2 + 0.41, 1.7, 1.4, { ry: Math.PI / 2, cast: false, recv: false });
+  mk(root, new THREE.PlaneGeometry(2.0, 1.4), artMat, -1.2, 1.78, -Z / 2 + 0.12, { cast: false, recv: false }); // wall art (cover)
+  loadInto(artMat, coverImg);
+  mk(root, new THREE.CylinderGeometry(0.04, 0.05, 1.8), metal, -5.9, 0.9, 3.5, { cast: false });
+  mk(root, new THREE.ConeGeometry(0.32, 0.45, 20), new THREE.MeshStandardMaterial({ color: 0xfff3d4, emissive: 0xffe6b0, emissiveIntensity: 0.8 }), -5.9, 1.95, 3.5, { cast: false });
+  { const p = new THREE.PointLight(0xffe2b0, 4, 6, 2); p.position.set(-5.9, 1.9, 3.5); root.add(p); }
+  potPlant(root, -5.9, 0, -2.2, metal);
 
-  // ── Kitchen (back wall, right of dining) ──
-  const kMat = new THREE.MeshStandardMaterial({ color: 0xe9ecef, roughness: 0.5 });
-  const counter = new THREE.MeshStandardMaterial({ color: 0x2b2f36, roughness: 0.35, metalness: 0.2 });
-  // base cabinets + worktop along back wall
-  mk(root, new RoundedBoxGeometry(4.2, 0.9, 0.7, 2, 0.04), kMat, 3.2, 0.45, -Z / 2 + 0.45);
-  mk(root, new THREE.BoxGeometry(4.3, 0.08, 0.78), counter, 3.2, 0.92, -Z / 2 + 0.45, { cast: false });
-  // upper cabinets
-  mk(root, new RoundedBoxGeometry(4.2, 0.7, 0.4, 2, 0.04), kMat, 3.2, 2.2, -Z / 2 + 0.3);
-  // hood + stove
-  mk(root, new THREE.BoxGeometry(0.9, 0.4, 0.5), metal, 3.2, 1.85, -Z / 2 + 0.35, { cast: false });
-  // island
-  mk(root, new RoundedBoxGeometry(2.2, 0.9, 1.0, 2, 0.05), kMat, 4.3, 0.45, -1.4);
-  mk(root, new THREE.BoxGeometry(2.3, 0.08, 1.1), counter, 4.3, 0.92, -1.4, { cast: false });
+  // ── Dining ──
+  mk(root, new RoundedBoxGeometry(2.3, 0.1, 1.15, 3, 0.04), wood, -0.6, 0.78, -2.6);
+  for (const [lx, lz] of [[-1.5, -3.0], [0.3, -3.0], [-1.5, -2.2], [0.3, -2.2]]) mk(root, new THREE.CylinderGeometry(0.05, 0.04, 0.74), metal, lx, 0.37, lz, { cast: false });
+  mk(root, new THREE.BoxGeometry(1.6, 0.02, 0.5), new THREE.MeshStandardMaterial({ color: 0xb5b0a4, roughness: 1 }), -0.6, 0.84, -2.6, { cast: false });
+  [[-1.4, -3.25], [0.2, -3.25], [-1.4, -1.95], [0.2, -1.95]].forEach(([x, z]) => { mk(root, new RoundedBoxGeometry(0.46, 0.12, 0.46, 3, 0.05), fabric, x, 0.5, z); mk(root, new RoundedBoxGeometry(0.46, 0.6, 0.08, 3, 0.04), fabric, x, 0.85, z + (z < -2.6 ? -0.2 : 0.2)); });
+  pendant(-0.6, -2.6, 1.95);
 
-  // ── Bedroom (right-rear, behind partition) ──
-  // bed
-  mk(root, new RoundedBoxGeometry(2.6, 0.4, 3.0, 2, 0.06), wood, 4.6, 0.25, -3.0);
-  mk(root, new RoundedBoxGeometry(2.5, 0.35, 2.7, 2, 0.08), new THREE.MeshStandardMaterial({ color: 0xeae3d6, roughness: 1 }), 4.6, 0.55, -2.9);
-  mk(root, new RoundedBoxGeometry(2.5, 0.18, 1.0, 2, 0.06), accentMat, 4.6, 0.75, -2.0); // duvet fold
-  for (const px of [3.7, 5.5]) mk(root, new RoundedBoxGeometry(0.8, 0.3, 0.5, 2, 0.08), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1 }), px, 0.78, -4.0); // pillows
-  mk(root, new THREE.BoxGeometry(2.6, 1.2, 0.1), accentMat, 4.6, 1.1, -Z / 2 + 0.12, { cast: false }); // headboard panel
-  // nightstand + lamp
-  mk(root, new RoundedBoxGeometry(0.6, 0.5, 0.5, 2, 0.05), wood, 3.0, 0.25, -4.0);
-  mk(root, new THREE.CylinderGeometry(0.16, 0.2, 0.4), new THREE.MeshStandardMaterial({ color: 0xfff1cf, emissive: 0xffe6b0, emissiveIntensity: 0.6 }), 3.0, 0.72, -4.0, { cast: false });
-  // wardrobe
-  mk(root, new RoundedBoxGeometry(0.6, 2.4, 3.0, 2, 0.05), wood, X / 2 - 0.45, 1.2, -3.0);
+  // ── Kitchen ──
+  mk(root, new RoundedBoxGeometry(4.2, 0.9, 0.7, 3, 0.04), wood, 3.2, 0.45, -Z / 2 + 0.45);     // base cabinets
+  mk(root, new THREE.BoxGeometry(4.32, 0.1, 0.78), marble, 3.2, 0.93, -Z / 2 + 0.45, { cast: false }); // marble worktop
+  mk(root, new THREE.BoxGeometry(4.2, 0.55, 0.03), marble, 3.2, 1.42, -Z / 2 + 0.09, { cast: false }); // backsplash
+  mk(root, new RoundedBoxGeometry(4.2, 0.65, 0.4, 3, 0.04), new THREE.MeshStandardMaterial({ color: 0xe9ecef, roughness: 0.5 }), 3.2, 2.2, -Z / 2 + 0.3); // upper cabinets
+  mk(root, new THREE.BoxGeometry(0.9, 0.45, 0.5), metal, 3.2, 1.95, -Z / 2 + 0.35, { cast: false }); // hood
+  mk(root, new RoundedBoxGeometry(2.2, 0.9, 1.0, 3, 0.05), wood, 4.3, 0.45, -1.4);               // island base
+  mk(root, new THREE.BoxGeometry(2.32, 0.1, 1.12), marble, 4.3, 0.93, -1.4, { cast: false });    // island top
+  pendant(4.3, -1.4, 1.95);
+  for (const sx of [3.7, 4.9]) { mk(root, new THREE.CylinderGeometry(0.2, 0.2, 0.08, 18), dark, sx, 0.64, -0.55, { cast: false }); mk(root, new THREE.CylinderGeometry(0.03, 0.03, 0.6), metal, sx, 0.3, -0.55, { cast: false }); }
 
-  // ── Balcony + city view (front, z > Z/2) ──
-  // glass sliding doors (front opening)
-  mk(root, new THREE.BoxGeometry(X - 4, WH, 0.08), new THREE.MeshPhysicalMaterial({ color: 0xbfe0f5, roughness: 0.05, transmission: 0.85, transparent: true, opacity: 0.35, ior: 1.45 }), -1.5, WH / 2, Z / 2, { cast: false });
-  // balcony slab + glass railing
-  mk(root, new THREE.BoxGeometry(X, 0.2, 2.4), new THREE.MeshStandardMaterial({ color: 0xc8b89a, roughness: 0.7 }), 0, -0.1, Z / 2 + 1.2);
-  mk(root, new THREE.BoxGeometry(X, 1.0, 0.06), railGlass, 0, 0.5, Z / 2 + 2.35, { cast: false });
-  potPlant(root, X / 2 - 1, 0, Z / 2 + 0.9, metal);
-  // outdoor lounge chair
-  mk(root, new RoundedBoxGeometry(0.9, 0.3, 1.6, 2, 0.08), new THREE.MeshStandardMaterial({ color: 0x9a8e7a, roughness: 1 }), -4, 0.25, Z / 2 + 1.2);
+  // ── Bedroom ──
+  mk(root, new THREE.BoxGeometry(3.0, 0.02, 3.2), new THREE.MeshStandardMaterial({ color: 0xb7a98c, roughness: 1 }), 4.6, 0.01, -2.6, { cast: false }); // rug
+  mk(root, new RoundedBoxGeometry(2.7, 0.35, 3.2, 3, 0.06), wood, 4.6, 0.22, -3.0);              // base
+  mk(root, new RoundedBoxGeometry(2.55, 0.4, 2.9, 3, 0.1), bedding, 4.6, 0.5, -2.9);             // mattress
+  mk(root, new RoundedBoxGeometry(2.55, 0.14, 1.6, 3, 0.06), bedding, 4.6, 0.72, -3.4);          // sheet
+  mk(root, new RoundedBoxGeometry(2.6, 0.2, 1.5, 3, 0.08), duvet, 4.6, 0.74, -2.2);              // folded duvet
+  mk(root, new RoundedBoxGeometry(0.8, 0.5, 1.7, 3, 0.05), new THREE.MeshStandardMaterial({ color: 0xb98a64, roughness: 1 }), 4.6, 0.5, -1.5, { recv: false }); // throw
+  for (const px of [3.85, 5.35]) { mk(root, new RoundedBoxGeometry(1.0, 0.26, 0.55, 3, 0.12), bedding, px, 0.78, -4.05, { recv: false }); mk(root, new RoundedBoxGeometry(0.8, 0.2, 0.45, 3, 0.1), new THREE.MeshStandardMaterial({ color: 0x9aa6b2, roughness: 1 }), px, 0.92, -3.95, { recv: false }); }
+  mk(root, new RoundedBoxGeometry(2.9, 1.4, 0.12, 3, 0.05), accentMat, 4.6, 1.15, -Z / 2 + 0.13, { cast: false }); // upholstered headboard
+  for (const px of [2.95, 6.25]) { mk(root, new RoundedBoxGeometry(0.62, 0.5, 0.5, 3, 0.05), wood, px, 0.25, -4.1); mk(root, new THREE.CylinderGeometry(0.17, 0.21, 0.34, 20), new THREE.MeshStandardMaterial({ color: 0xfff1cf, emissive: 0xffe6b0, emissiveIntensity: 0.9 }), px, 0.95, -4.1, { cast: false }); }
+  { const p = new THREE.PointLight(0xffe2b0, 3, 6, 2); p.position.set(4.6, 2.4, -3); root.add(p); }
+  mk(root, new RoundedBoxGeometry(0.55, 2.4, 3.0, 3, 0.04), wood, X / 2 - 0.4, 1.2, -3.0);       // wardrobe
+  for (const wz of [-3.7, -2.3]) mk(root, new THREE.CylinderGeometry(0.025, 0.025, 0.5), metal, X / 2 - 0.66, 1.2, wz, { cast: false });
 
-  // skyline beyond the balcony (the "view")
+  // ── Balcony + city view ──
+  mk(root, new THREE.BoxGeometry(X - 4, 0.2, 0.12), wallMat, -1.5, WH - 0.1, Z / 2, { cast: false }); // open balcony doorway header
+  mk(root, new THREE.BoxGeometry(0.12, WH, 0.12), metal, -1.5 - (X - 4) / 2, WH / 2, Z / 2, { cast: false });
+  mk(root, new THREE.BoxGeometry(0.12, WH, 0.12), metal, -1.5 + (X - 4) / 2, WH / 2, Z / 2, { cast: false });
+  for (const cz of [-1.5 - (X - 4) / 2 + 0.35, -1.5 + (X - 4) / 2 - 0.35]) mk(root, new RoundedBoxGeometry(0.7, WH - 0.2, 0.18, 2, 0.08), curtainMat, cz, (WH - 0.2) / 2 + 0.1, Z / 2 - 0.25, { cast: false });
+  mk(root, new THREE.BoxGeometry(X, 0.2, 2.6), new THREE.MeshStandardMaterial({ color: 0xc2b59a, roughness: 0.7 }), 0, -0.1, Z / 2 + 1.3);
+  mk(root, new THREE.BoxGeometry(X, 1.05, 0.05), railGlass, 0, 0.52, Z / 2 + 2.55, { cast: false });
+  mk(root, new THREE.BoxGeometry(X, 0.06, 0.1), metal, 0, 1.05, Z / 2 + 2.55, { cast: false });
+  mk(root, new RoundedBoxGeometry(1.0, 0.35, 1.8, 3, 0.08), new THREE.MeshStandardMaterial({ color: 0x8f8472, roughness: 1 }), -4, 0.28, Z / 2 + 1.3);
+  mk(root, new THREE.CylinderGeometry(0.3, 0.32, 0.4, 16), new THREE.MeshStandardMaterial({ color: 0x6b6258, roughness: 1 }), -2.2, 0.2, Z / 2 + 1.3, { cast: false });
+  potPlant(root, X / 2 - 1.2, 0, Z / 2 + 1.0, metal);
+  potPlant(root, -5.4, 0, Z / 2 + 1.6, metal);
+
+  // skyline view beyond the balcony
   scene.background = makeSky();
   mk(scene, new THREE.CircleGeometry(120, 48), new THREE.MeshStandardMaterial({ color: 0x738a55, roughness: 1 }), 0, -0.2, 0, { rx: -Math.PI / 2, cast: false });
   const distGlass = new THREE.MeshPhysicalMaterial({ color: 0x49627a, roughness: 0.12, metalness: 0.2, envMapIntensity: 1.2, clearcoat: 0.5 });
   for (let i = 0; i < 10; i++) { const x = -40 + i * 9 + (Math.random() * 4 - 2), h = 12 + Math.random() * 30; mk(scene, new THREE.BoxGeometry(6 + Math.random() * 3, h, 6), distGlass, x, h / 2, 26 + Math.random() * 14, { recv: false }); }
 
   const anchors = {
-    overview: new THREE.Vector3(-1.5, 2.4, 2),
+    overview: new THREE.Vector3(0.5, 2.5, -0.5),
     living: new THREE.Vector3(-3.6, 1.1, 2),
-    kitchen: new THREE.Vector3(3.4, 1.2, -3.2),
+    kitchen: new THREE.Vector3(3.6, 1.2, -3.0),
     bedroom: new THREE.Vector3(4.6, 1.2, -3.0),
     balcony: new THREE.Vector3(-1.5, 1.2, Z / 2 + 1.6),
   };
   const presets = {
-    overview: { pos: new THREE.Vector3(-2, 2.3, 9.5), look: new THREE.Vector3(-1, 1.2, -1) },
-    living: { pos: new THREE.Vector3(-0.6, 1.6, 3.4), look: new THREE.Vector3(-5.5, 1.3, 1.2) },
-    kitchen: { pos: new THREE.Vector3(1.0, 1.6, 0.4), look: new THREE.Vector3(4.2, 1.1, -4) },
-    bedroom: { pos: new THREE.Vector3(2.6, 1.6, 1.2), look: new THREE.Vector3(5.2, 1.2, -3.6) },
-    balcony: { pos: new THREE.Vector3(-1.5, 1.6, 2.2), look: new THREE.Vector3(-1.5, 1.4, 14) },
+    overview: { pos: new THREE.Vector3(-3.2, 2.25, 3.6), look: new THREE.Vector3(1.5, 1.0, -2.6) },
+    living: { pos: new THREE.Vector3(-1.0, 1.55, 4.0), look: new THREE.Vector3(-5.2, 1.2, 1.0) },
+    kitchen: { pos: new THREE.Vector3(0.8, 1.55, 0.6), look: new THREE.Vector3(4.0, 1.0, -4.2) },
+    bedroom: { pos: new THREE.Vector3(2.4, 1.55, 1.2), look: new THREE.Vector3(5.0, 1.1, -3.8) },
+    balcony: { pos: new THREE.Vector3(-1.5, 1.55, 2.4), look: new THREE.Vector3(-1.5, 1.5, 14) },
   };
   return { anchors, presets, ring: null, pin: null, start: presets.overview, interior: true };
 }
@@ -394,38 +453,16 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
   const [supported] = useState(() => typeof window !== 'undefined' && 'speechSynthesis' in window);
   const voiceRef = useRef(null);
 
-  // Real interior = the listing's actual photos (exact, not a procedural room).
-  const photos = useMemo(() => {
-    const m = (property.media || property.images || []).filter(Boolean);
-    return m.length ? m : (property.thumbnail ? [property.thumbnail] : []);
-  }, [property]);
-  const [photoIdx, setPhotoIdx] = useState(0);
-  const photoLayerRef = useRef(null);
-  useEffect(() => { setPhotoIdx(0); }, [mode]);
-
   const topics = useMemo(() => {
     if (mode === 'interior') {
       const beds = build.bhk;
-      const caps = ['Overview', 'A closer look', 'Details & finishes', 'Another view', 'More to see', 'Further view', 'Yet another angle', 'Last look'];
-      const says = [
-        `Here are the real photos of ${property.title}. It's a ${beds} B.H.K. ${build.type}${property.area ? ` of about ${property.area} square feet` : ''}${property.furnishing ? `, ${property.furnishing.toLowerCase()}` : ''}. Let me take you through them.`,
-        `A closer look at the property and its spaces.`,
-        `Notice the finishes and the natural light.`,
-        `Another real view of the home.`,
-        `${property.amenities?.length ? `Residents also enjoy ${property.amenities.slice(0, 3).join(', ')}.` : 'More of what the home offers.'}`,
-        `A further look at the property in ${property.location || 'its neighbourhood'}.`,
-        `One more angle of the home.`,
-        `And a final look.`,
+      return [
+        { id: 'overview', icon: '🏠', label: 'Home Overview', tip: `${beds} BHK furnished layout.`, say: `Welcome inside ${property.title}. This is a ${beds} B.H.K. home — let me walk you through each space.`, cam: 'overview' },
+        { id: 'living', icon: '🛋️', label: 'Living Room', tip: 'Spacious & sunlit.', say: `Here's the living room — a spacious, sunlit lounge with a comfortable sofa, media wall, and a balcony just beyond for natural light.`, cam: 'living' },
+        { id: 'kitchen', icon: '🍳', label: 'Kitchen', tip: 'Modular kitchen.', say: `The modular kitchen offers ample counter space, an island, overhead cabinets and a chimney — ready to cook in.`, cam: 'kitchen' },
+        { id: 'bedroom', icon: '🛏️', label: 'Master Bedroom', tip: 'Private & restful.', say: `This is the master bedroom — a private, restful retreat with a king bed, fitted wardrobe and bedside lighting.`, cam: 'bedroom' },
+        { id: 'balcony', icon: '🌆', label: 'Balcony View', tip: 'City skyline.', say: `And step out onto the balcony — glass railings and an open view over the city skyline. The perfect spot for your morning coffee.`, cam: 'balcony' },
       ];
-      if (!photos.length) {
-        return [{ id: 'p0', photo: 0, icon: '🖼️', label: 'No photos', tip: 'No photos available.', say: `We don't have photos for ${property.title} yet.` }];
-      }
-      return photos.map((src, i) => ({
-        id: 'p' + i, photo: i, icon: '🖼️',
-        label: caps[i] || `Photo ${i + 1}`,
-        tip: `Real photo ${i + 1} of ${photos.length}`,
-        say: says[i] || says[7],
-      }));
     }
     const sunWord = /east/i.test(build.facing) ? 'gentle morning sunlight' : /west/i.test(build.facing) ? 'warm afternoon and evening light' : /north/i.test(build.facing) ? 'soft, even daylight with low heat' : 'bright, sunny exposure through the day';
     const floorWord = build.yourFloor >= build.total * 0.75 ? 'a commanding high-rise vantage' : build.yourFloor >= build.total * 0.4 ? 'a comfortable mid-rise height' : 'an easy, low-floor convenience';
@@ -436,11 +473,10 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
       { id: 'amenities', icon: '🏊', label: build.isVilla ? 'Outdoor Space' : 'Sky Deck', tip: property.amenities?.length ? `${property.amenities.length} amenities.` : 'Premium amenities.', say: property.amenities?.length ? `${build.isVilla ? 'Your garden and deck sit here' : 'Up on the rooftop deck'} you have amenities like ${property.amenities.slice(0, 3).join(', ')}.` : `${build.isVilla ? 'Enjoy your private outdoor space.' : 'The rooftop deck offers an infinity pool and open city views.'}`, cam: 'deck' },
       { id: 'surroundings', icon: '🌳', label: 'Surroundings', tip: `${property.location || 'Prime location'}.`, say: `Looking around, ${property.title} sits in ${property.location || 'a prime neighbourhood'}, framed by greenery and well-connected roads.`, cam: 'wide' },
     ];
-  }, [mode, build, property, photos]);
+  }, [mode, build, property]);
 
-  // Build / rebuild the three.js EXTERIOR scene. Interior uses real photos (no WebGL).
+  // Build / rebuild the three.js scene on mode change.
   useEffect(() => {
-    if (mode !== 'exterior') { setReady(true); return; }
     const mount = mountRef.current; if (!mount) return;
     setReady(false);
     const W = mount.clientWidth, H = mount.clientHeight;
@@ -453,12 +489,12 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
     renderer.setSize(W, H);
     renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = mode === 'interior' ? 1.0 : 1.06;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = mode === 'interior' ? 0.92 : 1.06;
     mount.appendChild(renderer.domElement);
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-    const built = createExterior(scene, build, coverImg, property);
+    const built = mode === 'interior' ? createInterior(scene, build, coverImg, property) : createExterior(scene, build, coverImg, property);
     const { anchors, presets, ring, pin, start } = built;
 
     camera.position.copy(start.pos);
@@ -478,7 +514,9 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
     gtao.output = GTAOPass.OUTPUT.Default;
     gtao.updateGtaoMaterial({ radius: mode === 'interior' ? 0.6 : 3.2, distanceExponent: 1, thickness: 1, scale: 1.1, samples: 16, screenSpaceRadius: false });
     gtao.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 4, rings: 4, samples: 16 });
-    composer.addPass(gtao);
+    // GTAO is great for the exterior massing, but its world-space AO blacks out regions around
+    // the interior's thin partition walls — so the interior relies on real shadows + bloom + SMAA.
+    if (mode !== 'interior') composer.addPass(gtao);
     const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.16, 0.6, 0.9);
     composer.addPass(bloom);
     composer.addPass(new SMAAPass(W * pr, H * pr));
@@ -534,26 +572,12 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
   }, [supported]);
 
   const goTopic = useCallback((topic) => {
-    setActiveTopic(topic.id);
-    if (mode === 'interior') {
-      if (typeof topic.photo === 'number') setPhotoIdx(topic.photo);
-      speak(topic.say);
-      return;
-    }
     const api = sceneApi.current; if (!api) return;
+    setActiveTopic(topic.id);
     const preset = api.presets[topic.cam] || Object.values(api.presets)[0];
     flyTarget.current = { pos: preset.pos.clone(), look: preset.look.clone() };
     setAutoRotate(false); speak(topic.say);
-  }, [speak, mode]);
-
-  // Navigate the real-photo interior (wraps + narrates the matching room line).
-  const goPhoto = useCallback((i) => {
-    if (!photos.length) return;
-    const n = ((i % photos.length) + photos.length) % photos.length;
-    setPhotoIdx(n); setActiveTopic('p' + n);
-    const t = topics.find(tp => tp.id === 'p' + n);
-    if (t) speak(t.say);
-  }, [photos, topics, speak]);
+  }, [speak]);
 
   const runFullRef = useRef(false);
   const playFull = useCallback(() => {
@@ -577,39 +601,9 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
 
   return (
     <div className="pi-3d" role="dialog" aria-label="3D property showcase">
-      {mode === 'interior' ? (
-        photos.length ? (
-          <div
-            className="pi-3d-photo"
-            onMouseMove={(e) => { const el = photoLayerRef.current; if (!el) return; const r = e.currentTarget.getBoundingClientRect(); const dx = (e.clientX - r.left) / r.width - 0.5, dy = (e.clientY - r.top) / r.height - 0.5; el.style.transform = `translate(${dx * -22}px, ${dy * -14}px) scale(1.06)`; }}
-            onMouseLeave={() => { const el = photoLayerRef.current; if (el) el.style.transform = ''; }}
-          >
-            <div className="pi-3d-photo-layer" ref={photoLayerRef}>
-              <img key={photoIdx} src={photos[photoIdx]} alt={property.title} className="pi-3d-photo-img" />
-            </div>
-            <div className="pi-3d-photo-scrim" />
-            <button className="pi-3d-photo-tap left" onClick={() => goPhoto(photoIdx - 1)} aria-label="Previous photo" />
-            <button className="pi-3d-photo-tap right" onClick={() => goPhoto(photoIdx + 1)} aria-label="Next photo" />
-            <div className="pi-3d-photo-cap">
-              <span className="pi-3d-photo-kicker">🖼️ Real listing photo · {photoIdx + 1} / {photos.length}</span>
-              <strong>{property.title}</strong>
-            </div>
-            <div className="pi-3d-photo-thumbs">
-              {photos.map((src, i) => (
-                <button key={i} className={`pi-3d-photo-thumb ${i === photoIdx ? 'active' : ''}`} onClick={() => goPhoto(i)}>
-                  <img src={src} alt="" loading="lazy" />
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="pi-3d-photo empty"><div><span>🖼️</span><h3>No interior photos yet</h3><p>This listing doesn&apos;t have interior images uploaded.</p></div></div>
-        )
-      ) : (
-        <div ref={mountRef} className="pi-3d-canvas" />
-      )}
+      <div ref={mountRef} className="pi-3d-canvas" />
 
-      {mode === 'exterior' && ready && hotspots.map(h => h.visible && (
+      {ready && hotspots.map(h => h.visible && (
         <button key={h.id} className={`pi-3d-hotspot ${activeTopic === h.id ? 'active' : ''}`} style={{ left: h.x, top: h.y }}
           onClick={() => { const t = topics.find(t => t.id === h.id); if (t) goTopic(t); }}>
           <span className="pi-3d-hotspot-dot" /><span className="pi-3d-hotspot-label">{labelFor(h.id)}</span>
@@ -641,7 +635,7 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
             </button>
           ))}
         </div>
-        <button className="pi-3d-play-full" onClick={playFull} disabled={mode === 'interior' && !photos.length}>▶ Play full {mode === 'interior' ? 'home' : '3D'} tour</button>
+        <button className="pi-3d-play-full" onClick={playFull}>▶ Play full {mode === 'interior' ? 'home' : '3D'} tour</button>
         <div className="pi-3d-cta-row">
           <button className="primary" onClick={() => { onSchedule?.(); onClose(); }}>📅 Schedule Visit</button>
           <button className="ghost" onClick={() => onSave?.()}>{saved ? '♥ Saved' : '♡ Save'}</button>
@@ -649,23 +643,12 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
       </div>
 
       <div className="pi-3d-controls">
-        {mode === 'interior' ? (
-          <>
-            <button onClick={() => goPhoto(photoIdx - 1)} disabled={!photos.length}>⏮ Prev</button>
-            <button onClick={() => goPhoto(photoIdx + 1)} disabled={!photos.length}>⏭ Next</button>
-            <span className="pi-3d-counter">{photos.length ? photoIdx + 1 : 0} / {photos.length}</span>
-            <span className="pi-3d-hint">🖼️ Real listing photos · move mouse to look around</span>
-          </>
-        ) : (
-          <>
-            <button className={autoRotate ? 'on' : ''} onClick={() => setAutoRotate(r => !r)}>{autoRotate ? '⏸ Stop spin' : '↻ Auto-rotate'}</button>
-            <button onClick={() => { goTopic(topics[0]); setActiveTopic(null); }}>⤢ Reset view</button>
-            <span className="pi-3d-hint">🖱️ Drag to orbit · scroll to zoom</span>
-          </>
-        )}
+        <button className={autoRotate ? 'on' : ''} onClick={() => setAutoRotate(r => !r)}>{autoRotate ? '⏸ Stop spin' : '↻ Auto-rotate'}</button>
+        <button onClick={() => { goTopic(topics[0]); setActiveTopic(null); }}>⤢ Reset view</button>
+        <span className="pi-3d-hint">🖱️ Drag to orbit · scroll to zoom</span>
       </div>
 
-      {mode === 'exterior' && !ready && <div className="pi-3d-loading"><span className="pi-3d-spinner" />Building 3D model…</div>}
+      {!ready && <div className="pi-3d-loading"><span className="pi-3d-spinner" />Building 3D {mode === 'interior' ? 'home' : 'model'}…</div>}
     </div>
   );
 }
