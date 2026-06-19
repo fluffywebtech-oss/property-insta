@@ -144,7 +144,7 @@ export default function PropertyView() {
               <span className="pi-prop-tour-launch-icon room">⌂</span>
               <span className="pi-prop-tour-launch-text">
                 <strong>Interior tour</strong>
-                <small>Walk the furnished home · with voice</small>
+                <small>Real interior photos · narrated</small>
               </span>
             </button>
           </div>
@@ -233,7 +233,7 @@ export default function PropertyView() {
                 <span>🧊</span><strong>3D Showcase</strong><span className="hint">Rotate + AI 3D advisor</span>
               </button>
               <button className="pi-prop-tool-int" onClick={() => open3d('interior')}>
-                <span>🛋️</span><strong>Interior Tour</strong><span className="hint">Walk the furnished home</span>
+                <span>🛋️</span><strong>Interior Tour</strong><span className="hint">Real photos · narrated</span>
               </button>
               <button className="pi-prop-tool-tour" onClick={() => setTourOpen(true)}>
                 <span>🎧</span><strong>Guided Tour</strong><span className="hint">Agent narrates with voice</span>

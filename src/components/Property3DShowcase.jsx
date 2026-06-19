@@ -394,16 +394,38 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
   const [supported] = useState(() => typeof window !== 'undefined' && 'speechSynthesis' in window);
   const voiceRef = useRef(null);
 
+  // Real interior = the listing's actual photos (exact, not a procedural room).
+  const photos = useMemo(() => {
+    const m = (property.media || property.images || []).filter(Boolean);
+    return m.length ? m : (property.thumbnail ? [property.thumbnail] : []);
+  }, [property]);
+  const [photoIdx, setPhotoIdx] = useState(0);
+  const photoLayerRef = useRef(null);
+  useEffect(() => { setPhotoIdx(0); }, [mode]);
+
   const topics = useMemo(() => {
     if (mode === 'interior') {
       const beds = build.bhk;
-      return [
-        { id: 'overview', icon: '🏠', label: 'Home Overview', tip: `${beds} BHK furnished layout.`, say: `Welcome inside ${property.title}. This is a ${beds} B.H.K. home — let me walk you through each space.`, cam: 'overview' },
-        { id: 'living', icon: '🛋️', label: 'Living Room', tip: 'Spacious & sunlit.', say: `Here's the living room — a spacious, sunlit lounge with a comfortable sofa, media wall, and a balcony just beyond for natural light.`, cam: 'living' },
-        { id: 'kitchen', icon: '🍳', label: 'Kitchen', tip: 'Modular kitchen.', say: `The modular kitchen offers ample counter space, an island, overhead cabinets and a chimney — ready to cook in.`, cam: 'kitchen' },
-        { id: 'bedroom', icon: '🛏️', label: 'Master Bedroom', tip: 'Private & restful.', say: `This is the master bedroom — a private, restful retreat with a king bed, fitted wardrobe and bedside lighting.`, cam: 'bedroom' },
-        { id: 'balcony', icon: '🌆', label: 'Balcony View', tip: 'City skyline.', say: `And step out onto the balcony — glass railings and an open view over the city skyline. The perfect spot for your morning coffee.`, cam: 'balcony' },
+      const caps = ['Overview', 'A closer look', 'Details & finishes', 'Another view', 'More to see', 'Further view', 'Yet another angle', 'Last look'];
+      const says = [
+        `Here are the real photos of ${property.title}. It's a ${beds} B.H.K. ${build.type}${property.area ? ` of about ${property.area} square feet` : ''}${property.furnishing ? `, ${property.furnishing.toLowerCase()}` : ''}. Let me take you through them.`,
+        `A closer look at the property and its spaces.`,
+        `Notice the finishes and the natural light.`,
+        `Another real view of the home.`,
+        `${property.amenities?.length ? `Residents also enjoy ${property.amenities.slice(0, 3).join(', ')}.` : 'More of what the home offers.'}`,
+        `A further look at the property in ${property.location || 'its neighbourhood'}.`,
+        `One more angle of the home.`,
+        `And a final look.`,
       ];
+      if (!photos.length) {
+        return [{ id: 'p0', photo: 0, icon: '🖼️', label: 'No photos', tip: 'No photos available.', say: `We don't have photos for ${property.title} yet.` }];
+      }
+      return photos.map((src, i) => ({
+        id: 'p' + i, photo: i, icon: '🖼️',
+        label: caps[i] || `Photo ${i + 1}`,
+        tip: `Real photo ${i + 1} of ${photos.length}`,
+        say: says[i] || says[7],
+      }));
     }
     const sunWord = /east/i.test(build.facing) ? 'gentle morning sunlight' : /west/i.test(build.facing) ? 'warm afternoon and evening light' : /north/i.test(build.facing) ? 'soft, even daylight with low heat' : 'bright, sunny exposure through the day';
     const floorWord = build.yourFloor >= build.total * 0.75 ? 'a commanding high-rise vantage' : build.yourFloor >= build.total * 0.4 ? 'a comfortable mid-rise height' : 'an easy, low-floor convenience';
@@ -414,10 +436,11 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
       { id: 'amenities', icon: '🏊', label: build.isVilla ? 'Outdoor Space' : 'Sky Deck', tip: property.amenities?.length ? `${property.amenities.length} amenities.` : 'Premium amenities.', say: property.amenities?.length ? `${build.isVilla ? 'Your garden and deck sit here' : 'Up on the rooftop deck'} you have amenities like ${property.amenities.slice(0, 3).join(', ')}.` : `${build.isVilla ? 'Enjoy your private outdoor space.' : 'The rooftop deck offers an infinity pool and open city views.'}`, cam: 'deck' },
       { id: 'surroundings', icon: '🌳', label: 'Surroundings', tip: `${property.location || 'Prime location'}.`, say: `Looking around, ${property.title} sits in ${property.location || 'a prime neighbourhood'}, framed by greenery and well-connected roads.`, cam: 'wide' },
     ];
-  }, [mode, build, property]);
+  }, [mode, build, property, photos]);
 
-  // Build / rebuild the three.js scene on mode change.
+  // Build / rebuild the three.js EXTERIOR scene. Interior uses real photos (no WebGL).
   useEffect(() => {
+    if (mode !== 'exterior') { setReady(true); return; }
     const mount = mountRef.current; if (!mount) return;
     setReady(false);
     const W = mount.clientWidth, H = mount.clientHeight;
@@ -435,7 +458,7 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-    const built = mode === 'interior' ? createInterior(scene, build, coverImg) : createExterior(scene, build, coverImg, property);
+    const built = createExterior(scene, build, coverImg, property);
     const { anchors, presets, ring, pin, start } = built;
 
     camera.position.copy(start.pos);
@@ -511,12 +534,26 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
   }, [supported]);
 
   const goTopic = useCallback((topic) => {
-    const api = sceneApi.current; if (!api) return;
     setActiveTopic(topic.id);
+    if (mode === 'interior') {
+      if (typeof topic.photo === 'number') setPhotoIdx(topic.photo);
+      speak(topic.say);
+      return;
+    }
+    const api = sceneApi.current; if (!api) return;
     const preset = api.presets[topic.cam] || Object.values(api.presets)[0];
     flyTarget.current = { pos: preset.pos.clone(), look: preset.look.clone() };
     setAutoRotate(false); speak(topic.say);
-  }, [speak]);
+  }, [speak, mode]);
+
+  // Navigate the real-photo interior (wraps + narrates the matching room line).
+  const goPhoto = useCallback((i) => {
+    if (!photos.length) return;
+    const n = ((i % photos.length) + photos.length) % photos.length;
+    setPhotoIdx(n); setActiveTopic('p' + n);
+    const t = topics.find(tp => tp.id === 'p' + n);
+    if (t) speak(t.say);
+  }, [photos, topics, speak]);
 
   const runFullRef = useRef(false);
   const playFull = useCallback(() => {
@@ -540,9 +577,39 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
 
   return (
     <div className="pi-3d" role="dialog" aria-label="3D property showcase">
-      <div ref={mountRef} className="pi-3d-canvas" />
+      {mode === 'interior' ? (
+        photos.length ? (
+          <div
+            className="pi-3d-photo"
+            onMouseMove={(e) => { const el = photoLayerRef.current; if (!el) return; const r = e.currentTarget.getBoundingClientRect(); const dx = (e.clientX - r.left) / r.width - 0.5, dy = (e.clientY - r.top) / r.height - 0.5; el.style.transform = `translate(${dx * -22}px, ${dy * -14}px) scale(1.06)`; }}
+            onMouseLeave={() => { const el = photoLayerRef.current; if (el) el.style.transform = ''; }}
+          >
+            <div className="pi-3d-photo-layer" ref={photoLayerRef}>
+              <img key={photoIdx} src={photos[photoIdx]} alt={property.title} className="pi-3d-photo-img" />
+            </div>
+            <div className="pi-3d-photo-scrim" />
+            <button className="pi-3d-photo-tap left" onClick={() => goPhoto(photoIdx - 1)} aria-label="Previous photo" />
+            <button className="pi-3d-photo-tap right" onClick={() => goPhoto(photoIdx + 1)} aria-label="Next photo" />
+            <div className="pi-3d-photo-cap">
+              <span className="pi-3d-photo-kicker">🖼️ Real listing photo · {photoIdx + 1} / {photos.length}</span>
+              <strong>{property.title}</strong>
+            </div>
+            <div className="pi-3d-photo-thumbs">
+              {photos.map((src, i) => (
+                <button key={i} className={`pi-3d-photo-thumb ${i === photoIdx ? 'active' : ''}`} onClick={() => goPhoto(i)}>
+                  <img src={src} alt="" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="pi-3d-photo empty"><div><span>🖼️</span><h3>No interior photos yet</h3><p>This listing doesn&apos;t have interior images uploaded.</p></div></div>
+        )
+      ) : (
+        <div ref={mountRef} className="pi-3d-canvas" />
+      )}
 
-      {ready && hotspots.map(h => h.visible && (
+      {mode === 'exterior' && ready && hotspots.map(h => h.visible && (
         <button key={h.id} className={`pi-3d-hotspot ${activeTopic === h.id ? 'active' : ''}`} style={{ left: h.x, top: h.y }}
           onClick={() => { const t = topics.find(t => t.id === h.id); if (t) goTopic(t); }}>
           <span className="pi-3d-hotspot-dot" /><span className="pi-3d-hotspot-label">{labelFor(h.id)}</span>
@@ -574,7 +641,7 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
             </button>
           ))}
         </div>
-        <button className="pi-3d-play-full" onClick={playFull}>▶ Play full {mode === 'interior' ? 'home' : '3D'} tour</button>
+        <button className="pi-3d-play-full" onClick={playFull} disabled={mode === 'interior' && !photos.length}>▶ Play full {mode === 'interior' ? 'home' : '3D'} tour</button>
         <div className="pi-3d-cta-row">
           <button className="primary" onClick={() => { onSchedule?.(); onClose(); }}>📅 Schedule Visit</button>
           <button className="ghost" onClick={() => onSave?.()}>{saved ? '♥ Saved' : '♡ Save'}</button>
@@ -582,12 +649,23 @@ export default function Property3DShowcase({ property, coverImg, initialMode = '
       </div>
 
       <div className="pi-3d-controls">
-        <button className={autoRotate ? 'on' : ''} onClick={() => setAutoRotate(r => !r)}>{autoRotate ? '⏸ Stop spin' : '↻ Auto-rotate'}</button>
-        <button onClick={() => { goTopic(topics[0]); setActiveTopic(null); }}>⤢ Reset view</button>
-        <span className="pi-3d-hint">🖱️ Drag to orbit · scroll to zoom</span>
+        {mode === 'interior' ? (
+          <>
+            <button onClick={() => goPhoto(photoIdx - 1)} disabled={!photos.length}>⏮ Prev</button>
+            <button onClick={() => goPhoto(photoIdx + 1)} disabled={!photos.length}>⏭ Next</button>
+            <span className="pi-3d-counter">{photos.length ? photoIdx + 1 : 0} / {photos.length}</span>
+            <span className="pi-3d-hint">🖼️ Real listing photos · move mouse to look around</span>
+          </>
+        ) : (
+          <>
+            <button className={autoRotate ? 'on' : ''} onClick={() => setAutoRotate(r => !r)}>{autoRotate ? '⏸ Stop spin' : '↻ Auto-rotate'}</button>
+            <button onClick={() => { goTopic(topics[0]); setActiveTopic(null); }}>⤢ Reset view</button>
+            <span className="pi-3d-hint">🖱️ Drag to orbit · scroll to zoom</span>
+          </>
+        )}
       </div>
 
-      {!ready && <div className="pi-3d-loading"><span className="pi-3d-spinner" />Building 3D {mode === 'interior' ? 'home' : 'model'}…</div>}
+      {mode === 'exterior' && !ready && <div className="pi-3d-loading"><span className="pi-3d-spinner" />Building 3D model…</div>}
     </div>
   );
 }
