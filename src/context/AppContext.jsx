@@ -369,8 +369,10 @@ export function AppProvider({ children }) {
   // Supabase availability flag
   const [dbReady, setDbReady] = useState(false);
 
-  // View management
-  const [currentView, setCurrentView] = useState('feed');
+  // View management — land on the blog when deep-linked via /blog or /blog/{slug}
+  const [currentView, setCurrentView] = useState(
+    () => (typeof window !== 'undefined' && /^\/blog(\/|$)/.test(window.location.pathname) ? 'blog' : 'feed')
+  );
   // Which builder's microsite is being shown (set when `currentView === 'builder'`)
   const [selectedBuilder, setSelectedBuilder] = useState(null);
 

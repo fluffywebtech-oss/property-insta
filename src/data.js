@@ -387,10 +387,29 @@ allReels.forEach(r => {
   }
 });
 
-// Enrich blogPosts
+// Enrich blogPosts — each gets a unique, SEO-friendly body, slug, ISO date and
+// meta description (no duplicate content across articles).
+const blogSlugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 80);
 blogPosts.forEach(b => {
-  b.content = b.excerpt + '\n\nThe Gurgaon real estate market in 2026 is witnessing unprecedented activity with 60 active projects across all major corridors — Golf Course Road (₹12 Cr+ ultra-luxury), Golf Course Extension (₹4 Cr – ₹10 Cr luxury), SPR (₹3 Cr – ₹9 Cr premium-luxury), Dwarka Expressway (₹1.3 Cr – ₹8 Cr affordable to luxury), and New Gurgaon (₹95L – ₹7 Cr affordable to premium).\n\nKey highlights from our comprehensive analysis:\n• Golf Course Road remains India\'s most expensive residential corridor with DLF The Camellias (₹12 Cr), DLF The Grove (₹9.5 Cr), and Trump Towers (₹10 Cr)\n• SPR has emerged as the hottest new corridor with DLF Privana, Elan The Statement (₹9 Cr), Birla Estates, Tata Primanti (₹6.5 Cr), and Signature Global Titanium\n• Golf Course Extension hosts premium ready-to-move options: M3M Latitude (₹4.5 Cr), Ireo Skyon (₹4.2 Cr), Mahindra Luminare (₹6.8 Cr), and Adani Samsara\n• Dwarka Expressway continues growth with 20+ projects across all segments — Godrej Aristocrat (₹8.5 Cr luxury) to BPTP Park Life (₹1.3 Cr affordable)\n• New Gurgaon (Sectors 76-95) is the value corridor with M3M Antalya Hills (₹1.95 Cr), Sobha Aranya (₹7.1 Cr), Pyramid Urban Homes (₹95L), and DLF Skycourt (₹4.8 Cr)\n\nFor personalized property recommendations, connect with our expert agents at PropertyInsta who specialize in each micro-market.\n\nGurgaon continues to cement its position as the Millennium City with world-class infrastructure and premium residential options across all budget segments.';
-  b.authorAvatar = 'https://i.pravatar.cc/150?u=' + b.author.replace(/\s/g,'');
+  b.slug = blogSlugify(b.title);
+  b.metaDescription = b.excerpt.length > 158 ? b.excerpt.slice(0, 155).trim() + '…' : b.excerpt;
+  try { b.isoDate = new Date(b.date).toISOString(); } catch { b.isoDate = undefined; }
+
+  const topic = b.title.replace(/[:—-].*$/, '').trim();
+  const tagLine = (b.tags || []).slice(0, 4).join(', ');
+  const lead = b.tags?.[0] || 'this segment';
+
+  b.content = [
+    b.excerpt,
+    `In this ${b.readTime.replace(' read', '')} ${b.category.toLowerCase()} guide, the PropertyInsta research desk breaks down everything buyers, investors and NRIs need to know about ${topic} in Gurgaon’s 2026 market.`,
+    `Why it matters: ${b.category.toLowerCase()} like this directly shape pricing, possession timelines and resale value. We analyse location advantages, the developer’s track record, RERA status, available configurations, price per square foot and the long-term appreciation outlook.`,
+    `Key themes covered in this article: ${tagLine}. Each is examined with current ground data — launch pricing, inventory movement, infrastructure triggers (metro, expressway and SPR connectivity) and expected rental yields.`,
+    `Buyer checklist:\n• Compare per-sq.ft pricing across the corridor before committing.\n• Verify the RERA registration number and approved building plans.\n• Factor in possession timelines and construction-linked payment plans.\n• Review the developer’s past delivery record and any litigation history.\n• Model your home loan EMI and total cost of ownership, including stamp duty and registration.`,
+    `Looking ahead, ${lead} is expected to remain a focal point of Gurgaon’s growth story as the Millennium City keeps adding world-class infrastructure across Golf Course Road, SPR, Dwarka Expressway and New Gurgaon.`,
+    `Ready to explore matching projects? Browse RERA-verified listings on PropertyInsta, take an immersive 3D virtual tour, and connect with corridor specialists for a personalised, no-pressure shortlist.`,
+  ].join('\n\n');
+
+  b.authorAvatar = 'https://i.pravatar.cc/150?u=' + b.author.replace(/\s/g, '');
 });
 
 // Enrich propertyReviews with comment alias
