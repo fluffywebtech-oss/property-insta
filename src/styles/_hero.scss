@@ -258,93 +258,110 @@ body.dark .hero-search-box {
   &:hover:not(.active) { color: var(--ig-text); }
 }
 
-.hero-search-input-row {
+// Unified search panel — stacked labeled segments separated by hairline dividers
+.hero-usb {
   display: flex;
-  gap: 8px;
-  align-items: stretch;
+  flex-direction: column;
+  gap: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--ig-border);
+  border-radius: 18px;
+  padding: 6px;
+  box-shadow: 0 1px 2px rgba(8,12,24,0.04);
 }
+body.dark .hero-usb { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
 
-.hero-search-field {
-  flex: 1;
+.hero-usb-seg {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 18px;
+  border-radius: 13px;
+  cursor: pointer;
   position: relative;
+  min-width: 0;
+  transition: background 0.2s ease;
 
-  input, select {
-    width: 100%;
-    height: 56px;
-    padding: 0 16px 0 48px;
-    border: 1.5px solid transparent;
-    border-radius: 16px;
-    font-size: 14px;
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    background: var(--muted-bg);
-    color: var(--ig-text);
-    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  &:hover { background: var(--muted-bg); }
 
-    &::placeholder { color: var(--ig-text-secondary); font-weight: 500; }
-    &:hover { background: var(--hover-bg); }
-    &:focus {
-      outline: none;
-      background: var(--card-bg);
-      border-color: var(--ig-link);
-      box-shadow: 0 0 0 4px rgba(31,86,196,0.13);
-    }
-  }
-  select { cursor: pointer; }
-
-  // leading accent icon
-  > svg:first-of-type {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--ig-link);
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    padding-right: 40px;
-  }
-  .hero-field-chevron {
-    position: absolute;
-    right: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--ig-text-secondary);
-    z-index: 1;
-    pointer-events: none;
-    transition: transform 0.2s ease;
-  }
-  select:focus ~ .hero-field-chevron { transform: translateY(-50%) rotate(180deg); color: var(--ig-link); }
-
-  &.hero-search-price { max-width: 200px; }
-  &.hero-search-type { max-width: 185px; }
+  > svg:first-child { color: var(--ig-link); flex-shrink: 0; }
 }
 
-.hero-search-btn {
-  height: 56px;
-  padding: 0 32px;
+.hero-usb-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.hero-usb-lbl {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ig-text-secondary);
+  line-height: 1;
+}
+.hero-usb-body input,
+.hero-usb-body select {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--ig-text);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.3;
+
+  &:focus { outline: none; }
+  &::placeholder { color: var(--ig-text); opacity: 0.42; font-weight: 600; }
+}
+.hero-usb-body select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  padding-right: 2px;
+}
+.hero-usb-chev {
+  color: var(--ig-text-secondary);
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.hero-usb-seg select:focus ~ .hero-usb-chev { transform: rotate(180deg); color: var(--ig-link); }
+
+.hero-usb-div {
+  width: auto;
+  height: 1px;
+  align-self: stretch;
+  margin: 0 18px;
+  background: var(--ig-border);
+  flex-shrink: 0;
+}
+
+.hero-usb-btn {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 15px;
+  border-radius: 13px;
   background: var(--ig-gradient-warm);
   color: #fff;
   border: none;
-  border-radius: 16px;
-  font-weight: 800;
-  font-size: 14.5px;
-  letter-spacing: 0.01em;
   cursor: pointer;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
   white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 9px;
   font-family: 'Inter', sans-serif;
-  box-shadow: 0 10px 22px rgba(234,88,12,0.4), 0 1px 0 rgba(255,255,255,0.4) inset;
-  transition: transform 0.22s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s ease, filter 0.2s ease;
+  box-shadow: 0 8px 18px rgba(234,88,12,0.36), 0 1px 0 rgba(255,255,255,0.35) inset;
+  transition: transform 0.2s cubic-bezier(0.16,1,0.3,1), box-shadow 0.2s ease, filter 0.2s ease;
 
-  &:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(234,88,12,0.52); filter: brightness(1.06); }
+  &:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(234,88,12,0.48); filter: brightness(1.05); }
   &:active { transform: translateY(0); }
 }
 
@@ -490,13 +507,11 @@ body.dark .hero-search-box {
   .hero-trust-strip { justify-content: center; gap: 14px; margin-top: 14px; }
   .hero-search-box { max-width: 100%; }
   .hero-search-tabs { display: inline-flex; margin-bottom: 11px; }
-  .hero-search-input-row { flex-wrap: wrap; gap: 8px; }
-  .hero-search-field {
-    flex: 1 1 100%;
-    &.hero-search-price { flex: 1 1 calc(50% - 4px); max-width: none; }
-    &.hero-search-type { flex: 1 1 calc(50% - 4px); max-width: none; }
-  }
-  .hero-search-btn { width: 100%; justify-content: center; }
+  // Unified bar stacks vertically with hairline dividers on small screens
+  .hero-usb { flex-direction: column; padding: 6px; border-radius: 20px; }
+  .hero-usb-div { width: auto; height: 1px; align-self: stretch; margin: 0 14px; }
+  .hero-usb-seg { padding: 12px 14px; }
+  .hero-usb-btn { margin: 6px 0 0; padding: 14px; justify-content: center; }
   .hero-search-tags { display: flex; }
 
   .hero-content-right { width: 100%; }
@@ -514,10 +529,8 @@ body.dark .hero-search-box {
   .hero-banner-content { padding: 16px 12px 16px; }
   .hero-banner-title { font-size: 22px; }
   .hero-banner-subtitle { font-size: 13px; margin-bottom: 16px; }
-  .hero-search-field input,
-  .hero-search-field select { height: 50px; padding: 0 14px 0 44px; font-size: 13.5px; }
-  .hero-search-field select { padding-right: 38px; }
-  .hero-search-btn { height: 50px; }
+  .hero-usb-seg { padding: 11px 13px; }
+  .hero-usb-body input, .hero-usb-body select { font-size: 14px; }
   .hero-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .hero-stat-value { font-size: 18px; }
 }
