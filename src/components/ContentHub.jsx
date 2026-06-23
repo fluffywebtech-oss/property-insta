@@ -101,9 +101,28 @@ export default function ContentHub() {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6" /></svg>
           Back to hub
         </button>
-        <audio controls autoPlay style={{ width: '100%', marginBottom: '20px' }}>
-          <source src={selectedContent.audioUrl} type="audio/mpeg" />
-        </audio>
+        {selectedContent.videoUrl ? (
+          <video
+            src={selectedContent.videoUrl}
+            poster={selectedContent.poster}
+            controls
+            playsInline
+            className="ig-podcast-video"
+            style={{ width: '100%', borderRadius: 'var(--radius-lg)', marginBottom: '20px', background: '#000' }}
+          />
+        ) : (
+          <audio controls autoPlay style={{ width: '100%', marginBottom: '20px' }}>
+            <source src={selectedContent.audioUrl} type="audio/mpeg" />
+          </audio>
+        )}
+        {selectedContent.videoUrl && (
+          <div className="ig-podcast-audio-alt">
+            <span>🎧 Prefer audio only?</span>
+            <audio controls style={{ flex: 1 }}>
+              <source src={selectedContent.audioUrl} type="audio/mpeg" />
+            </audio>
+          </div>
+        )}
         <h1>{selectedContent.title}</h1>
         <p className="ig-content-date">{selectedContent.date}</p>
         {selectedContent.guest && (
@@ -192,7 +211,9 @@ export default function ContentHub() {
 
           <div className="ig-featured-item" onClick={() => openContent(featuredPodcast)}>
             <div className="ig-featured-img">
-              <div className="ig-featured-podcast-bg">🎙️</div>
+              {featuredPodcast.poster
+                ? <img src={featuredPodcast.poster} alt={featuredPodcast.title} />
+                : <div className="ig-featured-podcast-bg">🎙️</div>}
               <span className="ig-featured-icon">▶</span>
             </div>
             <div className="ig-featured-info">
@@ -216,7 +237,11 @@ export default function ContentHub() {
               <div className="ig-hub-card-visual">
                 {content.contentType === 'blog' && <img src={content.image} alt={content.title} />}
                 {content.contentType === 'video' && <img src={content.thumbnail} alt={content.title} />}
-                {content.contentType === 'podcast' && <div className="ig-podcast-visual">🎙️</div>}
+                {content.contentType === 'podcast' && (
+                  content.poster
+                    ? <><img src={content.poster} alt={content.title} /><span className="ig-podcast-play">▶</span></>
+                    : <div className="ig-podcast-visual">🎙️</div>
+                )}
                 <span className="ig-card-icon">{content.icon}</span>
               </div>
               <div className="ig-hub-card-info">

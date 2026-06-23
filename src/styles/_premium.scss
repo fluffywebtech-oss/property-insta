@@ -4706,6 +4706,42 @@ button:focus:not(:focus-visible) { outline: none; }
     font-size: 48px;
     background: var(--ig-gradient);
   }
+
+  .ig-podcast-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 3px;
+    font-size: 16px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.55);
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+  }
+}
+
+.ig-podcast-audio-alt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -8px 0 20px;
+  padding: 10px 14px;
+  background: var(--muted-bg);
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  color: var(--ig-text-secondary, #6b7280);
+
+  span { white-space: nowrap; }
+  audio { height: 36px; }
 }
 
 .ig-card-icon {
