@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { blogPosts } from '../data';
+import { blogPosts, productVideos } from '../data';
 import { setSeo, setJsonLd, removeJsonLd, origin } from '../utils/seo';
 
 export default function BlogView() {
+  const [activeView, setActiveView] = useState('blog'); // 'blog' or 'videos'
   const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
 
   const categories = ['All', ...new Set(blogPosts.map(p => p.category).filter(Boolean))];
@@ -93,13 +95,34 @@ export default function BlogView() {
     ? blogPosts.filter(p => p.id !== selectedPost.id && (p.category === selectedPost.category || (p.tags || []).some(t => (selectedPost.tags || []).includes(t)))).slice(0, 3)
     : [];
 
+  const videoCategories = ['All', ...new Set(productVideos.map(v => v.category).filter(Boolean))];
+  const filteredVideos = activeCategory === 'All' ? productVideos : productVideos.filter(v => v.category === activeCategory);
+
   return (
     <div id="blogView" className="">
       <div className="ig-blog-header">
         <h1>Property Insights &amp; Blog</h1>
         <p>Expert advice, market trends, and home buying guides</p>
+
+        {/* Blog / Videos Tabs */}
+        <div className="ig-blog-tabs">
+          <button
+            className={`ig-blog-tab ${activeView === 'blog' ? 'active' : ''}`}
+            onClick={() => { setActiveView('blog'); setSelectedPost(null); setSelectedVideo(null); }}
+          >
+            📝 Blog
+          </button>
+          <button
+            className={`ig-blog-tab ${activeView === 'videos' ? 'active' : ''}`}
+            onClick={() => { setActiveView('videos'); setSelectedPost(null); setSelectedVideo(null); }}
+          >
+            🎬 Product Videos
+          </button>
+        </div>
+
+        {/* Categories */}
         <div className="ig-blog-categories">
-          {categories.map(cat => (
+          {(activeView === 'blog' ? categories : videoCategories).map(cat => (
             <button
               key={cat}
               className={`ig-blog-cat-chip ${activeCategory === cat ? 'active' : ''}`}
@@ -111,7 +134,86 @@ export default function BlogView() {
         </div>
       </div>
 
-      {selectedPost ? (
+      {selectedVideo ? (
+        <div className="ig-video-detail">
+          <button className="ig-back-btn" onClick={() => setSelectedVideo(null)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+            Back to videos
+          </button>
+          <div className="ig-video-player">
+            <video
+              src={selectedVideo.videoUrl}
+              controls
+              autoPlay
+              style={{ width: '100%', borderRadius: 'var(--radius-lg)' }}
+            />
+          </div>
+          <div className="ig-video-info">
+            <h1>{selectedVideo.title}</h1>
+            <div className="ig-video-meta">
+              <span>📅 {selectedVideo.date}</span>
+              <span>👁️ {selectedVideo.views.toLocaleString()} views</span>
+              <span>⏱️ {selectedVideo.duration}</span>
+            </div>
+            <p className="ig-video-desc">{selectedVideo.description}</p>
+          </div>
+        </div>
+      ) : activeView === 'videos' ? (
+        <div className="ig-videos-section">
+          {filteredVideos.length === 0 ? (
+            <div className="ig-empty-state">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
+              <h3>No videos found</h3>
+            </div>
+          ) : (
+            <>
+              {/* Featured Video */}
+              {filteredVideos.find(v => v.featured) && (
+                <div className="ig-featured-video">
+                  <div className="ig-featured-video-thumb" onClick={() => setSelectedVideo(filteredVideos.find(v => v.featured))}>
+                    <img src={filteredVideos.find(v => v.featured).thumbnail} alt={filteredVideos.find(v => v.featured).title} />
+                    <div className="ig-featured-video-overlay">
+                      <span className="ig-play-btn">▶</span>
+                    </div>
+                  </div>
+                  <div className="ig-featured-video-info">
+                    <span className="ig-featured-badge">⭐ Featured</span>
+                    <h2>{filteredVideos.find(v => v.featured).title}</h2>
+                    <p>{filteredVideos.find(v => v.featured).description}</p>
+                    <div className="ig-video-stats">
+                      <span>👁️ {filteredVideos.find(v => v.featured).views.toLocaleString()}</span>
+                      <span>⏱️ {filteredVideos.find(v => v.featured).duration}</span>
+                    </div>
+                    <button className="ig-featured-play-btn" onClick={() => setSelectedVideo(filteredVideos.find(v => v.featured))}>
+                      ▶ Play Video
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Video Grid */}
+              <div className="ig-video-grid">
+                {filteredVideos.filter(v => !v.featured).map(video => (
+                  <div key={video.id} className="ig-video-card" onClick={() => setSelectedVideo(video)}>
+                    <div className="ig-video-thumb">
+                      <img src={video.thumbnail} alt={video.title} loading="lazy" />
+                      <span className="ig-play-btn-small">▶</span>
+                    </div>
+                    <div className="ig-video-card-info">
+                      <h3>{video.title}</h3>
+                      <div className="ig-video-card-stats">
+                        <span>👁️ {video.views.toLocaleString()}</span>
+                        <span>⏱️ {video.duration}</span>
+                      </div>
+                      <span className="ig-video-date">{video.date}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      ) : selectedPost ? (
         <div className="ig-blog-detail">
           <button className="ig-back-btn" onClick={closePost}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>

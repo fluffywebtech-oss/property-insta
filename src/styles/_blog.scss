@@ -19,6 +19,41 @@
   }
 }
 
+// ==================== Blog / Videos Tabs ====================
+.ig-blog-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--ig-border);
+}
+
+.ig-blog-tab {
+  padding: 10px 18px;
+  background: none;
+  border: none;
+  color: var(--ig-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+
+  &:hover { color: var(--ig-text); }
+
+  &.active {
+    color: var(--ig-link);
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--ig-link);
+    }
+  }
+}
+
 .ig-blog-categories {
   display: flex;
   gap: 8px;
@@ -311,11 +346,248 @@
   &:hover { transform: translateY(-3px); border-color: var(--ig-link); box-shadow: var(--shadow-md); }
 }
 
+// ==================== Product Videos ====================
+.ig-videos-section {
+  padding: 20px;
+}
+
+.ig-featured-video {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 36px;
+  align-items: center;
+}
+
+.ig-featured-video-thumb {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  aspect-ratio: 16 / 9;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img { transform: scale(1.05); }
+}
+
+.ig-featured-video-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  .ig-featured-video-thumb:hover & { opacity: 1; }
+}
+
+.ig-play-btn {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ig-gradient);
+  color: white;
+  border-radius: 50%;
+  font-size: 24px;
+  box-shadow: 0 8px 24px rgba(39, 71, 204, 0.4);
+}
+
+.ig-featured-video-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ig-text);
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ig-text-secondary);
+    line-height: 1.6;
+  }
+}
+
+.ig-featured-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--ig-gradient);
+  color: white;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.ig-video-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--ig-text-secondary);
+}
+
+.ig-featured-play-btn {
+  padding: 12px 24px;
+  background: var(--ig-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  width: fit-content;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(39, 71, 204, 0.3);
+  }
+}
+
+.ig-video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.ig-video-card {
+  background: var(--card-bg);
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.ig-video-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--muted-bg);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.ig-play-btn-small {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  font-size: 18px;
+  color: var(--ig-link);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  .ig-video-card:hover & { opacity: 1; }
+}
+
+.ig-video-card-info {
+  padding: 14px;
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ig-text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+}
+
+.ig-video-card-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--ig-text-secondary);
+  margin-bottom: 6px;
+}
+
+.ig-video-date {
+  font-size: 11px;
+  color: var(--ig-text-secondary);
+}
+
+// Video Detail View
+.ig-video-detail {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ig-video-player {
+  margin-bottom: 24px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+
+  video {
+    width: 100%;
+    background: #000;
+  }
+}
+
+.ig-video-info {
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ig-text);
+    margin-bottom: 12px;
+  }
+}
+
+.ig-video-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--ig-text-secondary);
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ig-border);
+}
+
+.ig-video-desc {
+  font-size: 15px;
+  color: var(--ig-text-secondary);
+  line-height: 1.6;
+}
+
 // ==================== Responsive Blog ====================
 @media (max-width: 1023px) {
   .ig-blog-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
   .ig-blog-article-title { font-size: 24px; }
   .ig-blog-hero-img { height: 240px; }
+
+  .ig-featured-video { grid-template-columns: 1fr; }
+  .ig-featured-video-info h2 { font-size: 20px; }
+  .ig-video-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 }
 
 @media (max-width: 767px) {
@@ -335,6 +607,12 @@
   .ig-blog-article-author { padding: 10px; }
   .ig-blog-article-content { font-size: 14px; line-height: 1.7; }
   .ig-back-btn { padding: 6px 12px; font-size: 12px; }
+
+  .ig-videos-section { padding: 16px; }
+  .ig-featured-video-info h2 { font-size: 18px; }
+  .ig-video-grid { grid-template-columns: 1fr; gap: 14px; }
+  .ig-video-card-info { padding: 10px; }
+  .ig-video-card-info h3 { font-size: 14px; }
 }
 
 @media (max-width: 480px) {
