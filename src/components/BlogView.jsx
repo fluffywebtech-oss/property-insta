@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { blogPosts, productVideos } from '../data';
+import { blogPosts, productVideos, podcasts } from '../data';
 import { setSeo, setJsonLd, removeJsonLd, origin } from '../utils/seo';
 
 export default function BlogView() {
-  const [activeView, setActiveView] = useState('blog'); // 'blog' or 'videos'
+  const [activeView, setActiveView] = useState('blog'); // 'blog', 'videos', or 'podcasts'
   const [selectedPost, setSelectedPost] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [selectedPodcast, setSelectedPodcast] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
 
   const categories = ['All', ...new Set(blogPosts.map(p => p.category).filter(Boolean))];
@@ -98,31 +99,40 @@ export default function BlogView() {
   const videoCategories = ['All', ...new Set(productVideos.map(v => v.category).filter(Boolean))];
   const filteredVideos = activeCategory === 'All' ? productVideos : productVideos.filter(v => v.category === activeCategory);
 
+  const podcastCategories = ['All', ...new Set(podcasts.map(p => p.category).filter(Boolean))];
+  const filteredPodcasts = activeCategory === 'All' ? podcasts : podcasts.filter(p => p.category === activeCategory);
+
   return (
     <div id="blogView" className="">
       <div className="ig-blog-header">
         <h1>Property Insights &amp; Blog</h1>
         <p>Expert advice, market trends, and home buying guides</p>
 
-        {/* Blog / Videos Tabs */}
+        {/* Blog / Videos / Podcasts Tabs */}
         <div className="ig-blog-tabs">
           <button
             className={`ig-blog-tab ${activeView === 'blog' ? 'active' : ''}`}
-            onClick={() => { setActiveView('blog'); setSelectedPost(null); setSelectedVideo(null); }}
+            onClick={() => { setActiveView('blog'); setSelectedPost(null); setSelectedVideo(null); setSelectedPodcast(null); }}
           >
             📝 Blog
           </button>
           <button
             className={`ig-blog-tab ${activeView === 'videos' ? 'active' : ''}`}
-            onClick={() => { setActiveView('videos'); setSelectedPost(null); setSelectedVideo(null); }}
+            onClick={() => { setActiveView('videos'); setSelectedPost(null); setSelectedVideo(null); setSelectedPodcast(null); }}
           >
-            🎬 Product Videos
+            🎬 Videos
+          </button>
+          <button
+            className={`ig-blog-tab ${activeView === 'podcasts' ? 'active' : ''}`}
+            onClick={() => { setActiveView('podcasts'); setSelectedPost(null); setSelectedVideo(null); setSelectedPodcast(null); }}
+          >
+            🎙️ Podcasts
           </button>
         </div>
 
         {/* Categories */}
         <div className="ig-blog-categories">
-          {(activeView === 'blog' ? categories : videoCategories).map(cat => (
+          {(activeView === 'blog' ? categories : activeView === 'videos' ? videoCategories : podcastCategories).map(cat => (
             <button
               key={cat}
               className={`ig-blog-cat-chip ${activeCategory === cat ? 'active' : ''}`}
@@ -157,6 +167,97 @@ export default function BlogView() {
             </div>
             <p className="ig-video-desc">{selectedVideo.description}</p>
           </div>
+        </div>
+      ) : activeView === 'podcasts' && selectedPodcast ? (
+        <div className="ig-podcast-detail">
+          <button className="ig-back-btn" onClick={() => setSelectedPodcast(null)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+            Back to podcasts
+          </button>
+          <div className="ig-podcast-player">
+            <audio controls autoPlay style={{ width: '100%', marginBottom: '20px' }}>
+              <source src={selectedPodcast.audioUrl} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+            <h1>{selectedPodcast.title}</h1>
+            <div className="ig-podcast-meta">
+              <span>📅 {selectedPodcast.date}</span>
+              <span>👂 {selectedPodcast.listens.toLocaleString()} listens</span>
+              <span>⏱️ {selectedPodcast.duration}</span>
+            </div>
+            <p className="ig-podcast-desc">{selectedPodcast.description}</p>
+
+            <div className="ig-podcast-guest">
+              <img src={selectedPodcast.guestAvatar} alt={selectedPodcast.guest} />
+              <div>
+                <strong>{selectedPodcast.guest}</strong>
+                <span>{selectedPodcast.guestRole}</span>
+              </div>
+            </div>
+
+            <div className="ig-podcast-section">
+              <h2>📄 Transcript</h2>
+              <p>{selectedPodcast.transcript}</p>
+            </div>
+
+            {selectedPodcast.tags && (
+              <div className="ig-podcast-tags">
+                {selectedPodcast.tags.map(tag => (
+                  <span key={tag} className="ig-podcast-tag">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ) : activeView === 'podcasts' ? (
+        <div className="ig-podcasts-section">
+          {filteredPodcasts.length === 0 ? (
+            <div className="ig-empty-state">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1C6.48 1 2 5.48 2 11s4.48 10 10 10 10-4.48 10-10S17.52 1 12 1z" /><path d="M10 8h4v7h-4z" /><path d="M8 17h8" /></svg>
+              <h3>No podcasts found</h3>
+            </div>
+          ) : (
+            <>
+              {filteredPodcasts.filter(p => p.featured).map(podcast => (
+                <div key={podcast.id} className="ig-podcast-featured">
+                  <div className="ig-podcast-featured-left">
+                    <div className="ig-podcast-icon">🎙️</div>
+                    <div className="ig-podcast-featured-info">
+                      <span className="ig-featured-badge">⭐ Featured</span>
+                      <h2>{podcast.title}</h2>
+                      <p>{podcast.description}</p>
+                      <div className="ig-podcast-stats">
+                        <span>👂 {podcast.listens.toLocaleString()}</span>
+                        <span>⏱️ {podcast.duration}</span>
+                      </div>
+                      <button className="ig-featured-play-btn" onClick={() => setSelectedPodcast(podcast)}>
+                        ▶ Play Episode
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <div className="ig-podcast-grid">
+                <h3>All Episodes</h3>
+                {filteredPodcasts.filter(p => !p.featured).map(podcast => (
+                  <div key={podcast.id} className="ig-podcast-card" onClick={() => setSelectedPodcast(podcast)}>
+                    <div className="ig-podcast-card-icon">🎙️</div>
+                    <div className="ig-podcast-card-info">
+                      <h4>{podcast.title}</h4>
+                      <div className="ig-podcast-card-meta">
+                        <span>{podcast.guest}</span>
+                      </div>
+                      <div className="ig-podcast-card-stats">
+                        <span>👂 {podcast.listens.toLocaleString()}</span>
+                        <span>⏱️ {podcast.duration}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       ) : activeView === 'videos' ? (
         <div className="ig-videos-section">

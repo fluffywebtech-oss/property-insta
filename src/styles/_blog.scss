@@ -346,6 +346,231 @@
   &:hover { transform: translateY(-3px); border-color: var(--ig-link); box-shadow: var(--shadow-md); }
 }
 
+// ==================== Podcasts ====================
+.ig-podcasts-section {
+  padding: 20px;
+}
+
+.ig-podcast-featured {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 36px;
+  padding: 24px;
+  background: var(--muted-bg);
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius-lg);
+  align-items: center;
+}
+
+.ig-podcast-featured-left {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  align-items: flex-start;
+}
+
+.ig-podcast-icon {
+  font-size: 48px;
+  min-flex: 0;
+}
+
+.ig-podcast-featured-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ig-text);
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ig-text-secondary);
+    line-height: 1.6;
+  }
+}
+
+.ig-podcast-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--ig-text-secondary);
+}
+
+.ig-podcast-grid {
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ig-text);
+    margin-bottom: 16px;
+  }
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.ig-podcast-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.ig-podcast-card-icon {
+  font-size: 36px;
+  min-flex: 0;
+}
+
+.ig-podcast-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+
+  h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ig-text);
+    line-height: 1.3;
+  }
+}
+
+.ig-podcast-card-meta {
+  font-size: 12px;
+  color: var(--ig-text-secondary);
+  font-weight: 500;
+}
+
+.ig-podcast-card-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--ig-text-secondary);
+}
+
+// Podcast Detail View
+.ig-podcast-detail {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ig-podcast-player {
+  margin-bottom: 24px;
+
+  audio {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ig-text);
+    margin-bottom: 12px;
+  }
+}
+
+.ig-podcast-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--ig-text-secondary);
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ig-border);
+}
+
+.ig-podcast-desc {
+  font-size: 15px;
+  color: var(--ig-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.ig-podcast-guest {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: var(--muted-bg);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  align-items: flex-start;
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ig-text);
+    }
+
+    span {
+      font-size: 12px;
+      color: var(--ig-text-secondary);
+    }
+  }
+}
+
+.ig-podcast-section {
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ig-text);
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ig-text-secondary);
+    line-height: 1.7;
+  }
+}
+
+.ig-podcast-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid var(--ig-border);
+}
+
+.ig-podcast-tag {
+  padding: 4px 12px;
+  background: var(--badge-bg);
+  color: var(--ig-link);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 // ==================== Product Videos ====================
 .ig-videos-section {
   padding: 20px;
@@ -588,6 +813,10 @@
   .ig-featured-video { grid-template-columns: 1fr; }
   .ig-featured-video-info h2 { font-size: 20px; }
   .ig-video-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+
+  .ig-podcast-featured { grid-template-columns: 1fr; gap: 16px; }
+  .ig-podcast-featured-left { flex-direction: column; }
+  .ig-podcast-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 }
 
 @media (max-width: 767px) {
@@ -613,6 +842,17 @@
   .ig-video-grid { grid-template-columns: 1fr; gap: 14px; }
   .ig-video-card-info { padding: 10px; }
   .ig-video-card-info h3 { font-size: 14px; }
+
+  .ig-podcasts-section { padding: 16px; }
+  .ig-podcast-featured { padding: 16px; gap: 12px; }
+  .ig-podcast-featured-left { gap: 12px; }
+  .ig-podcast-featured-info h2 { font-size: 16px; }
+  .ig-podcast-grid { grid-template-columns: 1fr; gap: 12px; }
+  .ig-podcast-card { padding: 12px; gap: 10px; }
+  .ig-podcast-card-icon { font-size: 28px; }
+  .ig-podcast-card-info h4 { font-size: 13px; }
+  .ig-podcast-detail { padding: 16px; }
+  .ig-podcast-player h1 { font-size: 20px; }
 }
 
 @media (max-width: 480px) {
