@@ -392,11 +392,6 @@ export default function FeedView() {
 
   return (
     <div className="ig-feed-content">
-      {/* Featured spotlight — landscape single-listing auto-slider */}
-      {!hasActiveFilters && spotlightProps.length > 0 && (
-        <FeaturedSpotlight items={spotlightProps} onOpen={openProperty} />
-      )}
-
       {/* Browse by City */}
       {!hasActiveFilters && cities.length > 0 && (
         <section className="ig-section ig-cities-section">
@@ -442,6 +437,10 @@ export default function FeedView() {
         </section>
       )}
 
+      {/* Featured spotlight — landscape single-listing auto-slider */}
+      {!hasActiveFilters && spotlightProps.length > 0 && (
+        <FeaturedSpotlight items={spotlightProps} onOpen={openProperty} />
+      )}
 
       {/* Recently Viewed — compact horizontal strip */}
       {!hasActiveFilters && recentProps.length > 0 && (
