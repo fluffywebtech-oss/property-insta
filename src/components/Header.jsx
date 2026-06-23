@@ -36,6 +36,20 @@ const OS_MODULES_BY_ROLE = {
 
 const TIER1_CITIES = ['All India', 'Gurgaon', 'Delhi', 'Mumbai', 'Navi Mumbai', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Kolkata', 'Chandigarh', 'Lucknow', 'Ludhiana', 'Indore', 'Vrindavan', 'Faridabad', 'Greater Noida', 'Noida', 'Ghaziabad'];
 
+// Shared SVG inner-paths for the core nav icons (used by the desktop tabs and the mobile drawer)
+function NavIcon({ icon }) {
+  return (
+    <svg className="ig-nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      {icon === 'home' && <><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></>}
+      {icon === 'play' && <polygon points="5 3 19 12 5 21 5 3" />}
+      {icon === 'map' && <><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" /><line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" /></>}
+      {icon === 'bookmark' && <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />}
+      {icon === 'library' && <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2" /></>}
+      {icon === 'blog' && <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /><line x1="8" y1="17" x2="13" y2="17" /></>}
+    </svg>
+  );
+}
+
 export default function Header() {
   const {
     currentView, setCurrentView,
@@ -52,6 +66,7 @@ export default function Header() {
   const [cityOpen, setCityOpen] = useState(false);
   const [osMenuOpen, setOsMenuOpen] = useState(false);
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const searchRef = useRef(null);
   const notifRef = useRef(null);
   const cityRef = useRef(null);
@@ -70,7 +85,14 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
+  // Lock body scroll while the mobile drawer is open
+  useEffect(() => {
+    document.body.style.overflow = drawerOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [drawerOpen]);
+
   const closeAll = () => { setSearchOpen(false); setNotifOpen(false); setCityOpen(false); setOsMenuOpen(false); setRoleMenuOpen(false); };
+  const navTo = (view) => { setCurrentView(view); setDrawerOpen(false); };
   const handleSearchChange = (val) => { setSearchQuery(val); setFilters(prev => ({ ...prev, search: val })); };
 
   const isOsActive = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub'].includes(currentView);
@@ -78,8 +100,16 @@ export default function Header() {
   const osModules = OS_MODULES_BY_ROLE[role] || OS_MODULES_BY_ROLE.buyer;
 
   return (
+    <>
     <header className="ig-header" id="igHeader">
       <div className="ig-header-inner">
+        {/* Mobile hamburger — opens the all-options drawer */}
+        <button className="ig-hamburger-btn" onClick={() => setDrawerOpen(true)} title="Menu" aria-label="Open menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
         {/* Logo */}
         <a className="ig-logo" onClick={() => setCurrentView('feed')}>
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-label="PropertyInsta">
@@ -116,14 +146,7 @@ export default function Header() {
               className={`ig-nav-tab ${currentView === tab.id ? 'active' : ''}`}
               onClick={() => setCurrentView(tab.id)}
             >
-              <svg className="ig-nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                {tab.icon === 'home' && <><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></>}
-                {tab.icon === 'play' && <polygon points="5 3 19 12 5 21 5 3" />}
-                {tab.icon === 'map' && <><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" /><line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" /></>}
-                {tab.icon === 'bookmark' && <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />}
-                {tab.icon === 'library' && <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2" /></>}
-                {tab.icon === 'blog' && <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /><line x1="8" y1="17" x2="13" y2="17" /></>}
-              </svg>
+              <NavIcon icon={tab.icon} />
               <span>{tab.label}</span>
             </button>
           ))}
@@ -313,5 +336,91 @@ export default function Header() {
         </div>
       </div>
     </header>
+
+    {/* Mobile All-Options Drawer — sibling of <header> so its position:fixed
+        resolves against the viewport, not the backdrop-filtered header */}
+      <div className={`ig-drawer-overlay ${drawerOpen ? 'open' : ''}`} onClick={() => setDrawerOpen(false)} />
+      <aside className={`ig-drawer ${drawerOpen ? 'open' : ''}`} aria-hidden={!drawerOpen}>
+        <div className="ig-drawer-head">
+          <span className="ig-drawer-title">Menu</span>
+          <button className="ig-drawer-close" onClick={() => setDrawerOpen(false)} aria-label="Close menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="ig-drawer-body">
+          {/* Role switcher */}
+          {Object.keys(ROLES).length > 1 && (
+            <div className="ig-drawer-section">
+              <span className="ig-drawer-label">I am a</span>
+              <div className="ig-drawer-roles">
+                {Object.values(ROLES).map(r => (
+                  <button
+                    key={r}
+                    className={`ig-drawer-role ${role === r ? 'active' : ''}`}
+                    onClick={() => switchRole(r)}
+                    style={{ '--rc': ROLE_COLORS[r] }}
+                  >
+                    <span className="role-dot" style={{ background: ROLE_COLORS[r] }} />
+                    {ROLE_LABELS[r]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Browse */}
+          <div className="ig-drawer-section">
+            <span className="ig-drawer-label">Browse</span>
+            <div className="ig-drawer-links">
+              {CORE_TABS.map(tab => (
+                <button
+                  key={tab.id}
+                  className={`ig-drawer-link ${currentView === tab.id ? 'active' : ''}`}
+                  onClick={() => navTo(tab.id)}
+                >
+                  <NavIcon icon={tab.icon} />
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Platform modules */}
+          <div className="ig-drawer-section">
+            <span className="ig-drawer-label">Platform</span>
+            <div className="ig-drawer-links">
+              <button
+                className={`ig-drawer-link ${currentView === 'os' ? 'active' : ''}`}
+                onClick={() => navTo('os')}
+              >
+                <span className="ig-drawer-emoji">⊞</span>
+                <span>All Modules</span>
+              </button>
+              {osModules.map(m => (
+                <button
+                  key={m.id}
+                  className={`ig-drawer-link ${currentView === m.id ? 'active' : ''}`}
+                  onClick={() => navTo(m.id)}
+                >
+                  <span className="ig-drawer-emoji">{m.icon}</span>
+                  <span>{m.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Theme toggle */}
+          <div className="ig-drawer-section">
+            <button className="ig-drawer-link" onClick={toggleDarkMode}>
+              <span className="ig-drawer-emoji">{darkMode ? '☀️' : '🌙'}</span>
+              <span>{darkMode ? 'Light mode' : 'Dark mode'}</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </>
   );
 }
