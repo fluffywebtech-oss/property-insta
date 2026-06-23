@@ -7,6 +7,7 @@ const CORE_TABS = [
   { id: 'reels', icon: 'play', label: 'Reels' },
   { id: 'mapView', icon: 'map', label: 'Map' },
   { id: 'saved', icon: 'bookmark', label: 'Saved' },
+  { id: 'content-hub', icon: 'library', label: 'Content' },
 ];
 
 const OS_MODULES_BY_ROLE = {
@@ -71,7 +72,7 @@ export default function Header() {
   const closeAll = () => { setSearchOpen(false); setNotifOpen(false); setCityOpen(false); setOsMenuOpen(false); setRoleMenuOpen(false); };
   const handleSearchChange = (val) => { setSearchQuery(val); setFilters(prev => ({ ...prev, search: val })); };
 
-  const isOsActive = !['feed', 'reels', 'mapView', 'saved', 'blog'].includes(currentView);
+  const isOsActive = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub'].includes(currentView);
   const roleColor = ROLE_COLORS[role];
   const osModules = OS_MODULES_BY_ROLE[role] || OS_MODULES_BY_ROLE.buyer;
 
@@ -119,6 +120,7 @@ export default function Header() {
                 {tab.icon === 'play' && <polygon points="5 3 19 12 5 21 5 3" />}
                 {tab.icon === 'map' && <><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" /><line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" /></>}
                 {tab.icon === 'bookmark' && <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />}
+                {tab.icon === 'library' && <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2" /></>}
               </svg>
               <span>{tab.label}</span>
             </button>
