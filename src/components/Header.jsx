@@ -8,6 +8,7 @@ const CORE_TABS = [
   { id: 'mapView', icon: 'map', label: 'Map' },
   { id: 'saved', icon: 'bookmark', label: 'Saved' },
   { id: 'content-hub', icon: 'library', label: 'Content' },
+  { id: 'blog', icon: 'blog', label: 'Blog' },
 ];
 
 const OS_MODULES_BY_ROLE = {
@@ -121,6 +122,7 @@ export default function Header() {
                 {tab.icon === 'map' && <><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" /><line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" /></>}
                 {tab.icon === 'bookmark' && <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />}
                 {tab.icon === 'library' && <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2" /></>}
+                {tab.icon === 'blog' && <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /><line x1="8" y1="17" x2="13" y2="17" /></>}
               </svg>
               <span>{tab.label}</span>
             </button>
