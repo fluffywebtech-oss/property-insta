@@ -43,7 +43,7 @@ const cityImage = (name, i) => CITY_IMAGES[name] || FALLBACK_CITY_IMAGES[i % FAL
 
 // Trust / social-proof features
 const TRUST_FEATURES = [
-  { icon: '🛡️', title: 'RERA Verified', desc: 'Every project checked against the official RERA registry.' },
+  { icon: '🛡️', title: 'Verified Listings', desc: 'Every project is checked and verified before it goes live.' },
   { icon: '🎥', title: 'HD Virtual Tours', desc: 'Walk through homes in 3D before you ever visit.' },
   { icon: '🤝', title: 'Zero Brokerage', desc: 'Connect with builders directly — no hidden commissions.' },
   { icon: '⚡', title: 'Instant Site Visits', desc: 'Book a guided visit in seconds, on your schedule.' },
@@ -588,7 +588,7 @@ export default function FeedView() {
         <section className="ig-section">
           <div className="ig-section-header">
             <h2 className="ig-section-title">🏆 Top in {filters.city}</h2>
-            <span className="ig-showcase-sub">Handpicked, RERA-verified highlights</span>
+            <span className="ig-showcase-sub">Handpicked highlights</span>
           </div>
           <FeaturedSpotlight items={cityTopFeatures} onOpen={openProperty} />
         </section>

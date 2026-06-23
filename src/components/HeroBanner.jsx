@@ -96,8 +96,6 @@ export default function HeroBanner() {
           <div className="hero-eyebrow">
             <span className="hero-eyebrow-dot" />
             India&apos;s most visual property platform
-            <span className="hero-eyebrow-sep">·</span>
-            <span className="hero-eyebrow-accent">RERA Verified</span>
           </div>
           <h1 className="hero-banner-title">
             Look Visit Book
