@@ -341,20 +341,46 @@ export default function Header() {
         resolves against the viewport, not the backdrop-filtered header */}
       <div className={`ig-drawer-overlay ${drawerOpen ? 'open' : ''}`} onClick={() => setDrawerOpen(false)} />
       <aside className={`ig-drawer ${drawerOpen ? 'open' : ''}`} aria-hidden={!drawerOpen}>
+        {/* Brand header */}
         <div className="ig-drawer-head">
-          <span className="ig-drawer-title">Menu</span>
+          <a className="ig-drawer-brand" onClick={() => navTo('feed')}>
+            <svg width="30" height="30" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+              <rect width="34" height="34" rx="9.5" fill="url(#dwGrad)" />
+              <path d="M17 8.2l8 6.6c.32.27.5.66.5 1.08V25.2A1.8 1.8 0 0 1 23.7 27H10.3A1.8 1.8 0 0 1 8.5 25.2v-9.34c0-.42.18-.81.5-1.08L17 8.2z" fill="#fff" />
+              <circle cx="17" cy="18.6" r="4.6" fill="url(#dwAccent)" />
+              <path d="M15.5 16.3l3.2 2.3-3.2 2.3z" fill="#fff" />
+              <defs>
+                <linearGradient id="dwGrad" x1="0" y1="0" x2="34" y2="34"><stop stopColor="#1b4db1" /><stop offset="1" stopColor="#2e6fe0" /></linearGradient>
+                <linearGradient id="dwAccent" x1="12" y1="14" x2="22" y2="23"><stop stopColor="#fb8c3a" /><stop offset="1" stopColor="#ea6a0c" /></linearGradient>
+              </defs>
+            </svg>
+            <span className="ig-drawer-brand-text">Property<b>Insta</b></span>
+          </a>
           <button className="ig-drawer-close" onClick={() => setDrawerOpen(false)} aria-label="Close menu">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
+        </div>
+
+        {/* Profile card */}
+        <div className="ig-drawer-profile">
+          <img className="ig-drawer-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=face" alt="" width="44" height="44" />
+          <div className="ig-drawer-profile-info">
+            <strong>Welcome back</strong>
+            <span className="ig-drawer-role-badge" style={{ '--rc': roleColor }}>
+              <span className="role-dot" style={{ background: roleColor }} />
+              {ROLE_LABELS[role]}
+            </span>
+          </div>
+          <span className="ig-drawer-chip">{filters.city || 'All India'}</span>
         </div>
 
         <div className="ig-drawer-body">
           {/* Role switcher */}
           {Object.keys(ROLES).length > 1 && (
             <div className="ig-drawer-section">
-              <span className="ig-drawer-label">I am a</span>
+              <span className="ig-drawer-label">Switch role</span>
               <div className="ig-drawer-roles">
                 {Object.values(ROLES).map(r => (
                   <button
@@ -375,14 +401,16 @@ export default function Header() {
           <div className="ig-drawer-section">
             <span className="ig-drawer-label">Browse</span>
             <div className="ig-drawer-links">
-              {CORE_TABS.map(tab => (
+              {CORE_TABS.map((tab, i) => (
                 <button
                   key={tab.id}
                   className={`ig-drawer-link ${currentView === tab.id ? 'active' : ''}`}
+                  style={{ '--i': i }}
                   onClick={() => navTo(tab.id)}
                 >
-                  <NavIcon icon={tab.icon} />
-                  <span>{tab.label}</span>
+                  <span className="ig-drawer-ico"><NavIcon icon={tab.icon} /></span>
+                  <span className="ig-drawer-link-label">{tab.label}</span>
+                  <svg className="ig-drawer-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
                 </button>
               ))}
             </div>
@@ -394,31 +422,37 @@ export default function Header() {
             <div className="ig-drawer-links">
               <button
                 className={`ig-drawer-link ${currentView === 'os' ? 'active' : ''}`}
+                style={{ '--i': 0 }}
                 onClick={() => navTo('os')}
               >
-                <span className="ig-drawer-emoji">⊞</span>
-                <span>All Modules</span>
+                <span className="ig-drawer-ico ig-drawer-ico-emoji">⊞</span>
+                <span className="ig-drawer-link-label">All Modules</span>
+                <svg className="ig-drawer-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
               </button>
-              {osModules.map(m => (
+              {osModules.map((m, i) => (
                 <button
                   key={m.id}
                   className={`ig-drawer-link ${currentView === m.id ? 'active' : ''}`}
+                  style={{ '--i': i + 1 }}
                   onClick={() => navTo(m.id)}
                 >
-                  <span className="ig-drawer-emoji">{m.icon}</span>
-                  <span>{m.label}</span>
+                  <span className="ig-drawer-ico ig-drawer-ico-emoji">{m.icon}</span>
+                  <span className="ig-drawer-link-label">{m.label}</span>
+                  <svg className="ig-drawer-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
                 </button>
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Theme toggle */}
-          <div className="ig-drawer-section">
-            <button className="ig-drawer-link" onClick={toggleDarkMode}>
-              <span className="ig-drawer-emoji">{darkMode ? '☀️' : '🌙'}</span>
-              <span>{darkMode ? 'Light mode' : 'Dark mode'}</span>
-            </button>
-          </div>
+        {/* Footer: theme switch + version */}
+        <div className="ig-drawer-foot">
+          <button className="ig-drawer-theme" onClick={toggleDarkMode} aria-pressed={darkMode}>
+            <span className="ig-drawer-theme-ico">{darkMode ? '☀️' : '🌙'}</span>
+            <span className="ig-drawer-theme-label">{darkMode ? 'Light mode' : 'Dark mode'}</span>
+            <span className={`ig-drawer-switch ${darkMode ? 'on' : ''}`}><i /></span>
+          </button>
+          <span className="ig-drawer-version">PropertyInsta · India's Real-Estate OS</span>
         </div>
       </aside>
     </>
