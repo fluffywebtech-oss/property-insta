@@ -168,6 +168,83 @@ function DeveloperCard({ dev, gradient, onClick }) {
 const SHOWCASE_LIMIT = 10;
 
 // Horizontal "collection" carousel — the competitive showcase unit.
+// Full-width landscape spotlight — shows one listing at a time, auto-slides.
+function FeaturedSpotlight({ items, onOpen }) {
+  const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const n = items.length;
+
+  useEffect(() => {
+    if (paused || n <= 1) return;
+    const t = setInterval(() => setIdx(i => (i + 1) % n), 5500);
+    return () => clearInterval(t);
+  }, [paused, n]);
+
+  useEffect(() => { if (idx >= n) setIdx(0); }, [n, idx]);
+
+  if (!n) return null;
+  const go = (d) => setIdx(i => (i + d + n) % n);
+
+  return (
+    <section
+      className="ig-spotlight"
+      aria-roledescription="carousel"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <div className="ig-spotlight-stage">
+        {items.map((p, i) => (
+          <button
+            key={p.id}
+            className={`ig-spot-slide ${i === idx ? 'active' : ''}`}
+            style={{ backgroundImage: `url("${p.media?.[0] || p.thumbnail || ''}")` }}
+            onClick={() => onOpen(p.id)}
+            aria-hidden={i !== idx}
+            tabIndex={i === idx ? 0 : -1}
+          >
+            <span className="ig-spot-scrim" />
+            <span className="ig-spot-body">
+              <span className="ig-spot-badges">
+                <span className="ig-spot-badge hot">🔥 Featured</span>
+                {p.rera && <span className="ig-spot-badge rera">RERA</span>}
+                {p.listingStatus && <span className="ig-spot-badge">{p.listingStatus}</span>}
+              </span>
+              <span className="ig-spot-title">{p.title}</span>
+              <span className="ig-spot-loc">📍 {p.location}</span>
+              <span className="ig-spot-specs">
+                {p.bedrooms ? <em>{p.bedrooms} BHK</em> : null}
+                {p.area ? <em>{p.area} sq.ft</em> : null}
+                {p.type ? <em>{p.type}</em> : null}
+              </span>
+              <span className="ig-spot-foot">
+                <span className="ig-spot-price">{formatPriceIndian(p.price)}</span>
+                <span className="ig-spot-cta">View details →</span>
+              </span>
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {n > 1 && (
+        <>
+          <button className="ig-spot-arrow left" onClick={() => go(-1)} aria-label="Previous listing">‹</button>
+          <button className="ig-spot-arrow right" onClick={() => go(1)} aria-label="Next listing">›</button>
+          <div className="ig-spot-dots">
+            {items.map((_, i) => (
+              <button
+                key={i}
+                className={`ig-spot-dot ${i === idx ? 'active' : ''}`}
+                onClick={() => setIdx(i)}
+                aria-label={`Go to listing ${i + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
 function ShowcaseRow({ icon, title, subtitle, items, onViewAll }) {
   if (!items || items.length === 0) return null;
   return (
@@ -203,6 +280,7 @@ export default function FeedView() {
     loadMore,
     filteredCount,
     openBuilder,
+    openProperty,
   } = useApp();
 
   const [openHouseCountdown, setOpenHouseCountdown] = useState({ hours: 0, minutes: 0, seconds: 0 });
@@ -266,6 +344,12 @@ export default function FeedView() {
   // Trending properties
   const trendingProps = allProperties.filter(p => p.trending).slice(0, TRENDING_COUNT);
 
+  // Spotlight — featured/trending listings for the landscape auto-slider
+  const spotlightProps = useMemo(() => {
+    const picked = allProperties.filter(p => p.featured || p.trending);
+    return (picked.length ? picked : allProperties).slice(0, 6);
+  }, [allProperties]);
+
   // Open House property (first property with open house)
   const openHouseProp = allProperties.find(p => p.openHouse);
 
@@ -308,6 +392,11 @@ export default function FeedView() {
 
   return (
     <div className="ig-feed-content">
+      {/* Featured spotlight — landscape single-listing auto-slider */}
+      {!hasActiveFilters && spotlightProps.length > 0 && (
+        <FeaturedSpotlight items={spotlightProps} onOpen={openProperty} />
+      )}
+
       {/* Browse by City */}
       {!hasActiveFilters && cities.length > 0 && (
         <section className="ig-section ig-cities-section">
