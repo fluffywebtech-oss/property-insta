@@ -392,6 +392,16 @@ export default function FeedView() {
     [allProperties]
   );
 
+  // Top featured listings for the active location (city) page.
+  const cityTopFeatures = useMemo(() => {
+    if (!filters.city) return [];
+    const score = (p) => (p.featured ? 3 : 0) + (p.trending ? 2 : 0) + (p.rera ? 1 : 0);
+    return allProperties
+      .filter(p => (p.city || deriveCity(p.location || '')) === filters.city)
+      .sort((a, b) => (score(b) - score(a)) || (b.price || 0) - (a.price || 0))
+      .slice(0, 8);
+  }, [allProperties, filters.city]);
+
   // Top cities — grouped from live inventory
   const cities = useMemo(() => {
     const m = new Map();
@@ -571,6 +581,16 @@ export default function FeedView() {
             </button>
           </div>
         </section>
+      )}
+
+      {/* Top feature section — shown on every location (city) page */}
+      {filters.city && cityTopFeatures.length > 0 && (
+        <ShowcaseRow
+          icon="🏆"
+          title={`Top in ${filters.city}`}
+          subtitle={`Handpicked, RERA-verified highlights in ${filters.city}`}
+          items={cityTopFeatures}
+        />
       )}
 
       {/* All Properties Feed */}
