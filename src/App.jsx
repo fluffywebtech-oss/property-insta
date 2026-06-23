@@ -10,6 +10,7 @@ import HeroBanner from './components/HeroBanner';
 import FeedView from './components/FeedView';
 import FilterSidebar from './components/FilterSidebar';
 import Footer, { MobileNav, ChatWidget } from './components/Footer';
+import ScrollTopButton from './components/ScrollTopButton';
 import './styles/styles.scss';
 
 // Lazy: every secondary view + all 17 OS modules + the modal stack.
@@ -112,6 +113,7 @@ function AppLayout() {
       {!isOsView && <Footer />}
       <MobileNav />
       <ChatWidget />
+      <ScrollTopButton />
       <Suspense fallback={null}>
         <Modals />
       </Suspense>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useApp, deriveCity } from '../context/AppContext';
 import Stories from './Stories';
 import PropertyCard from './PropertyCard';
@@ -182,16 +182,37 @@ function FeaturedSpotlight({ items, onOpen }) {
 
   useEffect(() => { if (idx >= n) setIdx(0); }, [n, idx]);
 
+  const touchX = useRef(null);
+
   if (!n) return null;
   const go = (d) => setIdx(i => (i + d + n) % n);
+
+  const onTouchStart = (e) => { touchX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e) => {
+    if (touchX.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    if (Math.abs(dx) > 45) go(dx < 0 ? 1 : -1);
+    touchX.current = null;
+  };
+  const onKeyDown = (e) => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+  };
 
   return (
     <section
       className="ig-spotlight"
       aria-roledescription="carousel"
+      aria-label="Featured listings"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onKeyDown={onKeyDown}
     >
+      {n > 1 && <span key={idx} className={`ig-spot-progress ${paused ? 'paused' : ''}`} />}
       <div className="ig-spotlight-stage">
         {items.map((p, i) => (
           <button

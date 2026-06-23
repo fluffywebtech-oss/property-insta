@@ -3734,6 +3734,16 @@ textarea:focus-visible {
   transition: width 0.25s ease, background 0.25s ease;
   &.active { width: 22px; background: #fff; }
 }
+// Auto-advance progress bar (top edge) — restarts each slide via React key.
+.ig-spot-progress {
+  position: absolute; top: 0; left: 0; z-index: 4;
+  height: 3px; width: 0;
+  background: var(--ig-gradient-warm);
+  border-radius: 0 3px 3px 0;
+  animation: ig-spot-fill 5500ms linear forwards;
+  &.paused { animation-play-state: paused; }
+}
+@keyframes ig-spot-fill { from { width: 0; } to { width: 100%; } }
 
 @media (max-width: 767px) {
   .ig-spotlight-stage { height: 300px; }
@@ -4459,9 +4469,50 @@ body.dark .ig-dev-logo.has-img { background: #f4f6fb; }
 }
 
 // =====================================================================
+// UX POLISH — scroll-to-top, focus rings, smooth scrolling
+// =====================================================================
+html { scroll-behavior: smooth; }
+
+// Accessible keyboard focus rings (only for keyboard users)
+:focus-visible {
+  outline: 2px solid var(--ig-link);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) { outline: none; }
+
+.pi-scrolltop {
+  position: fixed;
+  left: 18px;
+  bottom: 96px;
+  z-index: 90;
+  width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  background: var(--ig-gradient);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(39,71,204,0.4), 0 2px 6px rgba(0,0,0,0.18);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px) scale(0.9);
+  transition: opacity 0.28s cubic-bezier(0.16,1,0.3,1), transform 0.28s cubic-bezier(0.16,1,0.3,1), box-shadow 0.2s ease;
+
+  &.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+  &:hover { transform: translateY(-2px) scale(1.06); box-shadow: 0 14px 30px rgba(39,71,204,0.5); }
+  &:active { transform: scale(0.94); }
+}
+@media (min-width: 1024px) {
+  .pi-scrolltop { bottom: 26px; }
+}
+
+// =====================================================================
 // REDUCED MOTION — respect user preference
 // =====================================================================
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
