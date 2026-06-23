@@ -390,39 +390,12 @@ export default function FeedView() {
       {/* Curated showcase collections — competitive discovery carousels */}
       {!hasActiveFilters && (
         <>
-          {/* Trending Now — compact mini-cards */}
-          {trendingProps.length > 0 && (
-            <section className="ig-section ig-recent-section">
-              <div className="ig-section-header">
-                <h2 className="ig-section-title">🔥 Trending Now</h2>
-                <span className="ig-showcase-sub">Most-viewed this week</span>
-              </div>
-              <div className="ig-recent-row">
-                {trendingProps.map(prop => (
-                  <button
-                    key={`trend-${prop.id}`}
-                    className="ig-recent-card"
-                    onClick={() => openProperty(prop.id)}
-                  >
-                    <img
-                      className="ig-recent-img"
-                      src={prop.media?.[0] || prop.thumbnail || ''}
-                      alt={prop.title}
-                      loading="lazy"
-                    />
-                    <div className="ig-recent-info">
-                      <span className="ig-recent-title">{prop.title}</span>
-                      <span className="ig-recent-location">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                        {prop.location}
-                      </span>
-                      <span className="ig-recent-price">{formatPriceIndian(prop.price)}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </section>
-          )}
+          {/* Trending Now — full-size showcase cards */}
+          <ShowcaseRow
+            icon="🔥" title="Trending Now" subtitle="Most-viewed this week"
+            items={trendingProps}
+            onViewAll={() => applyAndScroll({ priceMin: '', priceMax: '', priceRange: '', listingStatus: [] })}
+          />
 
           {/* Stories */}
           <section className="ig-stories-section">
