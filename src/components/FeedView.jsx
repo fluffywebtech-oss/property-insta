@@ -583,14 +583,15 @@ export default function FeedView() {
         </section>
       )}
 
-      {/* Top feature section — shown on every location (city) page */}
+      {/* Top feature section — full-size landscape slider on every location page */}
       {filters.city && cityTopFeatures.length > 0 && (
-        <ShowcaseRow
-          icon="🏆"
-          title={`Top in ${filters.city}`}
-          subtitle={`Handpicked, RERA-verified highlights in ${filters.city}`}
-          items={cityTopFeatures}
-        />
+        <section className="ig-section">
+          <div className="ig-section-header">
+            <h2 className="ig-section-title">🏆 Top in {filters.city}</h2>
+            <span className="ig-showcase-sub">Handpicked, RERA-verified highlights</span>
+          </div>
+          <FeaturedSpotlight items={cityTopFeatures} onOpen={openProperty} />
+        </section>
       )}
 
       {/* All Properties Feed */}
