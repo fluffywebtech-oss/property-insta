@@ -26,7 +26,7 @@ const ALL_MODULES = [
   { id: 'trust', name: 'Trust Layer', desc: 'Ownership verification, RERA checks, builder scores & legal status', icon: '🛡️', status: 'beta', category: 'trust', roles: ['buyer', 'broker'] },
   { id: 'passport', name: 'Property Passport', desc: 'Digital twin with ownership history, valuation & registry documents', icon: '📋', status: 'beta', category: 'trust', roles: ['buyer', 'broker'] },
   { id: 'transaction', name: 'Transaction Layer', desc: 'Digital deal room, offers, negotiations & documentation', icon: '🤝', status: 'beta', category: 'transaction', roles: ['buyer', 'broker'] },
-  { id: 'crm', name: 'Property CRM', desc: 'Lead management, call logs, follow-ups & WhatsApp integration', icon: '📊', status: 'beta', category: 'crm', roles: ['broker'] },
+  { id: 'crm', name: 'Property CRM', desc: 'Website enquiries inbox, lead pipeline, call logs & WhatsApp follow-ups', icon: '📊', status: 'live', category: 'crm', roles: ['buyer', 'broker'] },
   { id: 'channelpartner', name: 'Channel Partner Network', desc: 'Inventory marketplace, lead sharing & commission tracking', icon: '🌐', status: 'beta', category: 'crm', roles: ['broker'] },
   { id: 'copilot', name: 'AI Copilot', desc: 'AI assistant for buyers, sellers, builders and investors', icon: '🤖', status: 'beta', category: 'ai', roles: ['buyer', 'broker'] },
   { id: 'aiexchange', name: 'AI Exchange', desc: 'AI-powered match-making between buyers and properties', icon: '✨', status: 'beta', category: 'ai', roles: ['buyer', 'broker'] },

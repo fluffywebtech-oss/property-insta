@@ -57,6 +57,7 @@ export function saveLead(lead) {
   const record = {
     ref,
     intent: lead.intent || 'contact',
+    status: 'New',
     property_id: lead.propertyId ?? null,
     property_title: lead.propertyTitle || '',
     name: lead.name || '',
@@ -88,5 +89,17 @@ export function saveLead(lead) {
 }
 
 export function getLeads() {
-  return readLocal();
+  // Normalise older records that predate the `status` field
+  return readLocal().map(l => ({ status: 'New', ...l }));
+}
+
+// Patch a stored lead by reference (e.g. status changes). Best-effort remote sync.
+export function updateLead(ref, patch) {
+  try {
+    const all = readLocal().map(l => (l.ref === ref ? { ...l, ...patch } : l));
+    localStorage.setItem(LS_KEY, JSON.stringify(all));
+  } catch { /* ignore */ }
+  try {
+    supabase.from('leads').update(patch).eq('ref', ref).then(() => {}, () => {});
+  } catch { /* offline / no table */ }
 }

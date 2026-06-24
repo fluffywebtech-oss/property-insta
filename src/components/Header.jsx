@@ -13,6 +13,7 @@ const CORE_TABS = [
 
 const OS_MODULES_BY_ROLE = {
   buyer: [
+    { id: 'crm', icon: '📥', label: 'Leads / CRM' },
     { id: 'trust', icon: '🛡️', label: 'Trust Layer' },
     { id: 'passport', icon: '📋', label: 'Property Passport' },
     { id: 'financing', icon: '🏦', label: 'Financing' },
