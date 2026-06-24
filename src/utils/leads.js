@@ -103,3 +103,13 @@ export function updateLead(ref, patch) {
     supabase.from('leads').update(patch).eq('ref', ref).then(() => {}, () => {});
   } catch { /* offline / no table */ }
 }
+
+// Remove a stored lead by reference. Best-effort remote delete.
+export function deleteLead(ref) {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(readLocal().filter(l => l.ref !== ref)));
+  } catch { /* ignore */ }
+  try {
+    supabase.from('leads').delete().eq('ref', ref).then(() => {}, () => {});
+  } catch { /* offline / no table */ }
+}

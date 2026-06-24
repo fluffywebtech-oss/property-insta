@@ -864,6 +864,136 @@
   text-align: center;
 }
 
+// ===== Admin Panel =====
+.admin-panel-modal {
+  background: var(--card-bg);
+  border-radius: 18px;
+  width: 92%;
+}
+
+.admin-header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--ig-border);
+  padding: 16px 20px;
+  h3 { display: flex; align-items: center; gap: 8px; font-size: 18px; }
+}
+.admin-pill {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 3px 8px; border-radius: 999px;
+  &.warn { background: #fef3c7; color: #92400e; }
+}
+.admin-user { font-size: 12.5px; color: var(--ig-text-secondary); font-weight: 600; }
+.admin-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 9px;
+  border: 1px solid var(--ig-border); background: var(--muted-bg); color: var(--ig-text);
+  cursor: pointer; font-size: 15px; transition: background 0.15s ease;
+  &:hover { background: var(--ig-hover, rgba(0,0,0,0.06)); }
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 10px 16px 0;
+  border-bottom: 1px solid var(--ig-border);
+  position: sticky; top: 64px; background: var(--card-bg); z-index: 1;
+}
+.admin-tab {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 16px;
+  border: none; background: transparent; cursor: pointer;
+  font-size: 13.5px; font-weight: 700; color: var(--ig-text-secondary);
+  border-bottom: 2.5px solid transparent;
+  &:hover { color: var(--ig-text); }
+  &.active { color: var(--ig-link); border-bottom-color: var(--ig-link); }
+}
+.admin-tab-badge {
+  min-width: 17px; height: 17px; padding: 0 5px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #0d9488; color: #fff; font-size: 10.5px; font-weight: 800; border-radius: 999px;
+}
+
+.admin-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px;
+  @media (max-width: 560px) { grid-template-columns: repeat(2, 1fr); }
+}
+.admin-stat {
+  padding: 14px 16px; background: var(--muted-bg); border: 1px solid var(--ig-border); border-radius: 12px;
+  .as-n { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--ig-text); }
+  .as-l { font-size: 11.5px; color: var(--ig-text-secondary); font-weight: 600; }
+  &.teal .as-n { color: #0d9488; }
+  &.green .as-n { color: #059669; }
+  &.amber .as-n { color: #d97706; }
+  &.blue .as-n { color: #1d4ed8; }
+  &.purple .as-n { color: #7c3aed; }
+}
+
+.admin-section-title { font-size: 14px; font-weight: 800; margin: 0 0 10px; color: var(--ig-text); }
+.admin-empty { font-size: 13px; color: var(--ig-text-secondary); line-height: 1.5; padding: 10px 0; }
+
+.admin-recent { display: flex; flex-direction: column; gap: 8px; }
+.admin-recent-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; background: var(--muted-bg); border: 1px solid var(--ig-border); border-radius: 11px; cursor: pointer;
+  &:hover { border-color: var(--ig-link); }
+  .ar-intent { font-size: 18px; }
+  .ar-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .ar-body strong { font-size: 13.5px; color: var(--ig-text); }
+  .ar-body span { font-size: 11.5px; color: var(--ig-text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+.admin-status-chip, .admin-status-chip.s-new {
+  font-size: 10.5px; font-weight: 800; padding: 3px 9px; border-radius: 999px;
+  background: #ccfbf1; color: #0f766e;
+}
+.admin-status-chip.s-contacted { background: #dbeafe; color: #1d4ed8; }
+.admin-status-chip.s-visit-booked { background: #fef3c7; color: #92400e; }
+.admin-status-chip.s-closed { background: #e2e8f0; color: #64748b; }
+
+.admin-leads-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.admin-filter { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+.admin-filter-btn {
+  padding: 6px 12px; border-radius: 999px; border: 1px solid var(--ig-border);
+  background: transparent; color: var(--ig-text-secondary); font-size: 12px; font-weight: 700; cursor: pointer;
+  &:hover { color: var(--ig-text); }
+  &.active { background: var(--ig-gradient, #2e6fe0); color: #fff; border-color: transparent; }
+}
+
+.admin-lead-list { display: flex; flex-direction: column; gap: 10px; }
+.admin-lead-row {
+  display: flex; gap: 14px; padding: 14px; border: 1px solid var(--ig-border); border-radius: 12px; background: var(--card-bg);
+  .alr-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .alr-top { display: flex; align-items: center; gap: 8px; }
+  .alr-intent { font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: var(--muted-bg); color: var(--ig-text); }
+  .alr-ref { font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 700; color: var(--ig-text-secondary); }
+  .alr-name { font-size: 15px; font-weight: 800; color: var(--ig-text); }
+  .alr-prop, .alr-contact { font-size: 12px; color: var(--ig-text-secondary); }
+  .alr-msg { font-size: 12px; font-style: italic; color: var(--ig-text-secondary); }
+
+  .alr-side { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+  .alr-status { padding: 5px 9px; border: 1px solid var(--ig-border); border-radius: 8px; background: var(--muted-bg); color: var(--ig-text); font-size: 11.5px; font-weight: 700; cursor: pointer; }
+  .alr-acts { display: flex; gap: 5px; }
+  .alr-act {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 8px; font-size: 14px; text-decoration: none; cursor: pointer;
+    border: 1px solid var(--ig-border); background: var(--muted-bg);
+    &.wa { background: #25d366; border-color: transparent; }
+    &.del:hover { background: #fee2e2; border-color: #fca5a5; }
+  }
+}
+
+@media (max-width: 560px) {
+  .admin-lead-row { flex-direction: column; }
+  .admin-lead-row .alr-side { flex-direction: row; align-items: center; }
+}
+
+.admin-banner {
+  padding: 12px 14px; background: #fff3cd; color: #7c5e10; border-radius: 10px; margin-bottom: 16px; font-size: 13px;
+  code { background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 4px; }
+}
+.admin-login { max-width: 420px; }
+.admin-auth-error { color: #dc2626; margin-bottom: 10px; font-size: 13px; font-weight: 600; }
+
 .tour-prop-preview {
   display: flex;
   gap: 12px;

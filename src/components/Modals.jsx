@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../hooks/useToast';
-import { saveLead, whatsappLink, telLink, leadMessage } from '../utils/leads';
+import { saveLead, whatsappLink, telLink, leadMessage, getLeads, updateLead, deleteLead } from '../utils/leads';
 import {
   propertyStories,
   propertyReviews,
@@ -1239,19 +1239,45 @@ function AgentModal() {
 }
 
 // ==================== Admin Panel Modal ====================
+const ADMIN_INTENT_META = {
+  contact:  { icon: '💬', label: 'Enquiry' },
+  visit:    { icon: '📅', label: 'Site Visit' },
+  callback: { icon: '📞', label: 'Callback' },
+};
+const ADMIN_LEAD_STATUSES = ['New', 'Contacted', 'Visit Booked', 'Closed'];
+
 function AdminPanelModal() {
   const { user, signIn, signOut } = useAuth();
-  const { allProperties, adminAddProperty, adminDeleteProperty, dbReady } = useApp();
+  const { allProperties, adminAddProperty, adminDeleteProperty, dbReady, setActiveModal } = useApp();
+  const toast = useToast();
+  const [tab, setTab] = useState('overview');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [leadRows, setLeadRows] = useState(() => getLeads());
+  const [leadFilter, setLeadFilter] = useState('all');
   const [form, setForm] = useState({
     title: '', location: '', price: '', beds: 2, baths: 2, sqft: 1000,
     type: 'apartment', status: 'sale', builder: '', description: '',
     images: '', featured: false, hot: false, agent_name: '',
   });
+
+  const refreshLeads = () => setLeadRows(getLeads());
+  const newLeadCount = leadRows.filter(l => (l.status || 'New') === 'New').length;
+  const avgScore = allProperties.length
+    ? Math.round(allProperties.reduce((s, p) => s + (p.propScore?.score || 0), 0) / allProperties.length)
+    : 0;
+  const filteredLeads = leadFilter === 'all' ? leadRows : leadRows.filter(l => (l.status || 'New') === leadFilter);
+
+  const setLeadStatus = (ref, status) => { updateLead(ref, { status }); refreshLeads(); };
+  const removeLead = (ref) => {
+    if (!window.confirm(`Delete enquiry ${ref}?`)) return;
+    deleteLead(ref); refreshLeads(); toast('Enquiry deleted', 'success');
+  };
+
+  const close = () => setActiveModal(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -1300,32 +1326,129 @@ function AdminPanelModal() {
   };
 
   return (
-    <div className="prop-modal-backdrop" onClick={() => {}}>
-      <div className="admin-panel-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 800, maxHeight: '90vh', overflow: 'auto' }}>
-        <div className="modal-header" style={{ position: 'sticky', top: 0, background: 'var(--bg-primary)', zIndex: 1 }}>
-          <h3>🛠️ Admin Panel {!dbReady && '(Supabase not configured)'}</h3>
-          {user && (
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.85rem', opacity: 0.7 }}>{user.email}</span>
-              <button className="modal-close" onClick={signOut} style={{ position: 'static' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+    <div className="prop-modal-backdrop" onClick={close}>
+      <div className="admin-panel-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 860, maxHeight: '92vh', overflow: 'auto' }}>
+        <div className="modal-header admin-header" style={{ position: 'sticky', top: 0, zIndex: 2 }}>
+          <h3>🛠️ Admin Panel {!dbReady && <span className="admin-pill warn">offline data</span>}</h3>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            {user && <span className="admin-user">{user.email}</span>}
+            {user && (
+              <button className="admin-icon-btn" title="Sign out" onClick={signOut}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
               </button>
-            </div>
-          )}
+            )}
+            <button className="admin-icon-btn" title="Close" onClick={close}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+            </button>
+          </div>
         </div>
 
-        <div style={{ padding: '1.5rem' }}>
+        {/* Tabs */}
+        <div className="admin-tabs">
+          {['overview', 'leads', 'properties'].map(t => (
+            <button key={t} className={`admin-tab ${tab === t ? 'active' : ''}`} onClick={() => setTab(t)}>
+              {t === 'overview' && '📊 Overview'}
+              {t === 'leads' && <>📥 Leads{newLeadCount > 0 && <span className="admin-tab-badge">{newLeadCount}</span>}</>}
+              {t === 'properties' && '🏠 Properties'}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ padding: '1.25rem 1.5rem 1.75rem' }}>
+          {/* ───── OVERVIEW ───── */}
+          {tab === 'overview' && (
+            <div className="admin-overview">
+              <div className="admin-stats">
+                <div className="admin-stat"><span className="as-n">{allProperties.length}</span><span className="as-l">Listings</span></div>
+                <div className="admin-stat teal"><span className="as-n">{leadRows.length}</span><span className="as-l">Total Enquiries</span></div>
+                <div className="admin-stat green"><span className="as-n">{newLeadCount}</span><span className="as-l">New Enquiries</span></div>
+                <div className="admin-stat amber"><span className="as-n">{allProperties.filter(p => p.hot).length}</span><span className="as-l">Hot Deals</span></div>
+                <div className="admin-stat blue"><span className="as-n">{allProperties.filter(p => p.featured).length}</span><span className="as-l">Featured</span></div>
+                <div className="admin-stat purple"><span className="as-n">{avgScore}</span><span className="as-l">Avg PropScore</span></div>
+              </div>
+
+              <h4 className="admin-section-title">Recent enquiries</h4>
+              {leadRows.length === 0 ? (
+                <p className="admin-empty">No website enquiries yet. They appear here the moment a visitor contacts an agent, books a visit, or requests a callback.</p>
+              ) : (
+                <div className="admin-recent">
+                  {leadRows.slice(0, 4).map(l => {
+                    const m = ADMIN_INTENT_META[l.intent] || ADMIN_INTENT_META.contact;
+                    return (
+                      <div key={l.ref} className="admin-recent-row" onClick={() => setTab('leads')}>
+                        <span className="ar-intent">{m.icon}</span>
+                        <div className="ar-body"><strong>{l.name || 'Unnamed'}</strong><span>{l.property_title || '—'}</span></div>
+                        <span className={`admin-status-chip s-${(l.status || 'New').replace(/\s+/g, '-').toLowerCase()}`}>{l.status || 'New'}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ───── LEADS ───── */}
+          {tab === 'leads' && (
+            <div className="admin-leads">
+              <div className="admin-leads-bar">
+                <div className="admin-filter">
+                  {['all', ...ADMIN_LEAD_STATUSES].map(s => (
+                    <button key={s} className={`admin-filter-btn ${leadFilter === s ? 'active' : ''}`} onClick={() => setLeadFilter(s)}>
+                      {s === 'all' ? `All (${leadRows.length})` : s}
+                    </button>
+                  ))}
+                </div>
+                <button className="admin-icon-btn" title="Refresh" onClick={refreshLeads}>↻</button>
+              </div>
+
+              {filteredLeads.length === 0 ? (
+                <p className="admin-empty">No {leadFilter === 'all' ? '' : `"${leadFilter}" `}enquiries.</p>
+              ) : (
+                <div className="admin-lead-list">
+                  {filteredLeads.map(l => {
+                    const m = ADMIN_INTENT_META[l.intent] || ADMIN_INTENT_META.contact;
+                    return (
+                      <div key={l.ref} className="admin-lead-row">
+                        <div className="alr-main">
+                          <div className="alr-top">
+                            <span className="alr-intent">{m.icon} {m.label}</span>
+                            <span className="alr-ref">{l.ref}</span>
+                          </div>
+                          <strong className="alr-name">{l.name || 'Unnamed'}</strong>
+                          {l.property_title && <span className="alr-prop">🏠 {l.property_title}</span>}
+                          <span className="alr-contact">📱 {l.phone || '—'}{l.email ? ` · ✉️ ${l.email}` : ''}{l.intent === 'visit' && l.visit_date ? ` · 📅 ${l.visit_date} ${l.visit_time}` : ''}</span>
+                          {l.message && <span className="alr-msg">“{l.message}”</span>}
+                        </div>
+                        <div className="alr-side">
+                          <select className="alr-status" value={l.status || 'New'} onChange={(e) => setLeadStatus(l.ref, e.target.value)}>
+                            {ADMIN_LEAD_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                          <div className="alr-acts">
+                            {l.phone && <a className="alr-act wa" href={whatsappLink(l.phone, leadMessage({ intent: l.intent, name: l.name, property: { title: l.property_title } }))} target="_blank" rel="noopener noreferrer" title="WhatsApp">💬</a>}
+                            {l.phone && <a className="alr-act" href={telLink(l.phone)} title="Call">📞</a>}
+                            <button className="alr-act del" title="Delete" onClick={() => removeLead(l.ref)}>🗑️</button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ───── PROPERTIES ───── */}
+          {tab === 'properties' && (<>
           {!dbReady && (
-            <div style={{ padding: '1rem', background: '#fff3cd', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>
-              ⚠️ Supabase is not configured. Set <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> in your <code>.env</code> file.
-              Currently using static data from <code>src/data.js</code>.
+            <div className="admin-banner">
+              ⚠️ Supabase isn’t configured — property edits are disabled. Reading static data from <code>src/data.js</code>.
             </div>
           )}
 
           {!user ? (
-            <form onSubmit={handleLogin} style={{ maxWidth: 400 }}>
-              <h4 style={{ marginBottom: '1rem' }}>Admin Login</h4>
-              {authError && <div style={{ color: '#dc3545', marginBottom: '0.75rem', fontSize: '0.9rem' }}>{authError}</div>}
+            <form onSubmit={handleLogin} className="admin-login">
+              <h4 style={{ marginBottom: '0.85rem' }}>🔒 Admin login required to edit listings</h4>
+              {authError && <div className="admin-auth-error">{authError}</div>}
               <div className="roi-field">
                 <label>Email</label>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="admin@example.com" />
@@ -1335,7 +1458,7 @@ function AdminPanelModal() {
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" />
               </div>
               <button type="submit" className="mortgage-calc-btn" disabled={authLoading} style={{ width: '100%', marginTop: '0.5rem' }}>
-                {authLoading ? 'Logging in...' : 'Login'}
+                {authLoading ? 'Logging in…' : 'Login'}
               </button>
               <p style={{ marginTop: '0.75rem', fontSize: '0.8rem', opacity: 0.6 }}>
                 Create admin users in Supabase Dashboard → Authentication → Users → Add User.
@@ -1459,6 +1582,7 @@ function AdminPanelModal() {
               </div>
             </>
           )}
+          </>)}
         </div>
       </div>
     </div>

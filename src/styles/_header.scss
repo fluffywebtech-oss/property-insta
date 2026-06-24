@@ -366,6 +366,28 @@
   }
 }
 
+.ig-drawer-admin {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--ig-border);
+  background: transparent;
+  color: var(--ig-text);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+
+  &:hover { background: var(--ig-hover, rgba(0,0,0,0.04)); border-color: var(--ig-link); }
+
+  .ig-drawer-theme-ico { font-size: 17px; width: 22px; text-align: center; }
+  .ig-drawer-theme-label { flex: 1; text-align: left; }
+  .ig-drawer-admin-arrow { color: var(--ig-text-secondary, #9aa0ab); font-weight: 700; }
+}
+
 .ig-drawer-version {
   text-align: center;
   font-size: 10.5px;

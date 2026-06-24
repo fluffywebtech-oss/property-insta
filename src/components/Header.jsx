@@ -58,6 +58,7 @@ export default function Header() {
     notifications, unreadCount, markNotifRead,
     filters, setFilters,
     sidebarOpen, toggleSidebar,
+    setActiveModal,
   } = useApp();
   const { role, switchRole, ROLE_LABELS, ROLE_COLORS } = useRole();
 
@@ -446,12 +447,17 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Footer: theme switch + version */}
+        {/* Footer: theme switch + admin + version */}
         <div className="ig-drawer-foot">
           <button className="ig-drawer-theme" onClick={toggleDarkMode} aria-pressed={darkMode}>
             <span className="ig-drawer-theme-ico">{darkMode ? '☀️' : '🌙'}</span>
             <span className="ig-drawer-theme-label">{darkMode ? 'Light mode' : 'Dark mode'}</span>
             <span className={`ig-drawer-switch ${darkMode ? 'on' : ''}`}><i /></span>
+          </button>
+          <button className="ig-drawer-admin" onClick={() => { setDrawerOpen(false); setActiveModal({ type: 'admin' }); }}>
+            <span className="ig-drawer-theme-ico">🛠️</span>
+            <span className="ig-drawer-theme-label">Admin panel</span>
+            <span className="ig-drawer-admin-arrow">→</span>
           </button>
           <span className="ig-drawer-version">PropertyInsta · India's Real-Estate OS</span>
         </div>
