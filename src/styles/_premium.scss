@@ -1550,26 +1550,70 @@ textarea:focus-visible {
 }
 
 // Agent card
-.pi-prop-agent {
-  display: flex; align-items: center; gap: 12px;
+.pi-prop-agent-card {
   padding: 14px 16px;
   background: var(--card-bg);
   border: 1.5px solid var(--ig-border);
   border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pi-prop-agent {
+  display: flex; align-items: center; gap: 12px;
   img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(31,86,196,0.3); }
   > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   strong { font-size: 13.5px; font-weight: 800; color: var(--ig-text); }
   span { font-size: 11.5px; color: var(--ig-text-secondary); font-weight: 600; }
   .pi-prop-agent-rating { font-size: 11px; color: var(--ig-warning); font-weight: 700; }
-  button {
-    padding: 8px 14px;
-    font-size: 12px; font-weight: 700;
-    color: #fff;
-    background: var(--ig-gradient);
-    border: none; border-radius: 999px;
-    cursor: pointer; flex-shrink: 0;
-    &:hover { transform: translateY(-1px); }
+}
+
+.pi-prop-lead-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  .pi-lead-btn {
+    padding: 10px 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ig-text);
+    background: var(--muted-bg);
+    border: 1.5px solid var(--ig-border);
+    border-radius: 11px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+
+    &:hover { border-color: var(--ig-link); transform: translateY(-1px); }
+
+    &.primary {
+      grid-column: 1 / -1;
+      color: #fff;
+      background: var(--ig-gradient);
+      border-color: transparent;
+      box-shadow: 0 6px 16px rgba(31, 86, 196, 0.28);
+    }
   }
+}
+
+.pi-lead-whatsapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px;
+  border-radius: 12px;
+  background: #25d366;
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover { box-shadow: 0 9px 22px rgba(37, 211, 102, 0.42); transform: translateY(-1px); }
+  &:active { transform: scale(0.98); }
 }
 
 // Similar projects

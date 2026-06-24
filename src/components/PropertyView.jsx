@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, lazy, Suspense } from 'react';
 import { useApp, deriveCity } from '../context/AppContext';
 import { formatPriceIndian } from '../data';
+import { whatsappLink, leadMessage } from '../utils/leads';
 import PropertyCard from './PropertyCard';
 
 const PropertyTour = lazy(() => import('./PropertyTour'));
@@ -342,16 +343,32 @@ export default function PropertyView() {
             </button>
           )}
 
-          {/* Agent */}
+          {/* Agent + lead funnel */}
           {property.agent && (
-            <div className="pi-prop-agent">
-              <img src={property.agent.avatar || property.agentAvatar} alt={property.agent.name} />
-              <div>
-                <strong>{property.agent.name}</strong>
-                <span>{property.agent.company || 'PropertyInsta Realty'}</span>
-                {property.agent.rating && <span className="pi-prop-agent-rating">⭐ {property.agent.rating} · {property.agent.sales} sales</span>}
+            <div className="pi-prop-agent-card">
+              <div className="pi-prop-agent">
+                <img src={property.agent.avatar || property.agentAvatar} alt={property.agent.name} />
+                <div>
+                  <strong>{property.agent.name}</strong>
+                  <span>{property.agent.company || 'PropertyInsta Realty'}</span>
+                  {property.agent.rating && <span className="pi-prop-agent-rating">⭐ {property.agent.rating} · {property.agent.sales} sales</span>}
+                </div>
               </div>
-              <button onClick={() => setActiveModal({ type: 'tour', data: { propertyId: property.id } })}>Contact</button>
+              <div className="pi-prop-lead-actions">
+                <button className="pi-lead-btn primary" onClick={() => setActiveModal({ type: 'lead', data: { propertyId: property.id, intent: 'contact' } })}>💬 Contact Agent</button>
+                <button className="pi-lead-btn" onClick={() => setActiveModal({ type: 'lead', data: { propertyId: property.id, intent: 'visit' } })}>📅 Site Visit</button>
+                <button className="pi-lead-btn" onClick={() => setActiveModal({ type: 'lead', data: { propertyId: property.id, intent: 'callback' } })}>📞 Callback</button>
+              </div>
+              {property.agent.phone && (
+                <a
+                  className="pi-lead-whatsapp"
+                  href={whatsappLink(property.agent.phone, leadMessage({ intent: 'contact', property }))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span>🟢</span> Chat instantly on WhatsApp
+                </a>
+              )}
             </div>
           )}
         </aside>

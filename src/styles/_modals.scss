@@ -750,6 +750,120 @@
   p { color: var(--ig-text-secondary); margin-bottom: 20px; }
 }
 
+// ===== Lead capture funnel =====
+.lead-ref {
+  font-family: 'Space Grotesk', monospace;
+  letter-spacing: 0.04em;
+  color: var(--ig-text);
+}
+
+.lead-intent-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.lead-intent-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 9px 6px;
+  border: 1.5px solid var(--ig-border);
+  background: transparent;
+  color: var(--ig-text-secondary);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+
+  span { font-size: 17px; }
+
+  &:hover { border-color: var(--ig-link); color: var(--ig-text); }
+  &.active {
+    border-color: transparent;
+    background: linear-gradient(135deg, #2e6fe0, #1b4db1);
+    color: #fff;
+  }
+}
+
+.lead-blurb {
+  font-size: 12.5px;
+  color: var(--ig-text-secondary);
+  margin: 0 0 14px;
+}
+
+.lead-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.lead-opt { font-weight: 400; color: var(--ig-text-secondary); opacity: 0.7; font-size: 11px; }
+
+.lead-or {
+  margin-top: 14px;
+  text-align: center;
+
+  > span {
+    display: block;
+    font-size: 11.5px;
+    color: var(--ig-text-secondary);
+    margin-bottom: 8px;
+    position: relative;
+  }
+}
+
+.lead-direct, .lead-success-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.lead-success-actions { margin: 4px 0 20px; }
+
+.lead-wa-btn, .lead-call-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex: 1;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:active { transform: scale(0.97); }
+}
+
+.lead-wa-btn {
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.32);
+  &:hover { box-shadow: 0 8px 20px rgba(37, 211, 102, 0.42); }
+}
+
+.lead-call-btn {
+  background: var(--muted-bg);
+  color: var(--ig-text);
+  border: 1.5px solid var(--ig-border);
+  &:hover { border-color: var(--ig-link); }
+}
+
+.lead-consent {
+  margin: 12px 0 0;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--ig-text-secondary);
+  opacity: 0.75;
+  text-align: center;
+}
+
 .tour-prop-preview {
   display: flex;
   gap: 12px;

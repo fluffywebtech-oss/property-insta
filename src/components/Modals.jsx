@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../hooks/useToast';
+import { saveLead, whatsappLink, telLink, leadMessage } from '../utils/leads';
 import {
   propertyStories,
   propertyReviews,
@@ -490,35 +492,73 @@ function MortgageModal() {
 }
 
 // ==================== Tour Scheduler Modal ====================
-function TourModal() {
-  const { activeModal, setActiveModal } = useApp();
-  const { propertyId } = activeModal.data || {};
-  const property = allProperties.find(p => p.id === propertyId);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', date: '', time: '10:00', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+// ==================== Lead Capture Funnel ====================
+// One modal, three intents: Contact agent · Schedule visit · Request callback.
+// Triggered via setActiveModal({ type:'tour'|'lead', data:{ propertyId, intent } })
+const LEAD_INTENTS = {
+  contact:  { key: 'contact',  icon: '💬', title: 'Contact the Agent',    cta: 'Send Enquiry',     blurb: 'Get details, pricing & availability.' },
+  visit:    { key: 'visit',    icon: '📅', title: 'Schedule a Site Visit', cta: 'Book My Visit',    blurb: 'Pick a slot — the agent confirms.' },
+  callback: { key: 'callback', icon: '📞', title: 'Request a Callback',    cta: 'Request Callback', blurb: 'We’ll call you back, free of cost.' },
+};
 
-  const schedule = (e) => {
+const TIME_SLOTS = [
+  ['09:00', '9:00 AM'], ['10:00', '10:00 AM'], ['11:00', '11:00 AM'], ['12:00', '12:00 PM'],
+  ['14:00', '2:00 PM'], ['15:00', '3:00 PM'], ['16:00', '4:00 PM'], ['17:00', '5:00 PM'],
+];
+
+function TourModal() {
+  const { activeModal, setActiveModal, allProperties } = useApp();
+  const toast = useToast();
+  const { propertyId, intent: initialIntent } = activeModal.data || {};
+  const property = allProperties.find(p => p.id === propertyId);
+  const agent = property?.agent;
+
+  const [intent, setIntent] = useState(LEAD_INTENTS[initialIntent] ? initialIntent : 'visit');
+  const [form, setForm] = useState({ name: '', email: '', phone: '', date: '', time: '10:00', message: '' });
+  const [result, setResult] = useState(null); // { ref }
+
+  const cfg = LEAD_INTENTS[intent];
+  const update = (field, val) => setForm(p => ({ ...p, [field]: val }));
+
+  const submit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    const { ref } = saveLead({
+      intent,
+      propertyId,
+      propertyTitle: property?.title,
+      agentName: agent?.name,
+      ...form,
+    });
+    setResult({ ref });
+    toast(`Enquiry sent — ref ${ref}`, 'success');
   };
 
-  const update = (field, val) => setForm(p => ({ ...p, [field]: val }));
+  const waMsg = leadMessage({ intent, name: form.name, property });
+  const showDateTime = intent === 'visit';
 
   return (
     <div className="prop-modal-backdrop" onClick={() => setActiveModal(null)}>
-      <div className="tour-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="tour-modal lead-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>📅 Schedule a Tour</h3>
+          <h3>{cfg.icon} {cfg.title}</h3>
           <button className="modal-close" onClick={() => setActiveModal(null)}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
           </button>
         </div>
         <div className="tour-body">
-          {submitted ? (
+          {result ? (
             <div className="tour-success">
               <div className="success-icon">✅</div>
-              <h3>Tour Scheduled!</h3>
-              <p>We'll confirm your visit shortly via email/phone.</p>
+              <h3>{intent === 'visit' ? 'Visit Requested!' : intent === 'callback' ? 'Callback Requested!' : 'Enquiry Sent!'}</h3>
+              <p>Your reference is <strong className="lead-ref">{result.ref}</strong>.<br />{agent?.name || 'Our team'} will reach out shortly.</p>
+              {agent?.phone && (
+                <div className="lead-success-actions">
+                  <a className="lead-wa-btn" href={whatsappLink(agent.phone, `${waMsg} (Ref ${result.ref})`)} target="_blank" rel="noopener noreferrer">
+                    <span>🟢</span> Chat on WhatsApp
+                  </a>
+                  <a className="lead-call-btn" href={telLink(agent.phone)}>📞 Call now</a>
+                </div>
+              )}
               <button className="modal-action-btn primary" onClick={() => setActiveModal(null)}>Done</button>
             </div>
           ) : (
@@ -532,41 +572,68 @@ function TourModal() {
                   </div>
                 </div>
               )}
-              <form className="tour-form" onSubmit={schedule}>
+
+              {/* Intent switcher */}
+              <div className="lead-intent-tabs">
+                {Object.values(LEAD_INTENTS).map(o => (
+                  <button
+                    key={o.key}
+                    type="button"
+                    className={`lead-intent-tab ${intent === o.key ? 'active' : ''}`}
+                    onClick={() => setIntent(o.key)}
+                  >
+                    <span>{o.icon}</span>{o.title.replace(/^(Contact the |Schedule a |Request a )/, '')}
+                  </button>
+                ))}
+              </div>
+              <p className="lead-blurb">{cfg.blurb}</p>
+
+              <form className="tour-form" onSubmit={submit}>
                 <div className="tour-field">
                   <label>Full Name</label>
                   <input type="text" required value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Your full name" />
-                </div>
-                <div className="tour-field">
-                  <label>Email</label>
-                  <input type="email" required value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="you@email.com" />
                 </div>
                 <div className="tour-field">
                   <label>Phone</label>
                   <input type="tel" required value={form.phone} onChange={(e) => update('phone', e.target.value)} placeholder="+91 98765 43210" />
                 </div>
                 <div className="tour-field">
-                  <label>Preferred Date</label>
-                  <input type="date" required value={form.date} onChange={(e) => update('date', e.target.value)} />
+                  <label>Email <span className="lead-opt">(optional)</span></label>
+                  <input type="email" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder="you@email.com" />
                 </div>
+                {showDateTime && (
+                  <div className="lead-row">
+                    <div className="tour-field">
+                      <label>Preferred Date</label>
+                      <input type="date" required value={form.date} onChange={(e) => update('date', e.target.value)} />
+                    </div>
+                    <div className="tour-field">
+                      <label>Time</label>
+                      <select value={form.time} onChange={(e) => update('time', e.target.value)}>
+                        {TIME_SLOTS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                )}
                 <div className="tour-field">
-                  <label>Preferred Time</label>
-                  <select id="tourTime" value={form.time} onChange={(e) => update('time', e.target.value)}>
-                    <option value="09:00">9:00 AM</option>
-                    <option value="10:00">10:00 AM</option>
-                    <option value="11:00">11:00 AM</option>
-                    <option value="12:00">12:00 PM</option>
-                    <option value="14:00">2:00 PM</option>
-                    <option value="15:00">3:00 PM</option>
-                    <option value="16:00">4:00 PM</option>
-                    <option value="17:00">5:00 PM</option>
-                  </select>
+                  <label>Message <span className="lead-opt">(optional)</span></label>
+                  <textarea rows="2" value={form.message} onChange={(e) => update('message', e.target.value)} placeholder="Any specific requirements..." />
                 </div>
-                <div className="tour-field">
-                  <label>Message (Optional)</label>
-                  <textarea rows="3" value={form.message} onChange={(e) => update('message', e.target.value)} placeholder="Any specific requirements..." />
-                </div>
-                <button type="submit" className="mortgage-calc-btn">Schedule Tour</button>
+
+                <button type="submit" className="mortgage-calc-btn">{cfg.cta}</button>
+
+                {agent?.phone && (
+                  <div className="lead-or">
+                    <span>or reach the agent directly</span>
+                    <div className="lead-direct">
+                      <a className="lead-wa-btn" href={whatsappLink(agent.phone, waMsg)} target="_blank" rel="noopener noreferrer">
+                        <span>🟢</span> WhatsApp
+                      </a>
+                      <a className="lead-call-btn" href={telLink(agent.phone)}>📞 Call</a>
+                    </div>
+                  </div>
+                )}
+                <p className="lead-consent">By submitting, you agree to be contacted about this property. We never share your details.</p>
               </form>
             </>
           )}
@@ -1422,7 +1489,7 @@ export default function Modals() {
       {type === 'story' && <StoryModal />}
       {type === 'property' && <PropertyDetailModal />}
       {type === 'mortgage' && <MortgageModal />}
-      {type === 'tour' && <TourModal />}
+      {(type === 'tour' || type === 'lead') && <TourModal />}
       {type === 'alerts' && <AlertsModal />}
       {type === 'quiz' && <QuizModal />}
       {type === 'roi' && <ROIModal />}
