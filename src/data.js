@@ -3,6 +3,7 @@
 // All Major Builders | All Micro-Markets | Builders Section | May 2026
 // ===================================================================
 import Unsplash from './assets/hero.png';
+import { computePropScore } from './utils/propScore';
 
 // Image IDs legend (9 verified working Unsplash photos):
 //   A = 1600596542815-ffad4c1539a9   B = 1600585154340-be6161a56a0c   C = 1560185007-cde436f6a4d0
@@ -334,6 +335,9 @@ allProperties.forEach(p => { if (!agents[p.agent.id]) agents[p.agent.id] = p.age
 
 // Enrich allProperties with component-expected fields
 allProperties.forEach(p => {
+  // PropScore™ — computed from RAW fields (amenities array, neighborhood object)
+  // before they get reshaped below into display strings.
+  p.propScore = computePropScore(p);
   p.media = p.images;
   p.bedrooms = p.beds;
   p.bathrooms = p.baths;

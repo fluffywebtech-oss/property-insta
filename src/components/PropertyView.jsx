@@ -188,6 +188,54 @@ export default function PropertyView() {
             </section>
           )}
 
+          {/* PropScore™ breakdown */}
+          {property.propScore && (
+            <section className="pi-prop-section pi-propscore-panel">
+              <h2>📊 PropScore™ — AI Investment Score</h2>
+              <div className="pi-ps-head">
+                <div className="pi-ps-ring" style={{ '--ps-color': property.propScore.color, '--ps-pct': property.propScore.score }}>
+                  <svg viewBox="0 0 80 80" width="96" height="96">
+                    <circle className="pi-ps-track" cx="40" cy="40" r="34" />
+                    <circle
+                      className="pi-ps-fill"
+                      cx="40" cy="40" r="34"
+                      style={{ stroke: property.propScore.color, strokeDasharray: 2 * Math.PI * 34, strokeDashoffset: 2 * Math.PI * 34 * (1 - property.propScore.score / 100) }}
+                    />
+                  </svg>
+                  <div className="pi-ps-ring-num">
+                    <strong>{property.propScore.score}</strong>
+                    <span>/ 100</span>
+                  </div>
+                </div>
+                <div className="pi-ps-head-info">
+                  <span className="pi-ps-grade" style={{ background: property.propScore.color }}>
+                    {property.propScore.grade} · {property.propScore.tag}
+                  </span>
+                  <p className="pi-ps-summary">{property.propScore.summary}</p>
+                </div>
+              </div>
+
+              <div className="pi-ps-factors">
+                {property.propScore.factors.map(f => (
+                  <div key={f.key} className="pi-ps-factor">
+                    <div className="pi-ps-factor-top">
+                      <span className="pi-ps-factor-label">{f.label}</span>
+                      <span className="pi-ps-factor-score">{f.score}</span>
+                    </div>
+                    <div className="pi-ps-factor-bar">
+                      <span style={{ width: `${f.score}%`, background: property.propScore.color }} />
+                    </div>
+                    <div className="pi-ps-factor-foot">
+                      <span className="pi-ps-factor-hint">{f.hint}</span>
+                      <span className="pi-ps-factor-weight">{f.weight}% weight</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="pi-ps-disclaimer">PropScore™ is an algorithmic estimate from value, builder, locality, rental yield & lifestyle signals — not financial advice.</p>
+            </section>
+          )}
+
           {/* Key specs grid */}
           <section className="pi-prop-section">
             <h2>📋 Key details</h2>

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { allProperties as staticProperties, allReels as staticReels, formatPriceIndian } from '../data';
 import { supabase } from '../lib/supabase';
+import { computePropScore } from '../utils/propScore';
 
 // ============================================================================
 // Derive a canonical city from a free-text location string
@@ -312,6 +313,17 @@ function mapDBProperty(db) {
     age: db.age || 'New',
     mediaAspectRatio: db.media_aspect_ratio || '4/3',
     listingStatus: db.listing_status || db.possession_status || 'Ready to Move',
+    propScore: computePropScore({
+      price: db.price,
+      sqft: db.sqft,
+      builder: db.builder,
+      location: db.location,
+      type: db.type,
+      possessionStatus: db.possession_status,
+      hot: db.hot,
+      amenities: db.amenities || [],
+      neighborhood: db.neighborhood,
+    }),
     created_at: db.created_at,
     updated_at: db.updated_at,
   };

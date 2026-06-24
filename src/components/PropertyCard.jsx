@@ -112,6 +112,18 @@ export default function PropertyCard({ property }) {
           </>
         )}
 
+        {/* PropScore™ badge */}
+        {property.propScore && (
+          <div
+            className="ig-propscore-badge"
+            style={{ '--ps-color': property.propScore.color }}
+            title={`PropScore™ ${property.propScore.score}/100 · ${property.propScore.tag}`}
+          >
+            <span className="ig-propscore-num">{property.propScore.score}</span>
+            <span className="ig-propscore-cap">PropScore</span>
+          </div>
+        )}
+
         {/* Overlay Info */}
         <div className="ig-card-overlay-info">
           <span className="ig-card-price">{formatPriceIndian(property.price)}</span>
