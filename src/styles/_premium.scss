@@ -1279,6 +1279,35 @@ textarea:focus-visible {
   color: var(--ig-text-secondary);
   input { flex: 1; border: none; background: transparent; outline: none; font-size: 14px; color: var(--ig-text); }
 }
+// Benefits strip
+.ig-bwu-benefits {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px;
+}
+.ig-bwu-benefit {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-radius: 14px;
+  background: var(--card-bg); border: 1px solid var(--ig-border);
+  .ig-bwu-benefit-icon { font-size: 24px; flex-shrink: 0; }
+  strong { display: block; font-size: 13.5px; font-weight: 800; color: var(--ig-text); }
+  span { font-size: 11.5px; color: var(--ig-text-secondary); line-height: 1.35; }
+}
+
+// Section labels & category sections
+.ig-bwu-toolbar-label {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ig-text-secondary); text-align: center; margin-bottom: 10px;
+}
+.ig-bwu-section { margin-bottom: 36px; }
+.ig-bwu-section-head {
+  display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px;
+  padding-bottom: 8px; border-bottom: 2px solid var(--ig-border);
+  h2 {
+    font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800;
+    letter-spacing: -0.01em; color: var(--ig-text); margin: 0;
+  }
+  .ig-bwu-section-count { font-size: 12px; font-weight: 600; color: var(--ig-text-secondary); }
+}
+
 // "What are you building?" — project-type segment
 .ig-bwu-segments {
   display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 18px;
@@ -1356,10 +1385,15 @@ textarea:focus-visible {
 }
 .ig-bwu-empty { text-align: center; padding: 60px 20px; color: var(--ig-text-secondary); }
 
+@media (max-width: 900px) {
+  .ig-bwu-benefits { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 600px) {
   .ig-bwu { padding: 72px 14px 80px; } // mobile header ~56px + bottom nav space
   .ig-bwu-hero h1 { font-size: 23px; }
   .ig-bwu-grid { grid-template-columns: 1fr; }
+  .ig-bwu-benefits { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ig-bwu-benefit { padding: 10px 12px; }
 }
 
 // ===== PropScore™ breakdown panel =====

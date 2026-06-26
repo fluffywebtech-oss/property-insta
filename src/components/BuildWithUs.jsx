@@ -31,6 +31,13 @@ const CATEGORY_TYPES = {
 };
 const typesOf = (item) => item.types || CATEGORY_TYPES[item.category] || [];
 const matchesType = (item, type) => type === 'all' || typesOf(item).includes(type);
+const CATEGORY_ORDER = Object.keys(CATEGORY_TYPES);
+const BENEFITS = [
+  { icon: '🏷️', title: 'Best Market Rates', text: 'Bulk pricing direct from suppliers.' },
+  { icon: '✅', title: 'Verified Suppliers', text: 'Quality-checked, trusted brands.' },
+  { icon: '🚚', title: 'Doorstep Delivery', text: 'On-site delivery across Gurgaon NCR.' },
+  { icon: '🛠️', title: 'End-to-End Support', text: 'From foundation to finishing.' },
+];
 
 export default function BuildWithUs() {
   const [items, setItems] = useState(buildMaterials);
@@ -74,6 +81,35 @@ export default function BuildWithUs() {
   const quote = (item) =>
     whatsappLink(DESK_PHONE, `Hi, I'd like a quote for "${item.name}" (${item.brand}) on PropertyInsta — Build With Us.`);
 
+  const grouped = useMemo(() => {
+    const m = {};
+    filtered.forEach(i => { (m[i.category] = m[i.category] || []).push(i); });
+    return m;
+  }, [filtered]);
+  const groupedView = category === 'all';
+
+  const renderCard = (item) => (
+    <div key={item.id} className="ig-bwu-card">
+      <div className="ig-bwu-card-img">
+        <img src={item.image} alt={item.name} loading="lazy" onError={e => { e.target.style.visibility = 'hidden'; }} />
+        <span className={`ig-bwu-stock ${STOCK_CLASS[item.stock] || ''}`}>{item.stock}</span>
+      </div>
+      <div className="ig-bwu-card-body">
+        <span className="ig-bwu-cat">{item.category}</span>
+        <h3>{item.name}</h3>
+        <p className="ig-bwu-supplier">🚚 {item.supplier} · {item.brand}</p>
+        <p className="ig-bwu-desc">{item.description}</p>
+        <div className="ig-bwu-tags">
+          {typesOf(item).map(t => <span key={t} className={`ig-bwu-tag t-${t.toLowerCase()}`}>{t}</span>)}
+        </div>
+        <div className="ig-bwu-card-foot">
+          <div className="ig-bwu-price"><strong>{inr(item.price)}</strong><span> / {item.unit}</span></div>
+          <a className="ig-bwu-quote" href={quote(item)} target="_blank" rel="noopener noreferrer">Get Quote</a>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="ig-bwu">
       {/* Hero */}
@@ -87,6 +123,17 @@ export default function BuildWithUs() {
         </div>
       </div>
 
+      {/* Why Build With Us — benefits */}
+      <div className="ig-bwu-benefits">
+        {BENEFITS.map(b => (
+          <div key={b.title} className="ig-bwu-benefit">
+            <span className="ig-bwu-benefit-icon">{b.icon}</span>
+            <div><strong>{b.title}</strong><span>{b.text}</span></div>
+          </div>
+        ))}
+      </div>
+
+      <div className="ig-bwu-toolbar-label">What are you building?</div>
       {/* What are you building? — project type */}
       <div className="ig-bwu-segments">
         <button className={`ig-bwu-seg ${projectType === 'all' ? 'active' : ''}`} onClick={() => setProjectType('all')}>
@@ -108,33 +155,21 @@ export default function BuildWithUs() {
         ))}
       </div>
 
-      {/* Grid */}
+      {/* Catalog — divided into category sections when browsing all */}
       {filtered.length === 0 ? (
         <div className="ig-bwu-empty">No materials match your search.</div>
-      ) : (
-        <div className="ig-bwu-grid">
-          {filtered.map(item => (
-            <div key={item.id} className="ig-bwu-card">
-              <div className="ig-bwu-card-img">
-                <img src={item.image} alt={item.name} loading="lazy" onError={e => { e.target.style.visibility = 'hidden'; }} />
-                <span className={`ig-bwu-stock ${STOCK_CLASS[item.stock] || ''}`}>{item.stock}</span>
-              </div>
-              <div className="ig-bwu-card-body">
-                <span className="ig-bwu-cat">{item.category}</span>
-                <h3>{item.name}</h3>
-                <p className="ig-bwu-supplier">🚚 {item.supplier} · {item.brand}</p>
-                <p className="ig-bwu-desc">{item.description}</p>
-                <div className="ig-bwu-tags">
-                  {typesOf(item).map(t => <span key={t} className={`ig-bwu-tag t-${t.toLowerCase()}`}>{t}</span>)}
-                </div>
-                <div className="ig-bwu-card-foot">
-                  <div className="ig-bwu-price"><strong>{inr(item.price)}</strong><span> / {item.unit}</span></div>
-                  <a className="ig-bwu-quote" href={quote(item)} target="_blank" rel="noopener noreferrer">Get Quote</a>
-                </div>
-              </div>
+      ) : groupedView ? (
+        CATEGORY_ORDER.filter(c => grouped[c]?.length).map(c => (
+          <section key={c} className="ig-bwu-section">
+            <div className="ig-bwu-section-head">
+              <h2>{c}</h2>
+              <span className="ig-bwu-section-count">{grouped[c].length} item{grouped[c].length === 1 ? '' : 's'}</span>
             </div>
-          ))}
-        </div>
+            <div className="ig-bwu-grid">{grouped[c].map(renderCard)}</div>
+          </section>
+        ))
+      ) : (
+        <div className="ig-bwu-grid">{filtered.map(renderCard)}</div>
       )}
     </div>
   );
