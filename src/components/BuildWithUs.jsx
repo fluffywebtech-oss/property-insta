@@ -8,10 +8,34 @@ const STOCK_CLASS = { 'In Stock': 'in', 'Low Stock': 'low', 'Out of Stock': 'out
 const DESK_PHONE = '+91-98100 00000';
 const inr = (n) => `₹${Number(n || 0).toLocaleString('en-IN')}`;
 
+// What are you building? — each project type maps to the relevant material categories
+const PROJECT_TYPES = [
+  { key: 'Residential', icon: '🏠' },
+  { key: 'Commercial', icon: '🏢' },
+  { key: 'Industrial', icon: '🏭' },
+  { key: 'Renovation', icon: '🔧' },
+  { key: 'Interiors', icon: '🛋️' },
+];
+const CATEGORY_TYPES = {
+  'Cement': ['Residential', 'Commercial', 'Industrial', 'Renovation'],
+  'Steel & TMT': ['Residential', 'Commercial', 'Industrial'],
+  'Bricks & Blocks': ['Residential', 'Commercial', 'Industrial', 'Renovation'],
+  'Tiles & Flooring': ['Residential', 'Commercial', 'Renovation', 'Interiors'],
+  'Paints': ['Residential', 'Commercial', 'Renovation', 'Interiors'],
+  'Plumbing': ['Residential', 'Commercial', 'Industrial', 'Renovation'],
+  'Electrical': ['Residential', 'Commercial', 'Industrial', 'Renovation'],
+  'Sanitaryware': ['Residential', 'Commercial', 'Renovation', 'Interiors'],
+  'Wood & Ply': ['Residential', 'Renovation', 'Interiors'],
+  'Glass & Aluminium': ['Residential', 'Commercial', 'Interiors'],
+  'Hardware & Fittings': ['Residential', 'Commercial', 'Renovation', 'Interiors'],
+};
+const matchesType = (item, type) => type === 'all' || (CATEGORY_TYPES[item.category] || []).includes(type);
+
 export default function BuildWithUs() {
   const [items, setItems] = useState(buildMaterials);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
+  const [projectType, setProjectType] = useState('all');
 
   // Live catalog from Supabase (admin-managed) overrides the static seed when present
   useEffect(() => {
@@ -40,6 +64,7 @@ export default function BuildWithUs() {
 
   const categories = useMemo(() => ['all', ...Array.from(new Set(items.map(i => i.category)))], [items]);
   const filtered = items.filter(i => {
+    if (!matchesType(i, projectType)) return false;
     if (category !== 'all' && i.category !== category) return false;
     if (search && !`${i.name} ${i.brand} ${i.supplier}`.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
@@ -59,6 +84,18 @@ export default function BuildWithUs() {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
           <input type="text" placeholder="Search material, brand or supplier…" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
+      </div>
+
+      {/* What are you building? — project type */}
+      <div className="ig-bwu-segments">
+        <button className={`ig-bwu-seg ${projectType === 'all' ? 'active' : ''}`} onClick={() => setProjectType('all')}>
+          <span className="ig-bwu-seg-icon">🧱</span><span>All Projects</span>
+        </button>
+        {PROJECT_TYPES.map(t => (
+          <button key={t.key} className={`ig-bwu-seg ${projectType === t.key ? 'active' : ''}`} onClick={() => setProjectType(t.key)}>
+            <span className="ig-bwu-seg-icon">{t.icon}</span><span>{t.key}</span>
+          </button>
+        ))}
       </div>
 
       {/* Category filters */}

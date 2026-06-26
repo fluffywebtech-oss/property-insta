@@ -1279,6 +1279,24 @@ textarea:focus-visible {
   color: var(--ig-text-secondary);
   input { flex: 1; border: none; background: transparent; outline: none; font-size: 14px; color: var(--ig-text); }
 }
+// "What are you building?" — project-type segment
+.ig-bwu-segments {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 18px;
+}
+.ig-bwu-seg {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 14px;
+  border: 1.5px solid var(--ig-border); background: var(--card-bg);
+  color: var(--ig-text); font-size: 13.5px; font-weight: 700; cursor: pointer;
+  transition: all 0.18s ease;
+  .ig-bwu-seg-icon { font-size: 18px; }
+  &:hover { border-color: var(--ig-link); transform: translateY(-1px); }
+  &.active {
+    background: var(--ig-gradient); color: #fff; border-color: transparent;
+    box-shadow: 0 8px 20px rgba(31, 86, 196, 0.28);
+  }
+}
+
 .ig-bwu-filters {
   display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px;
 }
