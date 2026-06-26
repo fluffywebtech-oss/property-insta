@@ -29,7 +29,8 @@ const CATEGORY_TYPES = {
   'Glass & Aluminium': ['Residential', 'Commercial', 'Interiors'],
   'Hardware & Fittings': ['Residential', 'Commercial', 'Renovation', 'Interiors'],
 };
-const matchesType = (item, type) => type === 'all' || (CATEGORY_TYPES[item.category] || []).includes(type);
+const typesOf = (item) => item.types || CATEGORY_TYPES[item.category] || [];
+const matchesType = (item, type) => type === 'all' || typesOf(item).includes(type);
 
 export default function BuildWithUs() {
   const [items, setItems] = useState(buildMaterials);
@@ -123,6 +124,9 @@ export default function BuildWithUs() {
                 <h3>{item.name}</h3>
                 <p className="ig-bwu-supplier">🚚 {item.supplier} · {item.brand}</p>
                 <p className="ig-bwu-desc">{item.description}</p>
+                <div className="ig-bwu-tags">
+                  {typesOf(item).map(t => <span key={t} className={`ig-bwu-tag t-${t.toLowerCase()}`}>{t}</span>)}
+                </div>
                 <div className="ig-bwu-card-foot">
                   <div className="ig-bwu-price"><strong>{inr(item.price)}</strong><span> / {item.unit}</span></div>
                   <a className="ig-bwu-quote" href={quote(item)} target="_blank" rel="noopener noreferrer">Get Quote</a>
