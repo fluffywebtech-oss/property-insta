@@ -23,6 +23,7 @@ const MapView            = lazy(() => import('./components/MapView'));
 const SavedView          = lazy(() => import('./components/SavedView'));
 const BlogView           = lazy(() => import('./components/BlogView'));
 const ContentHub         = lazy(() => import('./components/ContentHub'));
+const BuildWithUs        = lazy(() => import('./components/BuildWithUs'));
 const Modals             = lazy(() => import('./components/Modals'));
 const OSDashboard        = lazy(() => import('./components/os/OSDashboard'));
 const TrustLayer         = lazy(() => import('./components/os/TrustLayer'));
@@ -73,6 +74,7 @@ function AppLayout() {
       case 'saved': return <SavedView />;
       case 'blog': return <BlogView />;
       case 'content-hub': return <ContentHub />;
+      case 'build-with-us': return <BuildWithUs />;
       // OS Modules
       case 'os': return <div className="os-page-wrap"><OSDashboard /></div>;
       case 'trust': return <div className="os-page-wrap"><TrustLayer /></div>;
@@ -103,7 +105,7 @@ function AppLayout() {
     }
   };
 
-  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'builder', 'property'].includes(currentView);
+  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'builder', 'property'].includes(currentView);
 
   return (
     <div className={`app-root ${darkMode ? 'dark' : ''}`}>

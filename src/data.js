@@ -653,6 +653,23 @@ export const productVideos = [
   },
 ];
 
+// ==================== Build With Us — Materials & Hardware ====================
+const _bwuImg = (id) => `https://images.unsplash.com/photo-${id}?w=600&h=400&fit=crop`;
+export const buildMaterials = [
+  { id: 1, name: 'UltraTech Cement OPC 53 Grade', category: 'Cement', brand: 'UltraTech', supplier: 'BuildMart Gurgaon', unit: '50kg bag', price: 410, stock: 'In Stock', image: _bwuImg('1581094794329-c8112a89af12'), description: 'High-strength OPC for RCC & structural work.' },
+  { id: 2, name: 'TATA Tiscon 550SD TMT Bars (12mm)', category: 'Steel & TMT', brand: 'TATA Steel', supplier: 'Steel Hub Sohna Rd', unit: 'per ton', price: 62500, stock: 'In Stock', image: _bwuImg('1565008576549-57569a49371d'), description: 'Earthquake-resistant Fe-550 TMT rebars.' },
+  { id: 3, name: 'AAC Lightweight Blocks (600x200x100)', category: 'Bricks & Blocks', brand: 'Magicrete', supplier: 'New Gurgaon Depot', unit: 'per block', price: 48, stock: 'In Stock', image: _bwuImg('1599629954294-14df9ec8bc05'), description: 'Autoclaved aerated concrete — light & insulating.' },
+  { id: 4, name: 'Kajaria Vitrified Floor Tiles (600x600)', category: 'Tiles & Flooring', brand: 'Kajaria', supplier: 'Tile Studio DLF', unit: 'per box (4)', price: 1180, stock: 'Low Stock', image: _bwuImg('1615873968403-89e068629265'), description: 'Double-charge vitrified tiles, matt finish.' },
+  { id: 5, name: 'Asian Paints Royale Luxury Emulsion', category: 'Paints', brand: 'Asian Paints', supplier: 'ColorWorld SPR', unit: '20L bucket', price: 7600, stock: 'In Stock', image: _bwuImg('1589939705384-5185137a7f0f'), description: 'Premium washable interior emulsion.' },
+  { id: 6, name: 'Astral CPVC Pipes & Fittings Set', category: 'Plumbing', brand: 'Astral', supplier: 'AquaFit Traders', unit: 'set', price: 3400, stock: 'In Stock', image: _bwuImg('1607472586893-edb57bdc0e39'), description: 'Lead-free hot & cold water CPVC system.' },
+  { id: 7, name: 'Havells Modular Switches & MCB Kit', category: 'Electrical', brand: 'Havells', supplier: 'Voltline Gurgaon', unit: 'kit', price: 5200, stock: 'In Stock', image: _bwuImg('1558002038-1055907df827'), description: 'Complete switchgear + modular plates.' },
+  { id: 8, name: 'Hindware Wall-Hung WC + Cistern', category: 'Sanitaryware', brand: 'Hindware', supplier: 'Bath Gallery', unit: 'piece', price: 9800, stock: 'Out of Stock', image: _bwuImg('1584622650111-993a426fbf0a'), description: 'Rimless wall-hung toilet with soft-close.' },
+  { id: 9, name: 'Fevicol Marine Plywood (19mm BWP)', category: 'Wood & Ply', brand: 'Century', supplier: 'Timber Mart', unit: 'per sheet', price: 4200, stock: 'In Stock', image: _bwuImg('1520208422220-d12a3c588e6c'), description: 'Boiling-water-proof plywood for kitchens & wardrobes.' },
+  { id: 10, name: 'Saint-Gobain Toughened Glass (12mm)', category: 'Glass & Aluminium', brand: 'Saint-Gobain', supplier: 'GlassLine NCR', unit: 'per sq.ft', price: 320, stock: 'In Stock', image: _bwuImg('1503387762-592deb58ef4e'), description: 'Tempered safety glass for façades & railings.' },
+  { id: 11, name: 'Godrej Door Hardware & Locks Set', category: 'Hardware & Fittings', brand: 'Godrej', supplier: 'FitWell Hardware', unit: 'set', price: 2850, stock: 'In Stock', image: _bwuImg('1530124566582-a618bc2615dc'), description: 'Mortise locks, handles & hinges (SS304).' },
+  { id: 12, name: 'Red Clay Bricks (Class-A)', category: 'Bricks & Blocks', brand: 'Local Kiln', supplier: 'New Gurgaon Depot', unit: 'per 1000', price: 8500, stock: 'In Stock', image: _bwuImg('1599629954294-14df9ec8bc05'), description: 'Kiln-fired first-class bricks for masonry.' },
+];
+
 // ==================== Utility ====================
 export const formatPriceIndian = (price) => {
   if (price >= 10000000) return '₹' + (price / 10000000).toFixed(price % 10000000 === 0 ? 0 : 2) + ' Cr';
