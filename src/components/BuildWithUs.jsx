@@ -45,6 +45,9 @@ const BENEFITS = [
 
 export default function BuildWithUs() {
   const [items, setItems] = useState(buildMaterials);
+  const [services, setServices] = useState(buildServices);
+  const [designs, setDesigns] = useState(buildDesigns);
+  const [designers, setDesigners] = useState(buildDesigners);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [projectType, setProjectType] = useState('all');
@@ -54,15 +57,20 @@ export default function BuildWithUs() {
   const [designZone, setDesignZone] = useState('all');
   const [designView, setDesignView] = useState('ideas'); // 'ideas' | 'designers'
 
-  // Live catalog from Supabase (admin-managed) overrides the static seed when present
+  // Live catalogs from Supabase (admin-managed) override the static seeds when present.
+  // Each table is optional — if it's missing we silently keep the bundled catalog.
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    const load = async (table, setter) => {
       try {
-        const { data, error } = await supabase.from('build_materials').select('*').order('id');
-        if (!cancelled && !error && Array.isArray(data) && data.length) setItems(data);
+        const { data, error } = await supabase.from(table).select('*').order('id');
+        if (!cancelled && !error && Array.isArray(data) && data.length) setter(data);
       } catch { /* table missing — keep static catalog */ }
-    })();
+    };
+    load('build_materials', setItems);
+    load('build_services', setServices);
+    load('build_designs', setDesigns);
+    load('build_designers', setDesigners);
     return () => { cancelled = true; };
   }, []);
 
@@ -120,8 +128,8 @@ export default function BuildWithUs() {
   );
 
   // ── Contractors & Services ──
-  const professions = ['all', ...Array.from(new Set(buildServices.map(s => s.profession)))];
-  const filteredServices = buildServices.filter(s => {
+  const professions = ['all', ...Array.from(new Set(services.map(s => s.profession)))];
+  const filteredServices = services.filter(s => {
     if (serviceType !== 'all' && s.profession !== serviceType) return false;
     if (search && !`${s.name} ${s.profession} ${s.specialization} ${(s.tags || []).join(' ')}`.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
@@ -152,7 +160,7 @@ export default function BuildWithUs() {
   );
 
   // ── Interior & Exterior Design ──
-  const designsByScope = buildDesigns.filter(d => designScope === 'all' || d.scope === designScope);
+  const designsByScope = designs.filter(d => designScope === 'all' || d.scope === designScope);
   const designZones = ['all', ...Array.from(new Set(designsByScope.map(d => d.zone)))];
   const filteredDesigns = designsByScope.filter(d => {
     if (designZone !== 'all' && d.zone !== designZone) return false;
@@ -188,7 +196,7 @@ export default function BuildWithUs() {
   );
 
   // ── Hire a Designer directory ──
-  const filteredDesigners = buildDesigners.filter(d => {
+  const filteredDesigners = designers.filter(d => {
     if (designScope !== 'all' && !d.scope.includes(designScope)) return false;
     if (search && !`${d.name} ${d.role} ${d.bio} ${(d.styles || []).join(' ')}`.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
@@ -309,7 +317,7 @@ export default function BuildWithUs() {
           <div className="ig-bwu-filters">
             {professions.map(p => (
               <button key={p} className={`ig-bwu-chip ${serviceType === p ? 'active' : ''}`} onClick={() => setServiceType(p)}>
-                {p === 'all' ? `All Pros (${buildServices.length})` : p}
+                {p === 'all' ? `All Pros (${services.length})` : p}
               </button>
             ))}
           </div>
