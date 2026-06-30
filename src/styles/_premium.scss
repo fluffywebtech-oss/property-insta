@@ -1341,6 +1341,26 @@ textarea:focus-visible {
 .ig-bwu-quote.hire { background: var(--ig-gradient); box-shadow: 0 6px 16px rgba(31,86,196,0.3);
   &:hover { box-shadow: 0 9px 22px rgba(31,86,196,0.42); } }
 
+// Interior & Exterior Design cards
+.ig-bwu-design {
+  .ig-bwu-card-img { position: relative; }
+}
+.ig-bwu-design-scope {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 999px;
+  color: #fff; backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  &.interior { background: rgba(124,58,237,0.92); }   // violet
+  &.exterior { background: rgba(5,150,105,0.92); }    // emerald
+}
+.ig-bwu-design-style {
+  position: absolute; bottom: 10px; right: 10px; z-index: 2;
+  font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 999px;
+  background: rgba(17,24,39,0.78); color: #fff; backdrop-filter: blur(4px);
+}
+.ig-bwu-svc-tag.time { background: rgba(31,86,196,0.12); color: var(--ig-link); }
+.ig-bwu-quote.book { background: linear-gradient(135deg, #7c3aed, #4f46e5); box-shadow: 0 6px 16px rgba(124,58,237,0.32);
+  &:hover { box-shadow: 0 9px 22px rgba(124,58,237,0.45); } }
+
 // Section labels & category sections
 .ig-bwu-toolbar-label {
   font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;

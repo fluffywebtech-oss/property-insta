@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { buildMaterials, buildServices } from '../data';
+import { buildMaterials, buildServices, buildDesigns } from '../data';
 import { supabase } from '../lib/supabase';
 import { whatsappLink } from '../utils/leads';
 import { setSeo, setJsonLd, origin } from '../utils/seo';
@@ -29,6 +29,10 @@ const CATEGORY_TYPES = {
   'Glass & Aluminium': ['Residential', 'Commercial', 'Interiors'],
   'Hardware & Fittings': ['Residential', 'Commercial', 'Renovation', 'Interiors'],
 };
+const DESIGN_SCOPES = [
+  { key: 'Interior', icon: '🛋️' },
+  { key: 'Exterior', icon: '🏡' },
+];
 const typesOf = (item) => item.types || CATEGORY_TYPES[item.category] || [];
 const matchesType = (item, type) => type === 'all' || typesOf(item).includes(type);
 const CATEGORY_ORDER = Object.keys(CATEGORY_TYPES);
@@ -44,8 +48,10 @@ export default function BuildWithUs() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [projectType, setProjectType] = useState('all');
-  const [mode, setMode] = useState('materials'); // 'materials' | 'services'
+  const [mode, setMode] = useState('materials'); // 'materials' | 'services' | 'design'
   const [serviceType, setServiceType] = useState('all');
+  const [designScope, setDesignScope] = useState('all'); // 'all' | 'Interior' | 'Exterior'
+  const [designZone, setDesignZone] = useState('all');
 
   // Live catalog from Supabase (admin-managed) overrides the static seed when present
   useEffect(() => {
@@ -144,6 +150,42 @@ export default function BuildWithUs() {
     </div>
   );
 
+  // ── Interior & Exterior Design ──
+  const designsByScope = buildDesigns.filter(d => designScope === 'all' || d.scope === designScope);
+  const designZones = ['all', ...Array.from(new Set(designsByScope.map(d => d.zone)))];
+  const filteredDesigns = designsByScope.filter(d => {
+    if (designZone !== 'all' && d.zone !== designZone) return false;
+    if (search && !`${d.title} ${d.style} ${d.zone} ${d.designer} ${(d.tags || []).join(' ')}`.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+  const scopeIcon = (scope) => (DESIGN_SCOPES.find(s => s.key === scope)?.icon || '🎨');
+  const bookLink = (d) =>
+    whatsappLink(DESK_PHONE, `Hi, I'm interested in the "${d.title}" (${d.style} ${d.zone}) design via PropertyInsta — Build With Us.`);
+
+  const renderDesign = (d) => (
+    <div key={d.id} className="ig-bwu-card ig-bwu-design">
+      <div className="ig-bwu-card-img">
+        <img src={d.image} alt={d.title} loading="lazy" onError={e => { e.target.style.visibility = 'hidden'; }} />
+        <span className={`ig-bwu-design-scope ${d.scope.toLowerCase()}`}>{scopeIcon(d.scope)} {d.scope}</span>
+        <span className="ig-bwu-design-style">{d.style}</span>
+      </div>
+      <div className="ig-bwu-card-body">
+        <span className="ig-bwu-cat">{d.zone}</span>
+        <h3>{d.title}</h3>
+        <p className="ig-bwu-supplier">🎨 {d.designer} · ⭐ {d.rating}</p>
+        <p className="ig-bwu-desc">{d.description}</p>
+        <div className="ig-bwu-tags">
+          {(d.tags || []).map(t => <span key={t} className="ig-bwu-svc-tag">{t}</span>)}
+          <span className="ig-bwu-svc-tag time">⏱ {d.timeline}</span>
+        </div>
+        <div className="ig-bwu-card-foot">
+          <div className="ig-bwu-price"><span>from </span><strong>{inr(d.priceFrom)}</strong><span> {d.priceUnit}</span></div>
+          <a className="ig-bwu-quote book" href={bookLink(d)} target="_blank" rel="noopener noreferrer">Book a Designer</a>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="ig-bwu">
       {/* Hero */}
@@ -174,6 +216,9 @@ export default function BuildWithUs() {
         </button>
         <button className={`ig-bwu-mode ${mode === 'services' ? 'active' : ''}`} onClick={() => setMode('services')}>
           👷 Contractors &amp; Services
+        </button>
+        <button className={`ig-bwu-mode ${mode === 'design' ? 'active' : ''}`} onClick={() => setMode('design')}>
+          🎨 Interior &amp; Exterior Design
         </button>
       </div>
 
@@ -218,7 +263,7 @@ export default function BuildWithUs() {
             <div className="ig-bwu-grid">{filtered.map(renderCard)}</div>
           )}
         </>
-      ) : (
+      ) : mode === 'services' ? (
         <>
           <div className="ig-bwu-toolbar-label">Hire verified building professionals</div>
           <div className="ig-bwu-filters">
@@ -232,6 +277,34 @@ export default function BuildWithUs() {
             <div className="ig-bwu-empty">No professionals match your search.</div>
           ) : (
             <div className="ig-bwu-grid">{filteredServices.map(renderService)}</div>
+          )}
+        </>
+      ) : (
+        <>
+          <div className="ig-bwu-toolbar-label">Interior &amp; exterior design ideas — book a designer</div>
+          {/* Interior vs Exterior */}
+          <div className="ig-bwu-segments">
+            <button className={`ig-bwu-seg ${designScope === 'all' ? 'active' : ''}`} onClick={() => { setDesignScope('all'); setDesignZone('all'); }}>
+              <span className="ig-bwu-seg-icon">🎨</span><span>All Designs</span>
+            </button>
+            {DESIGN_SCOPES.map(s => (
+              <button key={s.key} className={`ig-bwu-seg ${designScope === s.key ? 'active' : ''}`} onClick={() => { setDesignScope(s.key); setDesignZone('all'); }}>
+                <span className="ig-bwu-seg-icon">{s.icon}</span><span>{s.key}</span>
+              </button>
+            ))}
+          </div>
+          {/* Zone filters */}
+          <div className="ig-bwu-filters">
+            {designZones.map(z => (
+              <button key={z} className={`ig-bwu-chip ${designZone === z ? 'active' : ''}`} onClick={() => setDesignZone(z)}>
+                {z === 'all' ? `All (${designsByScope.length})` : z}
+              </button>
+            ))}
+          </div>
+          {filteredDesigns.length === 0 ? (
+            <div className="ig-bwu-empty">No design ideas match your search.</div>
+          ) : (
+            <div className="ig-bwu-grid">{filteredDesigns.map(renderDesign)}</div>
           )}
         </>
       )}
