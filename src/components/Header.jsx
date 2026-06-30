@@ -3,7 +3,6 @@ import { useApp } from '../context/AppContext';
 import { useRole, ROLES } from '../context/RoleContext';
 
 const CORE_TABS = [
-  { id: 'my-journey', icon: 'journey', label: 'My Journey' },
   { id: 'feed', icon: 'home', label: 'Discover' },
   { id: 'reels', icon: 'play', label: 'Reels' },
   { id: 'mapView', icon: 'map', label: 'Map' },
@@ -12,6 +11,7 @@ const CORE_TABS = [
   { id: 'blog', icon: 'blog', label: 'Blog' },
   { id: 'build-with-us', icon: 'build', label: 'Build With Us' },
   { id: 'home-loans', icon: 'loan', label: 'Home Loans' },
+  { id: 'my-journey', icon: 'journey', label: 'My Journey' },
 ];
 
 const OS_MODULES_BY_ROLE = {
