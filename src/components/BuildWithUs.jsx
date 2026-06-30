@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { buildMaterials, buildServices, buildDesigns } from '../data';
+import { buildMaterials, buildServices, buildDesigns, buildDesigners } from '../data';
 import { supabase } from '../lib/supabase';
 import { whatsappLink } from '../utils/leads';
 import { setSeo, setJsonLd, origin } from '../utils/seo';
@@ -52,6 +52,7 @@ export default function BuildWithUs() {
   const [serviceType, setServiceType] = useState('all');
   const [designScope, setDesignScope] = useState('all'); // 'all' | 'Interior' | 'Exterior'
   const [designZone, setDesignZone] = useState('all');
+  const [designView, setDesignView] = useState('ideas'); // 'ideas' | 'designers'
 
   // Live catalog from Supabase (admin-managed) overrides the static seed when present
   useEffect(() => {
@@ -186,6 +187,45 @@ export default function BuildWithUs() {
     </div>
   );
 
+  // ── Hire a Designer directory ──
+  const filteredDesigners = buildDesigners.filter(d => {
+    if (designScope !== 'all' && !d.scope.includes(designScope)) return false;
+    if (search && !`${d.name} ${d.role} ${d.bio} ${(d.styles || []).join(' ')}`.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+  const consultLink = (d) =>
+    whatsappLink(DESK_PHONE, `Hi, I'd like to book a design consultation with ${d.name} (${d.role}) via PropertyInsta — Build With Us.`);
+
+  const renderDesigner = (d) => (
+    <div key={d.id} className="ig-bwu-svc ig-bwu-designer">
+      <div className="ig-bwu-svc-top">
+        <img src={d.avatar} alt={d.name} className="ig-bwu-svc-avatar" loading="lazy" />
+        <div className="ig-bwu-svc-id">
+          <h3>{d.name}{d.verified && <span className="ig-bwu-svc-verified" title="Verified">✓</span>}</h3>
+          <span className="ig-bwu-svc-role">{d.role}</span>
+        </div>
+        <div className="ig-bwu-designer-scopes">
+          {d.scope.map(s => <span key={s} className={`ig-bwu-design-scope ${s.toLowerCase()} sm`}>{scopeIcon(s)} {s}</span>)}
+        </div>
+      </div>
+      <p className="ig-bwu-svc-spec">{d.bio}</p>
+      <div className="ig-bwu-designer-portfolio">
+        {(d.portfolio || []).slice(0, 3).map((src, i) => (
+          <img key={i} src={src} alt={`${d.name} work ${i + 1}`} loading="lazy" onError={e => { e.target.style.visibility = 'hidden'; }} />
+        ))}
+      </div>
+      <div className="ig-bwu-svc-stats">
+        <span>⭐ {d.rating}</span><span>·</span><span>{d.projects} projects</span><span>·</span><span>{d.experience}</span>
+      </div>
+      <p className="ig-bwu-svc-loc">📍 {d.location}</p>
+      <div className="ig-bwu-svc-tags">{(d.styles || []).map(s => <span key={s} className="ig-bwu-svc-tag">{s}</span>)}</div>
+      <div className="ig-bwu-card-foot">
+        <div className="ig-bwu-price"><span>from </span><strong>{d.price}</strong><span> {d.priceUnit}</span></div>
+        <a className="ig-bwu-quote book" href={consultLink(d)} target="_blank" rel="noopener noreferrer">Book Consultation</a>
+      </div>
+    </div>
+  );
+
   return (
     <div className="ig-bwu">
       {/* Hero */}
@@ -281,11 +321,15 @@ export default function BuildWithUs() {
         </>
       ) : (
         <>
-          <div className="ig-bwu-toolbar-label">Interior &amp; exterior design ideas — book a designer</div>
-          {/* Interior vs Exterior */}
+          {/* Sub-tabs: Design Ideas vs Hire a Designer */}
+          <div className="ig-bwu-subtabs">
+            <button className={`ig-bwu-subtab ${designView === 'ideas' ? 'active' : ''}`} onClick={() => setDesignView('ideas')}>💡 Design Ideas</button>
+            <button className={`ig-bwu-subtab ${designView === 'designers' ? 'active' : ''}`} onClick={() => setDesignView('designers')}>👩‍🎨 Hire a Designer</button>
+          </div>
+          {/* Interior vs Exterior (shared) */}
           <div className="ig-bwu-segments">
             <button className={`ig-bwu-seg ${designScope === 'all' ? 'active' : ''}`} onClick={() => { setDesignScope('all'); setDesignZone('all'); }}>
-              <span className="ig-bwu-seg-icon">🎨</span><span>All Designs</span>
+              <span className="ig-bwu-seg-icon">🎨</span><span>All</span>
             </button>
             {DESIGN_SCOPES.map(s => (
               <button key={s.key} className={`ig-bwu-seg ${designScope === s.key ? 'active' : ''}`} onClick={() => { setDesignScope(s.key); setDesignZone('all'); }}>
@@ -293,18 +337,32 @@ export default function BuildWithUs() {
               </button>
             ))}
           </div>
-          {/* Zone filters */}
-          <div className="ig-bwu-filters">
-            {designZones.map(z => (
-              <button key={z} className={`ig-bwu-chip ${designZone === z ? 'active' : ''}`} onClick={() => setDesignZone(z)}>
-                {z === 'all' ? `All (${designsByScope.length})` : z}
-              </button>
-            ))}
-          </div>
-          {filteredDesigns.length === 0 ? (
-            <div className="ig-bwu-empty">No design ideas match your search.</div>
+
+          {designView === 'ideas' ? (
+            <>
+              {/* Zone filters */}
+              <div className="ig-bwu-filters">
+                {designZones.map(z => (
+                  <button key={z} className={`ig-bwu-chip ${designZone === z ? 'active' : ''}`} onClick={() => setDesignZone(z)}>
+                    {z === 'all' ? `All (${designsByScope.length})` : z}
+                  </button>
+                ))}
+              </div>
+              {filteredDesigns.length === 0 ? (
+                <div className="ig-bwu-empty">No design ideas match your search.</div>
+              ) : (
+                <div className="ig-bwu-grid">{filteredDesigns.map(renderDesign)}</div>
+              )}
+            </>
           ) : (
-            <div className="ig-bwu-grid">{filteredDesigns.map(renderDesign)}</div>
+            <>
+              <div className="ig-bwu-toolbar-label">Book a verified interior &amp; exterior designer</div>
+              {filteredDesigners.length === 0 ? (
+                <div className="ig-bwu-empty">No designers match your search.</div>
+              ) : (
+                <div className="ig-bwu-grid">{filteredDesigners.map(renderDesigner)}</div>
+              )}
+            </>
           )}
         </>
       )}

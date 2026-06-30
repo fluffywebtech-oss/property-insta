@@ -1361,6 +1361,28 @@ textarea:focus-visible {
 .ig-bwu-quote.book { background: linear-gradient(135deg, #7c3aed, #4f46e5); box-shadow: 0 6px 16px rgba(124,58,237,0.32);
   &:hover { box-shadow: 0 9px 22px rgba(124,58,237,0.45); } }
 
+// Design sub-tabs (Ideas vs Hire a Designer)
+.ig-bwu-subtabs {
+  display: flex; justify-content: center; gap: 8px; margin-bottom: 14px;
+}
+.ig-bwu-subtab {
+  font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 999px;
+  border: 1.5px solid var(--ig-border); background: var(--card-bg);
+  color: var(--ig-text-secondary); cursor: pointer; transition: all 0.18s;
+  &:hover { border-color: #7c3aed; color: var(--ig-text); }
+  &.active { background: linear-gradient(135deg, #7c3aed, #4f46e5); border-color: transparent; color: #fff;
+    box-shadow: 0 6px 16px rgba(124,58,237,0.3); }
+}
+
+// Hire a Designer cards
+.ig-bwu-design-scope.sm { position: static; font-size: 10px; padding: 2px 7px; box-shadow: none; }
+.ig-bwu-designer-scopes { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; margin-left: auto; }
+.ig-bwu-designer-portfolio {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 12px;
+  img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; display: block; }
+  img:only-child, img:nth-child(2):last-child { aspect-ratio: 16/9; }
+}
+
 // Section labels & category sections
 .ig-bwu-toolbar-label {
   font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
