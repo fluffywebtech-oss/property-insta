@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { buildMaterials } from '../data';
+import { buildMaterials, buildServices } from '../data';
 import { supabase } from '../lib/supabase';
 import { whatsappLink } from '../utils/leads';
 import { setSeo, setJsonLd, origin } from '../utils/seo';
@@ -44,6 +44,8 @@ export default function BuildWithUs() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [projectType, setProjectType] = useState('all');
+  const [mode, setMode] = useState('materials'); // 'materials' | 'services'
+  const [serviceType, setServiceType] = useState('all');
 
   // Live catalog from Supabase (admin-managed) overrides the static seed when present
   useEffect(() => {
@@ -110,6 +112,38 @@ export default function BuildWithUs() {
     </div>
   );
 
+  // ── Contractors & Services ──
+  const professions = ['all', ...Array.from(new Set(buildServices.map(s => s.profession)))];
+  const filteredServices = buildServices.filter(s => {
+    if (serviceType !== 'all' && s.profession !== serviceType) return false;
+    if (search && !`${s.name} ${s.profession} ${s.specialization} ${(s.tags || []).join(' ')}`.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+  const hireLink = (s) =>
+    whatsappLink(DESK_PHONE, `Hi, I'd like to hire ${s.name} (${s.profession}) via PropertyInsta — Build With Us.`);
+
+  const renderService = (s) => (
+    <div key={s.id} className="ig-bwu-svc">
+      <div className="ig-bwu-svc-top">
+        <img src={s.avatar} alt={s.name} className="ig-bwu-svc-avatar" loading="lazy" />
+        <div className="ig-bwu-svc-id">
+          <h3>{s.name}{s.verified && <span className="ig-bwu-svc-verified" title="Verified">✓</span>}</h3>
+          <span className="ig-bwu-svc-role">{s.profession}</span>
+        </div>
+      </div>
+      <p className="ig-bwu-svc-spec">{s.specialization}</p>
+      <div className="ig-bwu-svc-stats">
+        <span>⭐ {s.rating}</span><span>·</span><span>{s.projects} projects</span><span>·</span><span>{s.experience}</span>
+      </div>
+      <p className="ig-bwu-svc-loc">📍 {s.location}</p>
+      <div className="ig-bwu-svc-tags">{(s.tags || []).map(t => <span key={t} className="ig-bwu-svc-tag">{t}</span>)}</div>
+      <div className="ig-bwu-card-foot">
+        <div className="ig-bwu-price"><span>from </span><strong>{s.price}</strong><span> {s.priceUnit}</span></div>
+        <a className="ig-bwu-quote hire" href={hireLink(s)} target="_blank" rel="noopener noreferrer">Hire / Enquire</a>
+      </div>
+    </div>
+  );
+
   return (
     <div className="ig-bwu">
       {/* Hero */}
@@ -133,43 +167,73 @@ export default function BuildWithUs() {
         ))}
       </div>
 
-      <div className="ig-bwu-toolbar-label">What are you building?</div>
-      {/* What are you building? — project type */}
-      <div className="ig-bwu-segments">
-        <button className={`ig-bwu-seg ${projectType === 'all' ? 'active' : ''}`} onClick={() => setProjectType('all')}>
-          <span className="ig-bwu-seg-icon">🧱</span><span>All Projects</span>
+      {/* Mode toggle — Materials vs Contractors & Services */}
+      <div className="ig-bwu-modes">
+        <button className={`ig-bwu-mode ${mode === 'materials' ? 'active' : ''}`} onClick={() => setMode('materials')}>
+          🧱 Materials &amp; Hardware
         </button>
-        {PROJECT_TYPES.map(t => (
-          <button key={t.key} className={`ig-bwu-seg ${projectType === t.key ? 'active' : ''}`} onClick={() => setProjectType(t.key)}>
-            <span className="ig-bwu-seg-icon">{t.icon}</span><span>{t.key}</span>
-          </button>
-        ))}
+        <button className={`ig-bwu-mode ${mode === 'services' ? 'active' : ''}`} onClick={() => setMode('services')}>
+          👷 Contractors &amp; Services
+        </button>
       </div>
 
-      {/* Category filters */}
-      <div className="ig-bwu-filters">
-        {categories.map(c => (
-          <button key={c} className={`ig-bwu-chip ${category === c ? 'active' : ''}`} onClick={() => setCategory(c)}>
-            {c === 'all' ? `All (${items.length})` : c}
-          </button>
-        ))}
-      </div>
+      {mode === 'materials' ? (
+        <>
+          <div className="ig-bwu-toolbar-label">What are you building?</div>
+          {/* What are you building? — project type */}
+          <div className="ig-bwu-segments">
+            <button className={`ig-bwu-seg ${projectType === 'all' ? 'active' : ''}`} onClick={() => setProjectType('all')}>
+              <span className="ig-bwu-seg-icon">🧱</span><span>All Projects</span>
+            </button>
+            {PROJECT_TYPES.map(t => (
+              <button key={t.key} className={`ig-bwu-seg ${projectType === t.key ? 'active' : ''}`} onClick={() => setProjectType(t.key)}>
+                <span className="ig-bwu-seg-icon">{t.icon}</span><span>{t.key}</span>
+              </button>
+            ))}
+          </div>
 
-      {/* Catalog — divided into category sections when browsing all */}
-      {filtered.length === 0 ? (
-        <div className="ig-bwu-empty">No materials match your search.</div>
-      ) : groupedView ? (
-        CATEGORY_ORDER.filter(c => grouped[c]?.length).map(c => (
-          <section key={c} className="ig-bwu-section">
-            <div className="ig-bwu-section-head">
-              <h2>{c}</h2>
-              <span className="ig-bwu-section-count">{grouped[c].length} item{grouped[c].length === 1 ? '' : 's'}</span>
-            </div>
-            <div className="ig-bwu-grid">{grouped[c].map(renderCard)}</div>
-          </section>
-        ))
+          {/* Category filters */}
+          <div className="ig-bwu-filters">
+            {categories.map(c => (
+              <button key={c} className={`ig-bwu-chip ${category === c ? 'active' : ''}`} onClick={() => setCategory(c)}>
+                {c === 'all' ? `All (${items.length})` : c}
+              </button>
+            ))}
+          </div>
+
+          {/* Catalog — divided into category sections when browsing all */}
+          {filtered.length === 0 ? (
+            <div className="ig-bwu-empty">No materials match your search.</div>
+          ) : groupedView ? (
+            CATEGORY_ORDER.filter(c => grouped[c]?.length).map(c => (
+              <section key={c} className="ig-bwu-section">
+                <div className="ig-bwu-section-head">
+                  <h2>{c}</h2>
+                  <span className="ig-bwu-section-count">{grouped[c].length} item{grouped[c].length === 1 ? '' : 's'}</span>
+                </div>
+                <div className="ig-bwu-grid">{grouped[c].map(renderCard)}</div>
+              </section>
+            ))
+          ) : (
+            <div className="ig-bwu-grid">{filtered.map(renderCard)}</div>
+          )}
+        </>
       ) : (
-        <div className="ig-bwu-grid">{filtered.map(renderCard)}</div>
+        <>
+          <div className="ig-bwu-toolbar-label">Hire verified building professionals</div>
+          <div className="ig-bwu-filters">
+            {professions.map(p => (
+              <button key={p} className={`ig-bwu-chip ${serviceType === p ? 'active' : ''}`} onClick={() => setServiceType(p)}>
+                {p === 'all' ? `All Pros (${buildServices.length})` : p}
+              </button>
+            ))}
+          </div>
+          {filteredServices.length === 0 ? (
+            <div className="ig-bwu-empty">No professionals match your search.</div>
+          ) : (
+            <div className="ig-bwu-grid">{filteredServices.map(renderService)}</div>
+          )}
+        </>
       )}
     </div>
   );
