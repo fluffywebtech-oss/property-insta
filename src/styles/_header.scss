@@ -450,15 +450,30 @@
   border-radius: var(--radius-full);
   padding: 4px;
   transition: background 0.3s ease;
-  // Allow the tab row to shrink and scroll horizontally so the right-side
-  // actions (search, notifications, avatar) always stay visible.
-  min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar { display: none; }
 }
+// Secondary destinations live in a "More ▾" dropdown so the row never overflows
+// (and the absolutely-positioned menus aren't clipped). Tabs don't shrink/wrap.
 .ig-nav-tab { flex-shrink: 0; }
+
+.ig-more-dropdown { position: relative; flex-shrink: 0; }
+.ig-more-menu {
+  position: absolute; top: calc(100% + 10px); left: 0; z-index: 200;
+  min-width: 184px; padding: 6px;
+  background: var(--card-bg); border: 1px solid var(--ig-border); border-radius: 14px;
+  box-shadow: 0 14px 36px rgba(20,22,43,0.16);
+  display: flex; flex-direction: column; gap: 2px;
+  animation: igMoreIn 0.16s ease;
+}
+@keyframes igMoreIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.ig-more-item {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  padding: 9px 12px; border-radius: 10px; border: none; background: transparent; cursor: pointer;
+  color: var(--ig-text); font-size: 13.5px; font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease;
+  .ig-nav-icon { width: 16px; height: 16px; }
+  &:hover { background: var(--muted-bg); }
+  &.active { background: var(--ig-gradient); color: #fff; box-shadow: 0 6px 16px rgba(31,86,196,0.3); }
+}
 
 .ig-nav-tab {
   display: flex;
@@ -783,14 +798,14 @@
 }
 
 // ==================== Responsive Header ====================
+// Below ~1180px the row (logo + tabs + actions) can't fit, so switch to the
+// hamburger drawer instead of letting the actions overflow off-screen.
+@media (max-width: 1179px) {
+  .ig-nav-tabs { display: none; }
+  .ig-hamburger-btn { display: flex; }
+}
+
 @media (max-width: 1023px) {
-  .ig-nav-tab {
-    padding: 8px 12px;
-    font-size: 12px;
-
-    .ig-nav-icon { width: 14px; height: 14px; }
-  }
-
   .ig-logo-text { font-size: 18px; }
   .ig-logo-icon { width: 32px; height: 32px; font-size: 16px; }
 }

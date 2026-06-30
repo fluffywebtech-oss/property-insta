@@ -4262,6 +4262,14 @@ textarea:focus-visible {
   }
 }
 
+// Mid-desktop band (nav shows from 768px up): compact the row so the right-side
+// actions never get pushed off-screen. Placed here to win over the base override.
+@media (min-width: 1024px) and (max-width: 1365px) {
+  .ig-header-inner { gap: 10px; }
+  .ig-nav-tab { padding: 7px 9px; }
+  .ig-logo-text { font-size: 19px; }
+}
+
 // Icon buttons — glass with hover ring + lift
 .ig-icon-btn {
   width: 40px;

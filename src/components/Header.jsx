@@ -2,18 +2,23 @@ import { useState, useRef, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { useRole, ROLES } from '../context/RoleContext';
 
-const CORE_TABS = [
+// Primary tabs stay visible; the rest collapse into a "More ▾" dropdown.
+const PRIMARY_TABS = [
   { id: 'feed', icon: 'home', label: 'Discover' },
   { id: 'reels', icon: 'play', label: 'Reels' },
   { id: 'mapView', icon: 'map', label: 'Map' },
-  { id: 'localities', icon: 'locality', label: 'Localities' },
   { id: 'saved', icon: 'bookmark', label: 'Saved' },
+  { id: 'build-with-us', icon: 'build', label: 'Build With Us' },
+];
+const MORE_TABS = [
+  { id: 'home-loans', icon: 'loan', label: 'Home Loans' },
+  { id: 'localities', icon: 'locality', label: 'Localities' },
   { id: 'content-hub', icon: 'library', label: 'Content' },
   { id: 'blog', icon: 'blog', label: 'Blog' },
-  { id: 'build-with-us', icon: 'build', label: 'Build With Us' },
-  { id: 'home-loans', icon: 'loan', label: 'Home Loans' },
   { id: 'my-journey', icon: 'journey', label: 'My Journey' },
 ];
+// Union — used by the mobile drawer (shows every destination).
+const CORE_TABS = [...PRIMARY_TABS, ...MORE_TABS];
 
 const OS_MODULES_BY_ROLE = {
   buyer: [
@@ -77,11 +82,13 @@ export default function Header() {
   const [osMenuOpen, setOsMenuOpen] = useState(false);
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const searchRef = useRef(null);
   const notifRef = useRef(null);
   const cityRef = useRef(null);
   const osRef = useRef(null);
   const roleRef = useRef(null);
+  const moreRef = useRef(null);
 
   useEffect(() => {
     const handleClick = (e) => {
@@ -90,6 +97,7 @@ export default function Header() {
       if (cityRef.current && !cityRef.current.contains(e.target)) setCityOpen(false);
       if (osRef.current && !osRef.current.contains(e.target)) setOsMenuOpen(false);
       if (roleRef.current && !roleRef.current.contains(e.target)) setRoleMenuOpen(false);
+      if (moreRef.current && !moreRef.current.contains(e.target)) setMoreOpen(false);
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
@@ -101,7 +109,8 @@ export default function Header() {
     return () => { document.body.style.overflow = ''; };
   }, [drawerOpen]);
 
-  const closeAll = () => { setSearchOpen(false); setNotifOpen(false); setCityOpen(false); setOsMenuOpen(false); setRoleMenuOpen(false); };
+  const closeAll = () => { setSearchOpen(false); setNotifOpen(false); setCityOpen(false); setOsMenuOpen(false); setRoleMenuOpen(false); setMoreOpen(false); };
+  const isMoreActive = MORE_TABS.some(t => t.id === currentView);
   const navTo = (view) => { setCurrentView(view); setDrawerOpen(false); };
   const handleSearchChange = (val) => { setSearchQuery(val); setFilters(prev => ({ ...prev, search: val })); };
 
@@ -150,7 +159,7 @@ export default function Header() {
 
         {/* Core Nav Tabs */}
         <nav className="ig-nav-tabs">
-          {CORE_TABS.map(tab => (
+          {PRIMARY_TABS.map(tab => (
             <button
               key={tab.id}
               className={`ig-nav-tab ${currentView === tab.id ? 'active' : ''}`}
@@ -160,6 +169,33 @@ export default function Header() {
               <span>{tab.label}</span>
             </button>
           ))}
+
+          {/* More dropdown — secondary destinations */}
+          <div className="ig-more-dropdown" ref={moreRef}>
+            <button
+              className={`ig-nav-tab ig-more-btn ${isMoreActive ? 'active' : ''}`}
+              onClick={() => { closeAll(); setMoreOpen(v => !v); }}
+            >
+              <span>More</span>
+              <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" style={{ marginLeft: 2 }}>
+                <path d="M4 6l4 4 4-4" />
+              </svg>
+            </button>
+            {moreOpen && (
+              <div className="ig-more-menu">
+                {MORE_TABS.map(tab => (
+                  <button
+                    key={tab.id}
+                    className={`ig-more-item ${currentView === tab.id ? 'active' : ''}`}
+                    onClick={() => { setCurrentView(tab.id); setMoreOpen(false); }}
+                  >
+                    <NavIcon icon={tab.icon} />
+                    <span>{tab.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Platform OS Mega Menu */}
           <div className="ig-os-dropdown" ref={osRef}>
