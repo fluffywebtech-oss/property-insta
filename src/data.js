@@ -721,6 +721,97 @@ export const buildDesigners = [
   { id: 6, name: 'Elevation Architects', role: 'Facade Architect', scope: ['Exterior', 'Interior'], styles: ['Modern', 'Industrial', 'Glass'], experience: '14 yrs', rating: 4.7, projects: 64, location: 'Sector 49, Gurgaon', avatar: 'https://i.pravatar.cc/150?img=60', price: '₹140', priceUnit: 'per sq.ft', verified: true, bio: 'Striking elevations in glass, stone & timber cladding — kerb appeal that lasts.', portfolio: [_bwuImg('1600585154340-be6161a56a0c'), _bwuImg('1522708323590-d24dbb6b0267')] },
 ];
 
+// ==================== Locality Insights ====================
+// Neighbourhood guides for Gurgaon micro-markets. `match` keywords link a
+// locality to live listings (matched against property.location). avgPrice = ₹/sq.ft.
+const _locImg = (id) => `https://images.unsplash.com/photo-${id}?w=800&h=500&fit=crop`;
+export const localities = [
+  {
+    id: 'golf-course-road', name: 'Golf Course Road', city: 'Gurgaon',
+    tagline: 'Gurgaon’s ultra-luxury spine — Rapid Metro, marquee towers & premium retail.',
+    image: _locImg('1600596542815-ffad4c1539a9'), avgPrice: 22000, priceTrend: 9.2, rentalYield: 3.0, livability: 9.0,
+    priceHistory: [{ year: '2022', price: 17500 }, { year: '2023', price: 19000 }, { year: '2024', price: 20600 }, { year: '2025', price: 22000 }],
+    scores: { Connectivity: 9, Safety: 9, Greenery: 7, Amenities: 10, Schools: 9 },
+    connectivity: { metro: 'Rapid Metro (on-corridor)', highway: 'NH-48 / Golf Course Rd', airport: '30 min to IGI' },
+    schools: ['DPS International', 'Shri Ram School', 'Lancers International'],
+    hospitals: ['Max Hospital', 'Paras Hospital', 'Columbia Asia'],
+    malls: ['DLF Galleria', 'Good Earth City Centre', 'South Point Mall'],
+    highlights: ['Best metro connectivity in Gurgaon', 'Highest rental demand from expats & CXOs', 'Walk-to-work for Cyber City'],
+    watchouts: ['Premium pricing — limited value buys', 'Peak-hour congestion'],
+    match: ['Golf Course Road'],
+  },
+  {
+    id: 'spr', name: 'Golf Course Ext. Rd (SPR)', city: 'Gurgaon',
+    tagline: 'The fastest-appreciating corridor — new launches, SPR & wide arterial roads.',
+    image: _locImg('1600585154340-be6161a56a0c'), avgPrice: 15500, priceTrend: 12.5, rentalYield: 3.4, livability: 8.4,
+    priceHistory: [{ year: '2022', price: 10800 }, { year: '2023', price: 12500 }, { year: '2024', price: 14000 }, { year: '2025', price: 15500 }],
+    scores: { Connectivity: 8, Safety: 8, Greenery: 8, Amenities: 8, Schools: 8 },
+    connectivity: { metro: 'Proposed metro extension', highway: 'SPR / Golf Course Ext', airport: '35 min to IGI' },
+    schools: ['Scottish High', 'Amity International', 'GD Goenka'],
+    hospitals: ['Medanta The Medicity', 'Artemis', 'Fortis'],
+    malls: ['Airia Mall', 'M3M Urbana', 'Omaxe Gurgaon Mall'],
+    highlights: ['Highest price appreciation in NCR', 'New-launch supply from top builders', 'Close to Sohna Rd & Medanta'],
+    watchouts: ['Under-construction inventory dominates', 'Some pockets still developing'],
+    match: ['SPR', 'Golf Course Ext', 'Sector 49', 'Sector 65', 'Sector 71', 'Sector 76', 'Sector 77'],
+  },
+  {
+    id: 'sohna-road', name: 'Sohna Road', city: 'Gurgaon',
+    tagline: 'Value-for-money living with malls, offices & quick NH-48 access.',
+    image: _locImg('1560185007-cde436f6a4d0'), avgPrice: 11000, priceTrend: 8.0, rentalYield: 3.6, livability: 8.0,
+    priceHistory: [{ year: '2022', price: 8800 }, { year: '2023', price: 9500 }, { year: '2024', price: 10300 }, { year: '2025', price: 11000 }],
+    scores: { Connectivity: 8, Safety: 8, Greenery: 7, Amenities: 8, Schools: 7 },
+    connectivity: { metro: 'Nearest: HUDA City Centre', highway: 'Sohna Rd / NH-48', airport: '40 min to IGI' },
+    schools: ['Pathways School', 'Euro International', 'KR Mangalam'],
+    hospitals: ['Park Hospital', 'Medanta (nearby)', 'Signature Advanced'],
+    malls: ['Omaxe Gurgaon', 'Tata Primanti Retail', 'Vatika Town Square'],
+    highlights: ['Strong rental yields', 'Ready-to-move options', 'Established social infra'],
+    watchouts: ['Traffic on Sohna Rd at peak hours', 'Older stock in some sectors'],
+    match: ['Sohna'],
+  },
+  {
+    id: 'new-gurgaon', name: 'New Gurgaon', city: 'Gurgaon',
+    tagline: 'Affordable, planned sectors along Dwarka Expressway & NPR.',
+    image: _locImg('1600210492486-724fe5c67fb0'), avgPrice: 9500, priceTrend: 14.0, rentalYield: 3.2, livability: 7.8,
+    priceHistory: [{ year: '2022', price: 6500 }, { year: '2023', price: 7600 }, { year: '2024', price: 8600 }, { year: '2025', price: 9500 }],
+    scores: { Connectivity: 7, Safety: 8, Greenery: 8, Amenities: 7, Schools: 7 },
+    connectivity: { metro: 'Proposed along Dwarka E-way', highway: 'Dwarka Expressway / NPR', airport: '25 min to IGI' },
+    schools: ['Delhi Public School', 'St. Xavier’s', 'Imperial Heritage'],
+    hospitals: ['Aarvy Healthcare', 'Genesis Hospital', 'CK Birla'],
+    malls: ['Sapphire Ninety', 'Reach Airia (nearby)', 'Vatika INXT'],
+    highlights: ['Best entry price in Gurgaon', 'Dwarka Expressway boost', 'Newer, planned sectors'],
+    watchouts: ['Infra still maturing', 'Longer commute to Cyber City'],
+    match: ['New Gurgaon', 'Dwarka Expressway', 'Sector 76', 'Sector 77', 'Sector 79', 'Sector 81', 'Sector 84', 'Sector 88', 'Sector 89', 'Sector 90', 'Sector 92', 'Sector 95'],
+  },
+  {
+    id: 'dlf-phase-5', name: 'DLF Phase 5', city: 'Gurgaon',
+    tagline: 'Established premium enclave — The Crest, Camellias & Aralias.',
+    image: _locImg('1564013799919-ab600027ffc6'), avgPrice: 24000, priceTrend: 7.5, rentalYield: 2.8, livability: 8.8,
+    priceHistory: [{ year: '2022', price: 19500 }, { year: '2023', price: 21000 }, { year: '2024', price: 22800 }, { year: '2025', price: 24000 }],
+    scores: { Connectivity: 9, Safety: 9, Greenery: 8, Amenities: 9, Schools: 9 },
+    connectivity: { metro: 'Rapid Metro (Phase 5)', highway: 'Golf Course Rd', airport: '30 min to IGI' },
+    schools: ['The Shri Ram School', 'Pathways Aravali', 'DPS Sector 45'],
+    hospitals: ['Max Super Speciality', 'Paras', 'Aakash Healthcare'],
+    malls: ['DLF Galleria', 'Suncity Trade Tower', 'The Crescent'],
+    highlights: ['Most prestigious address in Gurgaon', 'Strong capital preservation', 'Top schools within reach'],
+    watchouts: ['Lowest rental yield (high capital values)', 'Resale-heavy, few new launches'],
+    match: ['DLF Phase 5', 'DLF Phase', 'Golf Course Road'],
+  },
+  {
+    id: 'mg-road', name: 'MG Road & Sushant Lok', city: 'Gurgaon',
+    tagline: 'Central, metro-connected & vibrant — Gurgaon’s original hub.',
+    image: _locImg('1600607687939-ce8a6c25118c'), avgPrice: 13000, priceTrend: 6.0, rentalYield: 3.8, livability: 7.6,
+    priceHistory: [{ year: '2022', price: 11000 }, { year: '2023', price: 11800 }, { year: '2024', price: 12400 }, { year: '2025', price: 13000 }],
+    scores: { Connectivity: 10, Safety: 7, Greenery: 6, Amenities: 9, Schools: 7 },
+    connectivity: { metro: 'Yellow Line (MG Road, IFFCO Chowk)', highway: 'MG Road / NH-48', airport: '25 min to IGI' },
+    schools: ['Blue Bells', 'Vidya Niketan', 'Salwan Public'],
+    hospitals: ['Fortis Memorial', 'Privat Hospital', 'Umkal'],
+    malls: ['Ambience Mall', 'MGF Metropolitan', 'Sahara Mall'],
+    highlights: ['Direct Delhi Metro access', 'Highest rental yields', 'Walk-to nightlife & malls'],
+    watchouts: ['Ageing buildings', 'Crowded & high footfall'],
+    match: ['MG Road', 'Sushant Lok', 'Sector 28', 'Sector 14'],
+  },
+];
+
 // ==================== Utility ====================
 export const formatPriceIndian = (price) => {
   if (price >= 10000000) return '₹' + (price / 10000000).toFixed(price % 10000000 === 0 ? 0 : 2) + ' Cr';

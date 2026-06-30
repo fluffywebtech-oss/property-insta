@@ -26,6 +26,7 @@ const ContentHub         = lazy(() => import('./components/ContentHub'));
 const BuildWithUs        = lazy(() => import('./components/BuildWithUs'));
 const HomeLoans          = lazy(() => import('./components/HomeLoans'));
 const MyJourney          = lazy(() => import('./components/MyJourney'));
+const Localities         = lazy(() => import('./components/Localities'));
 const Modals             = lazy(() => import('./components/Modals'));
 const OSDashboard        = lazy(() => import('./components/os/OSDashboard'));
 const TrustLayer         = lazy(() => import('./components/os/TrustLayer'));
@@ -79,6 +80,7 @@ function AppLayout() {
       case 'build-with-us': return <BuildWithUs />;
       case 'home-loans': return <HomeLoans />;
       case 'my-journey': return <MyJourney />;
+      case 'localities': return <Localities />;
       // OS Modules
       case 'os': return <div className="os-page-wrap"><OSDashboard /></div>;
       case 'trust': return <div className="os-page-wrap"><TrustLayer /></div>;
@@ -109,7 +111,7 @@ function AppLayout() {
     }
   };
 
-  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'builder', 'property'].includes(currentView);
+  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'localities', 'builder', 'property'].includes(currentView);
 
   return (
     <div className={`app-root ${darkMode ? 'dark' : ''}`}>

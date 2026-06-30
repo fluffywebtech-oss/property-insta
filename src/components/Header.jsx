@@ -6,6 +6,7 @@ const CORE_TABS = [
   { id: 'feed', icon: 'home', label: 'Discover' },
   { id: 'reels', icon: 'play', label: 'Reels' },
   { id: 'mapView', icon: 'map', label: 'Map' },
+  { id: 'localities', icon: 'locality', label: 'Localities' },
   { id: 'saved', icon: 'bookmark', label: 'Saved' },
   { id: 'content-hub', icon: 'library', label: 'Content' },
   { id: 'blog', icon: 'blog', label: 'Blog' },
@@ -53,6 +54,7 @@ function NavIcon({ icon }) {
       {icon === 'build' && <><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></>}
       {icon === 'loan' && <><line x1="3" y1="21" x2="21" y2="21" /><path d="M3 10l9-6 9 6" /><line x1="5" y1="10" x2="5" y2="21" /><line x1="9.5" y1="10" x2="9.5" y2="21" /><line x1="14.5" y1="10" x2="14.5" y2="21" /><line x1="19" y1="10" x2="19" y2="21" /></>}
       {icon === 'journey' && <><circle cx="12" cy="12" r="9" /><polyline points="8.5 12 11 14.5 15.5 9.5" /></>}
+      {icon === 'locality' && <><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></>}
     </svg>
   );
 }
@@ -103,7 +105,7 @@ export default function Header() {
   const navTo = (view) => { setCurrentView(view); setDrawerOpen(false); };
   const handleSearchChange = (val) => { setSearchQuery(val); setFilters(prev => ({ ...prev, search: val })); };
 
-  const isOsActive = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey'].includes(currentView);
+  const isOsActive = !['feed', 'reels', 'mapView', 'localities', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey'].includes(currentView);
   const roleColor = ROLE_COLORS[role];
   const osModules = OS_MODULES_BY_ROLE[role] || OS_MODULES_BY_ROLE.buyer;
 

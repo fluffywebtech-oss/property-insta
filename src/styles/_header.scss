@@ -23,9 +23,9 @@
   height: 60px;
 }
 
-.ig-logo { margin-right: 8px; }
+.ig-logo { margin-right: 8px; flex-shrink: 0; }
 .ig-nav-tabs { margin: 0 auto 0 0; }
-.ig-header-actions { margin-left: auto; }
+.ig-header-actions { margin-left: auto; flex-shrink: 0; }
 
 // ===== Mobile hamburger + all-options drawer =====
 .ig-hamburger-btn {
@@ -450,7 +450,15 @@
   border-radius: var(--radius-full);
   padding: 4px;
   transition: background 0.3s ease;
+  // Allow the tab row to shrink and scroll horizontally so the right-side
+  // actions (search, notifications, avatar) always stay visible.
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
 }
+.ig-nav-tab { flex-shrink: 0; }
 
 .ig-nav-tab {
   display: flex;
