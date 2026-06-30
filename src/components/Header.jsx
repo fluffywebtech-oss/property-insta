@@ -11,6 +11,7 @@ const PRIMARY_TABS = [
   { id: 'build-with-us', icon: 'build', label: 'Build With Us' },
 ];
 const MORE_TABS = [
+  { id: 'post-property', icon: 'post', label: 'Post Property' },
   { id: 'home-loans', icon: 'loan', label: 'Home Loans' },
   { id: 'localities', icon: 'locality', label: 'Localities' },
   { id: 'content-hub', icon: 'library', label: 'Content' },
@@ -60,6 +61,7 @@ function NavIcon({ icon }) {
       {icon === 'loan' && <><line x1="3" y1="21" x2="21" y2="21" /><path d="M3 10l9-6 9 6" /><line x1="5" y1="10" x2="5" y2="21" /><line x1="9.5" y1="10" x2="9.5" y2="21" /><line x1="14.5" y1="10" x2="14.5" y2="21" /><line x1="19" y1="10" x2="19" y2="21" /></>}
       {icon === 'journey' && <><circle cx="12" cy="12" r="9" /><polyline points="8.5 12 11 14.5 15.5 9.5" /></>}
       {icon === 'locality' && <><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></>}
+      {icon === 'post' && <><rect x="3" y="3" width="18" height="18" rx="3" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></>}
     </svg>
   );
 }
@@ -114,7 +116,7 @@ export default function Header() {
   const navTo = (view) => { setCurrentView(view); setDrawerOpen(false); };
   const handleSearchChange = (val) => { setSearchQuery(val); setFilters(prev => ({ ...prev, search: val })); };
 
-  const isOsActive = !['feed', 'reels', 'mapView', 'localities', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey'].includes(currentView);
+  const isOsActive = !['feed', 'reels', 'mapView', 'localities', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'post-property'].includes(currentView);
   const roleColor = ROLE_COLORS[role];
   const osModules = OS_MODULES_BY_ROLE[role] || OS_MODULES_BY_ROLE.buyer;
 

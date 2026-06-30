@@ -1748,6 +1748,46 @@ textarea:focus-visible {
   .ig-loc-empty { font-size: 13px; color: var(--ig-text-secondary); }
 }
 
+// ════════════════════════════════════════════════════════════════════
+//  Post Your Property — guided listing form
+// ════════════════════════════════════════════════════════════════════
+.ig-post {
+  .ig-post-steps {
+    display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 18px;
+  }
+  .ig-post-step { display: flex; align-items: center; gap: 8px; opacity: 0.55; }
+  .ig-post-step-dot {
+    width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; background: var(--muted-bg); color: var(--ig-text-secondary);
+    border: 2px solid var(--ig-border);
+  }
+  .ig-post-step-label { font-size: 12.5px; font-weight: 700; color: var(--ig-text-secondary); }
+  .ig-post-step.current { opacity: 1;
+    .ig-post-step-dot { background: var(--ig-gradient); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(31,86,196,0.3); }
+    .ig-post-step-label { color: var(--ig-text); }
+  }
+  .ig-post-step.done { opacity: 1;
+    .ig-post-step-dot { background: #059669; color: #fff; border-color: transparent; }
+  }
+  .ig-post-step + .ig-post-step::before { content: ''; width: 16px; height: 2px; background: var(--ig-border); margin-right: 8px; }
+
+  .ig-post-label { display: block; font-size: 12.5px; font-weight: 700; color: var(--ig-text-secondary); margin-bottom: 8px; }
+
+  .ig-post-summary {
+    background: var(--muted-bg); border: 1px solid var(--ig-border); border-radius: 14px; padding: 16px; margin-bottom: 16px;
+    h4 { font-size: 14px; font-weight: 800; color: var(--ig-text); margin: 0 0 10px; }
+    ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    li { display: flex; justify-content: space-between; gap: 16px; font-size: 13px;
+      span { color: var(--ig-text-secondary); } strong { color: var(--ig-text); text-align: right; } }
+  }
+
+  .ig-post-foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 18px;
+  }
+  .ig-post-stepcount { font-size: 12.5px; font-weight: 700; color: var(--ig-text-secondary); }
+  .ig-post-foot .ig-bwu-quote { margin-left: auto; }
+}
+
 // Section labels & category sections
 .ig-bwu-toolbar-label {
   font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
