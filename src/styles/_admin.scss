@@ -144,3 +144,19 @@
   .adm-scrim { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 3000; }
   .adm-modal-body { grid-template-columns: 1fr; }
 }
+
+// ── Typography polish ──
+.adm-brand strong,
+.adm-topbar h1,
+.adm-card-head h3,
+.adm-modal-head h3,
+.adm-placeholder h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.015em;
+}
+.adm-stat-n,
+.adm-kv strong {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
