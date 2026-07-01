@@ -16,6 +16,10 @@ function emptyForm(fields) {
 }
 
 function Cell({ col, row }) {
+  if (col.pill) {
+    const v = row[col.key];
+    return <span className={`adm-pill ${String(v || '').toLowerCase().replace(/\s+/g, '')}`}>{v || '—'}</span>;
+  }
   if (col.render) return col.render(row);
   const v = row[col.key];
   if (Array.isArray(v)) return v.slice(0, 3).join(', ');
