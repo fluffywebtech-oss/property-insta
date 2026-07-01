@@ -119,7 +119,7 @@
   margin-bottom: 16px;
 
   h2 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 22px;
     font-weight: 700;
     color: var(--ig-text);
@@ -139,7 +139,7 @@
 }
 
 .prop-modal-price {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 28px;
   font-weight: 700;
   color: var(--ig-accent);
@@ -382,7 +382,7 @@
     font-size: 16px;
     font-weight: 700;
     color: var(--ig-text);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     display: block;
     margin-top: 2px;
   }
@@ -713,7 +713,7 @@
   border-radius: var(--radius);
 
   span { font-size: 11px; color: var(--ig-text-secondary); font-weight: 600; display: block; }
-  strong { font-size: 18px; font-weight: 700; color: var(--ig-text); font-family: 'Space Grotesk', sans-serif; display: block; margin-top: 4px; }
+  strong { font-size: 18px; font-weight: 700; color: var(--ig-text); font-family: 'Plus Jakarta Sans', sans-serif; display: block; margin-top: 4px; }
 
   &.highlight {
     background: var(--ig-gradient);
@@ -734,7 +734,7 @@
   background: var(--muted-bg);
   border-radius: var(--radius);
   margin-top: 14px;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 28px;
   font-weight: 700;
   color: var(--ig-accent);
@@ -752,7 +752,7 @@
 
 // ===== Lead capture funnel =====
 .lead-ref {
-  font-family: 'Space Grotesk', monospace;
+  font-family: 'Plus Jakarta Sans', monospace;
   letter-spacing: 0.04em;
   color: var(--ig-text);
 }
@@ -919,7 +919,7 @@
 }
 .admin-stat {
   padding: 14px 16px; background: var(--muted-bg); border: 1px solid var(--ig-border); border-radius: 12px;
-  .as-n { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--ig-text); }
+  .as-n { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 800; color: var(--ig-text); }
   .as-l { font-size: 11.5px; color: var(--ig-text-secondary); font-weight: 600; }
   &.teal .as-n { color: #0d9488; }
   &.green .as-n { color: #059669; }
@@ -965,7 +965,7 @@
   .alr-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
   .alr-top { display: flex; align-items: center; gap: 8px; }
   .alr-intent { font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: var(--muted-bg); color: var(--ig-text); }
-  .alr-ref { font-family: 'Space Grotesk', monospace; font-size: 11px; font-weight: 700; color: var(--ig-text-secondary); }
+  .alr-ref { font-family: 'Plus Jakarta Sans', monospace; font-size: 11px; font-weight: 700; color: var(--ig-text-secondary); }
   .alr-name { font-size: 15px; font-weight: 800; color: var(--ig-text); }
   .alr-prop, .alr-contact { font-size: 12px; color: var(--ig-text-secondary); }
   .alr-msg { font-size: 12px; font-style: italic; color: var(--ig-text-secondary); }
