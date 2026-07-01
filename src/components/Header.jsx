@@ -215,9 +215,12 @@ export default function Header() {
             </button>
             {osMenuOpen && (
               <div className="os-mega-menu">
-                <div className="os-mega-header">
+                <div className="os-mega-header" style={{ display: 'flex', gap: 8 }}>
                   <button className="os-mega-all-btn" onClick={() => { setCurrentView('os'); setOsMenuOpen(false); }}>
                     ⊞ View All Modules →
+                  </button>
+                  <button className="os-mega-all-btn" style={{ background: 'var(--ig-gradient)', color: '#fff' }} onClick={() => { setCurrentView('admin'); setOsMenuOpen(false); }}>
+                    🛠 Admin Console
                   </button>
                 </div>
                 <div className="os-mega-grid">

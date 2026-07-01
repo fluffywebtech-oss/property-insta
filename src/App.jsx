@@ -29,6 +29,7 @@ const MyJourney          = lazy(() => import('./components/MyJourney'));
 const Localities         = lazy(() => import('./components/Localities'));
 const PostProperty       = lazy(() => import('./components/PostProperty'));
 const AiFinder           = lazy(() => import('./components/AiFinder'));
+const AdminApp           = lazy(() => import('./admin/AdminApp'));
 const Modals             = lazy(() => import('./components/Modals'));
 const OSDashboard        = lazy(() => import('./components/os/OSDashboard'));
 const TrustLayer         = lazy(() => import('./components/os/TrustLayer'));
@@ -116,6 +117,15 @@ function AppLayout() {
   };
 
   const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'localities', 'post-property', 'ai-finder', 'builder', 'property'].includes(currentView);
+
+  // Full-screen in-frontend admin console (its own layout — no consumer chrome).
+  if (currentView === 'admin') {
+    return (
+      <div className={`app-root ${darkMode ? 'dark' : ''}`}>
+        <Suspense fallback={<ViewLoader />}><AdminApp /></Suspense>
+      </div>
+    );
+  }
 
   return (
     <div className={`app-root ${darkMode ? 'dark' : ''}`}>
