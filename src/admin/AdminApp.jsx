@@ -3,6 +3,8 @@ import { useApp } from '../context/AppContext';
 import AdminDashboard from './pages/Dashboard';
 import AdminProperties from './pages/Properties';
 import AdminLeads from './pages/Leads';
+import ResourcePage from './ResourcePage';
+import { RESOURCES } from './resources';
 
 const NAV = [
   {
@@ -98,7 +100,7 @@ export default function AdminApp() {
                 >
                   <span className="adm-nav-ico">{icon}</span>
                   <span>{label}</span>
-                  {!PAGES[id] && <span className="adm-soon-dot" title="Coming soon" />}
+                  {!PAGES[id] && !RESOURCES[id] && <span className="adm-soon-dot" title="Coming soon" />}
                 </button>
               ))}
             </div>
@@ -117,7 +119,7 @@ export default function AdminApp() {
           </div>
         </header>
         <div className="adm-content">
-          {Page ? <Page /> : <Placeholder id={section} />}
+          {Page ? <Page /> : RESOURCES[section] ? <ResourcePage config={RESOURCES[section]} /> : <Placeholder id={section} />}
         </div>
       </div>
 
