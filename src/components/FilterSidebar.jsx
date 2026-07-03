@@ -37,6 +37,7 @@ export default function FilterSidebar() {
     setFilters,
     filteredCount,
     setActiveModal,
+    setCurrentView,
     sidebarOpen,
     toggleSidebar,
   } = useApp();
@@ -229,7 +230,7 @@ export default function FilterSidebar() {
                 <span className="ig-quick-action-icon">🏦</span>
                 <span>Mortgage</span>
               </button>
-              <button className="ig-quick-action" onClick={() => setActiveModal({ type: 'compare' })}>
+              <button className="ig-quick-action" onClick={() => setCurrentView('compare')}>
                 <span className="ig-quick-action-icon">⚖️</span>
                 <span>Compare</span>
               </button>

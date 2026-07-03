@@ -98,7 +98,7 @@ export default function MyJourney() {
 
   const STATS = [
     { icon: '🔖', label: 'Saved', value: ctx.saved, onClick: () => setCurrentView('saved') },
-    { icon: '⚖️', label: 'In Compare', value: ctx.compared, onClick: () => setActiveModal({ type: 'compare' }) },
+    { icon: '⚖️', label: 'In Compare', value: ctx.compared, onClick: () => setCurrentView('compare') },
     { icon: '📩', label: 'Enquiries', value: ctx.leads, onClick: null },
     { icon: '👀', label: 'Recently Viewed', value: (recentlyViewed || []).length, onClick: recentProps[0] ? () => openProperty(recentProps[0].id) : null },
   ];
@@ -106,7 +106,7 @@ export default function MyJourney() {
   const TOOLS = [
     { icon: '🔍', label: 'Browse Homes', onClick: () => setCurrentView('feed') },
     { icon: '🧮', label: 'EMI Calculator', onClick: () => setCurrentView('home-loans') },
-    { icon: '⚖️', label: 'Compare', onClick: () => setActiveModal({ type: 'compare' }) },
+    { icon: '⚖️', label: 'Compare', onClick: () => setCurrentView('compare') },
     { icon: '🔖', label: 'Saved', onClick: () => setCurrentView('saved') },
     { icon: '🧱', label: 'Build With Us', onClick: () => setCurrentView('build-with-us') },
     { icon: '🗺️', label: 'Map View', onClick: () => setCurrentView('mapView') },

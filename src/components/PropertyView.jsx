@@ -293,7 +293,7 @@ export default function PropertyView() {
               <button onClick={() => setActiveModal({ type: 'roi', data: { propertyId: property.id } })}>
                 <span>📈</span><strong>ROI Calculator</strong><span className="hint">Project returns over time</span>
               </button>
-              <button onClick={() => setActiveModal({ type: 'compare' })}>
+              <button onClick={() => setCurrentView('compare')}>
                 <span>⚖️</span><strong>Compare</strong><span className="hint">Side-by-side comparison</span>
               </button>
               <button onClick={() => setActiveModal({ type: 'tour', data: { propertyId: property.id } })}>

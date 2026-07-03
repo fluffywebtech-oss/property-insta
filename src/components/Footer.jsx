@@ -205,7 +205,7 @@ export default function Footer() {
               <li><a onClick={() => setActiveModal({ type: 'mortgage' })}>Mortgage Calculator</a></li>
               <li><a onClick={() => setActiveModal({ type: 'roi' })}>ROI Calculator</a></li>
               <li><a onClick={() => setActiveModal({ type: 'currency' })}>Currency Converter</a></li>
-              <li><a onClick={() => setActiveModal({ type: 'compare' })}>Compare Properties</a></li>
+              <li><a onClick={() => setCurrentView('compare')}>Compare Properties</a></li>
             </ul>
           </div>
 

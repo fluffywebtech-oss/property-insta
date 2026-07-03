@@ -30,6 +30,7 @@ const Localities         = lazy(() => import('./components/Localities'));
 const PostProperty       = lazy(() => import('./components/PostProperty'));
 const AiFinder           = lazy(() => import('./components/AiFinder'));
 const Valuation          = lazy(() => import('./components/Valuation'));
+const Compare            = lazy(() => import('./components/Compare'));
 const AdminApp           = lazy(() => import('./admin/AdminApp'));
 const Modals             = lazy(() => import('./components/Modals'));
 const OSDashboard        = lazy(() => import('./components/os/OSDashboard'));
@@ -88,6 +89,7 @@ function AppLayout() {
       case 'post-property': return <PostProperty />;
       case 'ai-finder': return <AiFinder />;
       case 'valuation': return <Valuation />;
+      case 'compare': return <Compare />;
       // OS Modules
       case 'os': return <div className="os-page-wrap"><OSDashboard /></div>;
       case 'trust': return <div className="os-page-wrap"><TrustLayer /></div>;
@@ -118,7 +120,7 @@ function AppLayout() {
     }
   };
 
-  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'localities', 'post-property', 'ai-finder', 'valuation', 'builder', 'property'].includes(currentView);
+  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'localities', 'post-property', 'ai-finder', 'valuation', 'compare', 'builder', 'property'].includes(currentView);
 
   // Full-screen in-frontend admin console (its own layout — no consumer chrome).
   if (currentView === 'admin') {
