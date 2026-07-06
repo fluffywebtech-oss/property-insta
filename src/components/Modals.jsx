@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../hooks/useToast';
 import { saveLead, whatsappLink, telLink, leadMessage, getLeads, updateLead, deleteLead } from '../utils/leads';
+import { getReviews, saveReview, ratingSummary } from '../utils/reviews';
 import {
   propertyStories,
   propertyReviews,
@@ -949,17 +950,22 @@ function ReviewsModal() {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [name, setName] = useState('');
+  const [reviews, setReviews] = useState(() => getReviews(propertyId));
+  const [justPosted, setJustPosted] = useState(false);
 
   const property = allProperties.find(p => p.id === propertyId);
-  const reviews = propertyReviews[propertyId] || [];
+  const summary = ratingSummary(propertyId);
 
   const submitReview = (e) => {
     e.preventDefault();
     if (rating === 0 || !comment.trim()) return;
-    alert('Review submitted! Thank you for your feedback.');
+    const rec = saveReview({ propertyId, user: name, rating, text: comment });
+    setReviews(prev => [{ user: rec.user, rating: rec.rating, text: rec.text, date: rec.date }, ...prev]);
     setRating(0);
     setComment('');
     setName('');
+    setJustPosted(true);
+    setTimeout(() => setJustPosted(false), 3000);
   };
 
   return (
@@ -972,6 +978,17 @@ function ReviewsModal() {
           </button>
         </div>
         <div className="reviews-body" id="reviewsBody">
+          {/* Rating summary */}
+          {summary.count > 0 && (
+            <div className="reviews-summary">
+              <span className="reviews-avg">{summary.avg.toFixed(1)}</span>
+              <div>
+                <div className="review-stars-display">{'⭐'.repeat(Math.round(summary.avg))}{'☆'.repeat(5 - Math.round(summary.avg))}</div>
+                <span className="reviews-count">{summary.count} review{summary.count === 1 ? '' : 's'}</span>
+              </div>
+            </div>
+          )}
+
           {/* Existing Reviews */}
           {reviews.length > 0 ? (
             <div className="reviews-list">
@@ -979,9 +996,9 @@ function ReviewsModal() {
                 <div key={i} className="review-card">
                   <div className="review-header">
                     <strong>{r.user}</strong>
-                    <div className="review-stars-display">{'⭐'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
+                    <div className="review-stars-display">{'⭐'.repeat(r.rating)}{'☆'.repeat(Math.max(0, 5 - r.rating))}</div>
                   </div>
-                  <p>{r.comment}</p>
+                  <p>{r.text || r.comment}</p>
                   {r.date && <span className="review-date">{r.date}</span>}
                 </div>
               ))}
@@ -993,6 +1010,7 @@ function ReviewsModal() {
           {/* Review Form */}
           <div className="review-form-card">
             <h4>Write a Review</h4>
+            {justPosted && <div className="review-success">✅ Thanks! Your review has been posted.</div>}
             <form onSubmit={submitReview}>
               <div className="review-stars-input" id="reviewStars">
                 {[1, 2, 3, 4, 5].map(s => (
