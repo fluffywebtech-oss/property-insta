@@ -14,6 +14,7 @@ const MORE_TABS = [
   { id: 'ai-finder', icon: 'sparkle', label: 'AI Home Finder' },
   { id: 'compare', icon: 'compare', label: 'Compare' },
   { id: 'valuation', icon: 'valuation', label: 'Home Valuation' },
+  { id: 'rent-vs-buy', icon: 'rentbuy', label: 'Rent vs Buy' },
   { id: 'post-property', icon: 'post', label: 'Post Property' },
   { id: 'home-loans', icon: 'loan', label: 'Home Loans' },
   { id: 'localities', icon: 'locality', label: 'Localities' },
@@ -68,6 +69,7 @@ function NavIcon({ icon }) {
       {icon === 'sparkle' && <><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" /><path d="M18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z" /></>}
       {icon === 'valuation' && <><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></>}
       {icon === 'compare' && <><line x1="12" y1="3" x2="12" y2="21" /><path d="M5 7h14" /><path d="M2 13l3-6 3 6" /><path d="M16 13l3-6 3 6" /><path d="M2 13a3 3 0 0 0 6 0" /><path d="M16 13a3 3 0 0 0 6 0" /></>}
+      {icon === 'rentbuy' && <><polyline points="7 15 3 11 7 7" /><path d="M3 11h13a4 4 0 0 1 4 4v1" /><polyline points="17 9 21 13 17 17" /></>}
     </svg>
   );
 }
@@ -122,7 +124,7 @@ export default function Header() {
   const navTo = (view) => { setCurrentView(view); setDrawerOpen(false); };
   const handleSearchChange = (val) => { setSearchQuery(val); setFilters(prev => ({ ...prev, search: val })); };
 
-  const isOsActive = !['feed', 'reels', 'mapView', 'localities', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'post-property', 'ai-finder', 'valuation', 'compare'].includes(currentView);
+  const isOsActive = !['feed', 'reels', 'mapView', 'localities', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'post-property', 'ai-finder', 'valuation', 'compare', 'rent-vs-buy'].includes(currentView);
   const roleColor = ROLE_COLORS[role];
   const osModules = OS_MODULES_BY_ROLE[role] || OS_MODULES_BY_ROLE.buyer;
 

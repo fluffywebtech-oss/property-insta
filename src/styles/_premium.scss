@@ -1941,6 +1941,33 @@ textarea:focus-visible {
   }
 }
 
+// ════════════════════════════════════════════════════════════════════
+//  Rent vs Buy calculator
+// ════════════════════════════════════════════════════════════════════
+.ig-rvb {
+  .ig-rvb-assump { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 4px;
+    @media (max-width: 480px) { grid-template-columns: 1fr; } }
+  .ig-rvb-verdict {
+    text-align: center; padding: 16px; border-radius: 14px;
+    span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ig-text-secondary); }
+    h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 30px; font-weight: 900; letter-spacing: -0.025em; margin: 2px 0; }
+    p { font-size: 14px; color: var(--ig-text-secondary); margin: 0; strong { color: var(--ig-text); } }
+    &.buy { background: linear-gradient(135deg, rgba(5,150,105,0.12), rgba(16,185,129,0.10)); h2 { color: #059669; } }
+    &.rent { background: linear-gradient(135deg, rgba(31,86,196,0.12), rgba(79,70,229,0.10)); h2 { color: var(--ig-link); } }
+  }
+  .ig-rvb-bars { display: flex; flex-direction: column; gap: 10px; }
+  .ig-rvb-bar-row { display: grid; grid-template-columns: 96px 1fr auto; align-items: center; gap: 10px; }
+  .ig-rvb-bar-label { font-size: 12px; font-weight: 600; color: var(--ig-text-secondary); }
+  .ig-rvb-bar { height: 12px; border-radius: 999px; background: var(--muted-bg); overflow: hidden;
+    .fill { display: block; height: 100%; border-radius: 999px; opacity: 0.55; transition: width 0.35s ease;
+      &.buy { background: #059669; } &.rent { background: var(--ig-link); } &.win { opacity: 1; } } }
+  .ig-rvb-bar-val { font-size: 13px; font-weight: 800; color: var(--ig-text); font-variant-numeric: tabular-nums; }
+  .ig-rvb-breakeven {
+    text-align: center; font-size: 13px; font-weight: 700; color: var(--ig-text);
+    background: var(--muted-bg); border-radius: 10px; padding: 10px 12px; strong { color: var(--ig-link); }
+  }
+}
+
 // Section labels & category sections
 .ig-bwu-toolbar-label {
   font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
