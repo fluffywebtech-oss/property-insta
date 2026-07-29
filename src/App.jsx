@@ -32,7 +32,20 @@ const AiFinder           = lazy(() => import('./components/AiFinder'));
 const Valuation          = lazy(() => import('./components/Valuation'));
 const Compare            = lazy(() => import('./components/Compare'));
 const RentVsBuy          = lazy(() => import('./components/RentVsBuy'));
+const VastuChecker       = lazy(() => import('./components/VastuChecker'));
+const RentAgreement      = lazy(() => import('./components/RentAgreement'));
+const PosterMaker        = lazy(() => import('./components/PosterMaker'));
+const TenantVerification = lazy(() => import('./components/TenantVerification'));
+const InstantDeal        = lazy(() => import('./components/InstantDeal'));
+const RentCredit         = lazy(() => import('./components/RentCredit'));
+const BankAuction        = lazy(() => import('./components/BankAuction'));
+const StampDuty          = lazy(() => import('./components/StampDuty'));
+const Affordability      = lazy(() => import('./components/Affordability'));
+const MutationGuide      = lazy(() => import('./components/MutationGuide'));
+const GreenScore         = lazy(() => import('./components/GreenScore'));
+const AmeyaSapphire      = lazy(() => import('./components/AmeyaSapphire'));
 const AdminApp           = lazy(() => import('./admin/AdminApp'));
+const BuilderDesk        = lazy(() => import('./components/BuilderDesk'));
 const Modals             = lazy(() => import('./components/Modals'));
 const OSDashboard        = lazy(() => import('./components/os/OSDashboard'));
 const TrustLayer         = lazy(() => import('./components/os/TrustLayer'));
@@ -92,6 +105,18 @@ function AppLayout() {
       case 'valuation': return <Valuation />;
       case 'compare': return <Compare />;
       case 'rent-vs-buy': return <RentVsBuy />;
+      case 'vastu': return <VastuChecker />;
+      case 'rent-agreement': return <RentAgreement />;
+      case 'poster-maker': return <PosterMaker />;
+      case 'tenant-verify': return <TenantVerification />;
+      case 'instant': return <InstantDeal />;
+      case 'rent-credit': return <RentCredit />;
+      case 'auctions': return <BankAuction />;
+      case 'stamp-duty': return <StampDuty />;
+      case 'affordability': return <Affordability />;
+      case 'mutation': return <MutationGuide />;
+      case 'green-score': return <GreenScore />;
+      case 'ameya-sapphire': return <AmeyaSapphire />;
       // OS Modules
       case 'os': return <div className="os-page-wrap"><OSDashboard /></div>;
       case 'trust': return <div className="os-page-wrap"><TrustLayer /></div>;
@@ -122,13 +147,22 @@ function AppLayout() {
     }
   };
 
-  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'localities', 'post-property', 'ai-finder', 'valuation', 'compare', 'rent-vs-buy', 'builder', 'property'].includes(currentView);
+  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'localities', 'post-property', 'ai-finder', 'valuation', 'compare', 'rent-vs-buy', 'vastu', 'rent-agreement', 'poster-maker', 'tenant-verify', 'instant', 'rent-credit', 'auctions', 'stamp-duty', 'affordability', 'mutation', 'green-score', 'ameya-sapphire', 'builder', 'property'].includes(currentView);
 
   // Full-screen in-frontend admin console (its own layout — no consumer chrome).
   if (currentView === 'admin') {
     return (
       <div className={`app-root ${darkMode ? 'dark' : ''}`}>
         <Suspense fallback={<ViewLoader />}><AdminApp /></Suspense>
+      </div>
+    );
+  }
+
+  // Secret, unlisted inventory console — reached only via /builder-desk and a key.
+  if (currentView === 'builder-desk') {
+    return (
+      <div className={`app-root ${darkMode ? 'dark' : ''}`}>
+        <Suspense fallback={<ViewLoader />}><BuilderDesk /></Suspense>
       </div>
     );
   }

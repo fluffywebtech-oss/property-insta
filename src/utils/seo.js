@@ -37,7 +37,7 @@ function ensureLink(rel, href) {
   el.setAttribute('href', href);
 }
 
-export function setSeo({ title, description, image, canonical, type = 'website', keywords } = {}) {
+export function setSeo({ title, description, image, canonical, type = 'website', keywords, noindex = false } = {}) {
   if (typeof document === 'undefined') return;
   const fullTitle = title ? `${title} | ${SITE.name}` : SITE.defaultTitle;
   document.title = fullTitle;
@@ -47,6 +47,8 @@ export function setSeo({ title, description, image, canonical, type = 'website',
 
   ensureMeta('name', 'description', desc);
   if (keywords) ensureMeta('name', 'keywords', keywords);
+  // Reset on every view so the flag doesn't leak from a noindex page to others.
+  ensureMeta('name', 'robots', noindex ? 'noindex,nofollow' : 'index,follow');
   ensureLink('canonical', url);
 
   ensureMeta('property', 'og:title', fullTitle);

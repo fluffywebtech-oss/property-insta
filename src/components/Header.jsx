@@ -5,16 +5,28 @@ import { useRole, ROLES } from '../context/RoleContext';
 // Primary tabs stay visible; the rest collapse into a "More ▾" dropdown.
 const PRIMARY_TABS = [
   { id: 'feed', icon: 'home', label: 'Discover' },
+  { id: 'instant', icon: 'bolt', label: 'Instant Buy/Sell', hot: true },
   { id: 'reels', icon: 'play', label: 'Reels' },
   { id: 'mapView', icon: 'map', label: 'Map' },
   { id: 'saved', icon: 'bookmark', label: 'Saved' },
   { id: 'build-with-us', icon: 'build', label: 'Build With Us' },
 ];
 const MORE_TABS = [
+  { id: 'ameya-sapphire', icon: 'build', label: 'Ameya Sapphire 82A' },
   { id: 'ai-finder', icon: 'sparkle', label: 'AI Home Finder' },
   { id: 'compare', icon: 'compare', label: 'Compare' },
   { id: 'valuation', icon: 'valuation', label: 'Home Valuation' },
   { id: 'rent-vs-buy', icon: 'rentbuy', label: 'Rent vs Buy' },
+  { id: 'stamp-duty', icon: 'receipt', label: 'Stamp Duty + GST' },
+  { id: 'affordability', icon: 'wallet', label: 'Affordability' },
+  { id: 'rent-credit', icon: 'card', label: 'Rent Credit' },
+  { id: 'auctions', icon: 'gavel', label: 'Bank Auctions' },
+  { id: 'vastu', icon: 'vastu', label: 'Vastu Checker' },
+  { id: 'rent-agreement', icon: 'agreement', label: 'Rent Agreement' },
+  { id: 'poster-maker', icon: 'poster', label: 'Poster Maker' },
+  { id: 'tenant-verify', icon: 'shieldcheck', label: 'Tenant Verification' },
+  { id: 'mutation', icon: 'transfer', label: 'Khata / Mutation' },
+  { id: 'green-score', icon: 'leaf', label: 'Green Score' },
   { id: 'post-property', icon: 'post', label: 'Post Property' },
   { id: 'home-loans', icon: 'loan', label: 'Home Loans' },
   { id: 'localities', icon: 'locality', label: 'Localities' },
@@ -70,6 +82,17 @@ function NavIcon({ icon }) {
       {icon === 'valuation' && <><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></>}
       {icon === 'compare' && <><line x1="12" y1="3" x2="12" y2="21" /><path d="M5 7h14" /><path d="M2 13l3-6 3 6" /><path d="M16 13l3-6 3 6" /><path d="M2 13a3 3 0 0 0 6 0" /><path d="M16 13a3 3 0 0 0 6 0" /></>}
       {icon === 'rentbuy' && <><polyline points="7 15 3 11 7 7" /><path d="M3 11h13a4 4 0 0 1 4 4v1" /><polyline points="17 9 21 13 17 17" /></>}
+      {icon === 'vastu' && <><circle cx="12" cy="12" r="10" /><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" /></>}
+      {icon === 'agreement' && <><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><rect x="8" y="2" width="8" height="4" rx="1" ry="1" /><line x1="9" y1="12" x2="15" y2="12" /><line x1="9" y1="16" x2="13" y2="16" /></>}
+      {icon === 'poster' && <><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></>}
+      {icon === 'shieldcheck' && <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><polyline points="9 11.5 11 13.5 15 9.5" /></>}
+      {icon === 'bolt' && <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />}
+      {icon === 'card' && <><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></>}
+      {icon === 'receipt' && <><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z" /><line x1="8" y1="8" x2="16" y2="8" /><line x1="8" y1="12" x2="16" y2="12" /></>}
+      {icon === 'wallet' && <><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" /><path d="M18 12a2 2 0 0 0 0 4h4v-4Z" /></>}
+      {icon === 'gavel' && <><path d="m14 13-7.5 7.5a2.12 2.12 0 0 1-3-3L11 10" /><path d="m16 16 6-6" /><path d="m8 8 6-6" /><path d="m9 7 8 8" /><path d="m21 11-8-8" /></>}
+      {icon === 'transfer' && <><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></>}
+      {icon === 'leaf' && <><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6" /></>}
     </svg>
   );
 }
@@ -124,7 +147,7 @@ export default function Header() {
   const navTo = (view) => { setCurrentView(view); setDrawerOpen(false); };
   const handleSearchChange = (val) => { setSearchQuery(val); setFilters(prev => ({ ...prev, search: val })); };
 
-  const isOsActive = !['feed', 'reels', 'mapView', 'localities', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'post-property', 'ai-finder', 'valuation', 'compare', 'rent-vs-buy'].includes(currentView);
+  const isOsActive = !['feed', 'reels', 'mapView', 'localities', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'post-property', 'ai-finder', 'valuation', 'compare', 'rent-vs-buy', 'vastu', 'rent-agreement', 'poster-maker', 'tenant-verify', 'instant', 'rent-credit', 'auctions', 'stamp-duty', 'affordability', 'mutation', 'green-score'].includes(currentView);
   const roleColor = ROLE_COLORS[role];
   const osModules = OS_MODULES_BY_ROLE[role] || OS_MODULES_BY_ROLE.buyer;
 
@@ -172,7 +195,7 @@ export default function Header() {
           {PRIMARY_TABS.map(tab => (
             <button
               key={tab.id}
-              className={`ig-nav-tab ${currentView === tab.id ? 'active' : ''}`}
+              className={`ig-nav-tab ${tab.hot ? 'ig-nav-tab-hot' : ''} ${currentView === tab.id ? 'active' : ''}`}
               onClick={() => setCurrentView(tab.id)}
             >
               <NavIcon icon={tab.icon} />

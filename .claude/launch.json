@@ -4,14 +4,71 @@
     {
       "name": "propertyinsta",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "5173"],
-      "port": 5173
+      "runtimeArgs": ["run", "dev"],
+      "port": 5173,
+      "autoPort": true
     },
     {
       "name": "adminpanel",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["--prefix", "/Users/prashantyadav/demo/adminpanel", "run", "dev", "--", "--port", "5175"],
       "port": 5175
+    },
+    {
+      "name": "market-screener",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "exec env PORT=\"${PORT:-8080}\" python3 /Users/prashantyadav/demo/market-options-screener/local_server.py"],
+      "port": 8080,
+      "autoPort": true
+    },
+    {
+      "name": "samaris",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "exec python3 -m http.server \"${PORT:-8090}\" --directory /Users/prashantyadav/demo/samaris"],
+      "port": 8090,
+      "autoPort": true
+    },
+    {
+      "name": "sarvam-landing",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "exec python3 -m http.server \"${PORT:-8100}\" --directory /Users/prashantyadav/demo/sarvam-landing"],
+      "port": 8100,
+      "autoPort": true
+    },
+    {
+      "name": "untitled-folder-2",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "exec python3 -m http.server \"${PORT:-8110}\" --directory \"/Users/prashantyadav/untitled folder 2\""],
+      "port": 8110,
+      "autoPort": true
+    },
+    {
+      "name": "indiabulls-landing",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "exec python3 -m http.server \"${PORT:-8120}\" --directory /Users/prashantyadav/demo/indiabulls-landing"],
+      "port": 8120,
+      "autoPort": true
+    },
+    {
+      "name": "ameya-sapphire-82a",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "exec python3 -m http.server \"${PORT:-8130}\" --directory /Users/prashantyadav/demo/ameya-sapphire-82a"],
+      "port": 8130,
+      "autoPort": true
+    },
+    {
+      "name": "omex-dwarka",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/prashantyadav/demo/omex-dwarka", "run", "dev"],
+      "port": 5185,
+      "autoPort": true
+    },
+    {
+      "name": "landmark",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/prashantyadav/landmark", "run", "dev", "--", "--port", "5186"],
+      "port": 5186,
+      "autoPort": true
     }
   ]
 }

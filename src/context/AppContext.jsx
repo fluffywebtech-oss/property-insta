@@ -382,9 +382,14 @@ export function AppProvider({ children }) {
   const [dbReady, setDbReady] = useState(false);
 
   // View management — land on the blog when deep-linked via /blog or /blog/{slug}
-  const [currentView, setCurrentView] = useState(
-    () => (typeof window !== 'undefined' && /^\/blog(\/|$)/.test(window.location.pathname) ? 'blog' : 'feed')
-  );
+  const [currentView, setCurrentView] = useState(() => {
+    if (typeof window === 'undefined') return 'feed';
+    const path = window.location.pathname;
+    if (/^\/blog(\/|$)/.test(path)) return 'blog';
+    if (/^\/ameya-sapphire(-82a)?(\/|$)/.test(path)) return 'ameya-sapphire';
+    if (/^\/builder-desk(\/|$)/.test(path)) return 'builder-desk';
+    return 'feed';
+  });
   // Which builder's microsite is being shown (set when `currentView === 'builder'`)
   const [selectedBuilder, setSelectedBuilder] = useState(null);
 

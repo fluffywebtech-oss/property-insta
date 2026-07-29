@@ -502,6 +502,22 @@
   .ig-nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
 }
 
+// Headline "Instant Buy/Sell" tab — accent-tinted so it reads as a promoted CTA.
+// Declared after .ig-nav-tab so its colour wins on equal specificity.
+.ig-nav-tab.ig-nav-tab-hot {
+  color: #ea6a0c;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.14), rgba(234, 106, 12, 0.12));
+  box-shadow: inset 0 0 0 1px rgba(234, 106, 12, 0.32);
+  .ig-nav-icon { color: #ea6a0c; }
+  &:hover { color: #ea6a0c; background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(234, 106, 12, 0.18)); }
+  &.active {
+    color: #fff;
+    background: linear-gradient(135deg, #f59e0b, #ea6a0c);
+    box-shadow: 0 6px 16px rgba(234, 106, 12, 0.4);
+    .ig-nav-icon { color: #fff; }
+  }
+}
+
 // Header Actions
 .ig-header-actions {
   display: flex;

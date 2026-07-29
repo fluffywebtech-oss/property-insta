@@ -9,6 +9,7 @@ const OWNER_TYPES = ['Owner', 'Agent', 'Builder'];
 const FURNISHING = ['Unfurnished', 'Semi-Furnished', 'Fully Furnished'];
 const AMENITIES = ['Pool', 'Gym', 'Parking', 'Security', 'Power Backup', 'Lift', 'Garden', 'Clubhouse'];
 const STEPS = ['Property', 'Location & Layout', 'Price & Photos', 'Your Contact'];
+const TYPE_EMOJI = { 'Apartment': '🏢', 'Villa / House': '🏡', 'Plot / Land': '🌾', 'Builder Floor': '🏠', 'Commercial': '🏬' };
 
 const EMPTY = {
   listingType: 'Sell', propertyType: '', ownerType: 'Owner',
@@ -28,7 +29,7 @@ export default function PostProperty() {
   useEffect(() => {
     setSeo({
       title: 'Post Your Property — Sell or Rent | PropertyInsta',
-      description: 'List your property to sell or rent on PropertyInsta — free, no brokerage. Reach verified buyers and tenants across Gurgaon NCR.',
+      description: 'List your property to sell or rent on PropertyInsta — free. Reach verified buyers and tenants across Gurgaon NCR.',
       canonical: origin() + '/post-property',
       keywords: 'post property, sell property, rent property, list property free, Gurgaon',
     });
@@ -37,6 +38,13 @@ export default function PostProperty() {
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
   const toggleAmenity = (a) => setForm(f => ({ ...f, amenities: f.amenities.includes(a) ? f.amenities.filter(x => x !== a) : [...f.amenities, a] }));
   const isRent = form.listingType === 'Rent';
+
+  // Preview-card completeness: the fields that make a listing convert
+  const completeness = Math.round(
+    [form.propertyType, form.locality.trim(), form.area, form.price, form.photos.trim(),
+      form.description.trim(), form.amenities.length > 0, form.name.trim(), form.phone.trim()]
+      .filter(Boolean).length / 9 * 100
+  );
 
   const validate = (s) => {
     if (s === 1 && !form.propertyType) return 'Please choose a property type.';
@@ -96,11 +104,19 @@ export default function PostProperty() {
     <div className="ig-bwu ig-post">
       <div className="ig-bwu-hero">
         <span className="ig-bwu-eyebrow">🏷️ Post Your Property</span>
-        <h1>List your property — free, zero brokerage</h1>
-        <p>Reach verified buyers &amp; tenants across Gurgaon NCR. Takes about 2 minutes.</p>
+        <h1>List Your Property Free</h1>
+        <p>Reach verified buyers &amp; tenants across Gurgaon NCR — live in about 2 minutes.</p>
       </div>
 
-      {/* Stepper */}
+      {/* Benefits strip */}
+      <div className="ig-bwu-benefits ig-post-benefits">
+        <div className="ig-bwu-benefit"><span className="ig-bwu-benefit-icon">🆓</span><div><strong>Free forever</strong><span>No listing fee, ever.</span></div></div>
+        <div className="ig-bwu-benefit"><span className="ig-bwu-benefit-icon">📞</span><div><strong>Quick go-live</strong><span>We verify &amp; publish fast.</span></div></div>
+        <div className="ig-bwu-benefit"><span className="ig-bwu-benefit-icon">⚡</span><div><strong>2-minute listing</strong><span>Four quick steps.</span></div></div>
+        <div className="ig-bwu-benefit"><span className="ig-bwu-benefit-icon">✅</span><div><strong>Verified leads</strong><span>Our team screens every enquiry.</span></div></div>
+      </div>
+
+      {/* Stepper + progress */}
       <div className="ig-post-steps">
         {STEPS.map((s, i) => (
           <div key={s} className={`ig-post-step ${step === i + 1 ? 'current' : ''} ${step > i + 1 ? 'done' : ''}`}>
@@ -109,7 +125,9 @@ export default function PostProperty() {
           </div>
         ))}
       </div>
+      <div className="ig-post-progress"><span style={{ width: `${(step / 4) * 100}%` }} /></div>
 
+      <div className="ig-post-grid">
       <form className="ig-loan-form" onSubmit={e => { e.preventDefault(); step < 4 ? next() : submit(); }}>
         {step === 1 && (
           <>
@@ -181,7 +199,7 @@ export default function PostProperty() {
               <div className="ig-loan-input"><label>Phone *</label><input type="tel" inputMode="numeric" placeholder="98xxxxxxxx" value={form.phone} onChange={e => set('phone', e.target.value)} /></div>
               <div className="ig-loan-input"><label>Email</label><input type="email" placeholder="you@email.com" value={form.email} onChange={e => set('email', e.target.value)} /></div>
             </div>
-            <p className="ig-loan-disclaimer" style={{ marginTop: 12 }}>By submitting you agree our team may contact you to verify and publish the listing. No brokerage charged to you.</p>
+            <p className="ig-loan-disclaimer" style={{ marginTop: 12 }}>By submitting you agree our team may contact you to verify and publish the listing.</p>
           </>
         )}
 
@@ -196,6 +214,39 @@ export default function PostProperty() {
             : <button type="submit" className="ig-bwu-quote book">Submit listing</button>}
         </div>
       </form>
+
+      {/* Live listing preview — builds up as the form is filled */}
+      <aside className="ig-post-preview">
+        <span className="ig-post-preview-tag">👀 How buyers will see it</span>
+        <div className="ig-post-card">
+          <div className="ig-post-card-img">
+            <span>{TYPE_EMOJI[form.propertyType] || '🏠'}</span>
+            <em className={`ig-post-card-badge ${isRent ? 'rent' : ''}`}>{isRent ? 'FOR RENT' : 'FOR SALE'}</em>
+          </div>
+          <div className="ig-post-card-body">
+            <strong className="ig-post-card-price">{form.price ? form.price : (isRent ? '₹ — /month' : '₹ —')}</strong>
+            <h4>{form.bhk} BHK {form.propertyType || 'Property'}{form.locality ? ` in ${form.locality}` : ''}</h4>
+            <p>📍 {form.locality ? `${form.locality}, ` : ''}{form.city}</p>
+            <div className="ig-post-card-chips">
+              <span>{form.area ? `${form.area} sq.ft` : '— sq.ft'}</span>
+              <span>{form.baths} bath</span>
+              <span>{form.furnishing}</span>
+            </div>
+            {form.amenities.length > 0 && (
+              <div className="ig-post-card-tags">
+                {form.amenities.slice(0, 4).map(a => <span key={a}>{a}</span>)}
+                {form.amenities.length > 4 && <span>+{form.amenities.length - 4}</span>}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="ig-post-meter">
+          <div className="ig-post-meter-top"><span>Listing completeness</span><strong>{completeness}%</strong></div>
+          <div className="ig-post-meter-bar"><span style={{ width: `${completeness}%` }} /></div>
+          <p>{completeness >= 80 ? 'Great listing — complete profiles get up to 3× more enquiries.' : 'Add more details — complete listings get up to 3× more enquiries.'}</p>
+        </div>
+      </aside>
+      </div>
     </div>
   );
 }
