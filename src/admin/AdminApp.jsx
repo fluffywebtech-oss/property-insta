@@ -20,6 +20,7 @@ const NAV = [
       ['podcasts', 'Podcasts', '🎙️'],
       ['videos', 'Product Videos', '📹'],
       ['agents', 'Agents', '👥'],
+      ['employees', 'Employees', '🧑‍💼'],
     ],
   },
   {

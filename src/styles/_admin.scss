@@ -99,6 +99,8 @@
   &.closed { background: rgba(5,150,105,0.14); color: #059669; } }
 .adm-status { font-size: 12px; font-weight: 700; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--ig-border); background: var(--card-bg); color: var(--ig-text); cursor: pointer;
   &.new { color: var(--ig-link); } &.contacted { color: #d97706; } &.visitbooked { color: #7c3aed; } &.closed { color: #059669; } }
+.adm-assign-select { font-size: 12px; padding: 5px 8px; border-radius: 8px; border: 1px solid var(--ig-border); background: var(--card-bg); color: var(--ig-text); cursor: pointer; min-width: 130px;
+  &:focus { outline: none; border-color: var(--ig-link); } }
 
 // ── Toolbar / buttons ──
 .adm-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }

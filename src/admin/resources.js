@@ -195,6 +195,23 @@ export const RESOURCES = {
     ],
   },
 
+  // ── Team ──
+  employees: {
+    table: 'employees', seed: [], orderBy: 'id', ascending: true,
+    thumb: r => r.avatar, thumbRound: true, search: ['name', 'role', 'phone', 'email'], titleKey: 'name',
+    columns: [
+      { key: 'name', label: 'Name' }, { key: 'role', label: 'Role', muted: true },
+      { key: 'phone', label: 'Phone', muted: true }, { key: 'email', label: 'Email', muted: true },
+    ],
+    fields: [
+      { key: 'name', label: 'Name', required: true, col2: true },
+      { key: 'role', label: 'Role', type: 'select', options: ['Agent', 'Senior Agent', 'Team Lead', 'Manager', 'Admin'] },
+      { key: 'phone', label: 'Phone' }, { key: 'email', label: 'Email' },
+      { key: 'avatar', label: 'Avatar URL' },
+      { key: 'notes', label: 'Notes', type: 'textarea' },
+    ],
+  },
+
   // ── Platform ──
   reviews: {
     table: 'reviews', seed: REVIEWS_SEED, orderBy: 'id', ascending: true,
