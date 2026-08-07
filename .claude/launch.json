@@ -69,6 +69,13 @@
       "runtimeArgs": ["--prefix", "/Users/prashantyadav/landmark", "run", "dev", "--", "--port", "5186"],
       "port": 5186,
       "autoPort": true
+    },
+    {
+      "name": "real-estate-crm",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/prashantyadav/demo/real-estate-crm", "run", "dev", "--", "--port", "5190"],
+      "port": 5190,
+      "autoPort": true
     }
   ]
 }
