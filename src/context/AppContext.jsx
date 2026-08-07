@@ -222,11 +222,67 @@ const COMBINED_POOL = {
   commercial: POOL_BY_TYPE.commercial.map(i => LISTING_IMAGE_POOL[i]),
 };
 
+// Curated project-photo overrides — force specific listings to use real,
+// committed images regardless of what the DB row carries. Runs before image
+// assignment so these always win over Supabase placeholders / stock fallbacks.
+// Files live under /public/projects/... and ship with the build.
+const PROJECT_IMAGE_OVERRIDES = [
+  {
+    match: (p) => /ashiana\s*aaroham/i.test(p.title || '') || (p.builder === 'Ashiana Housing' && /aaroham/i.test(p.title || '')),
+    images: [
+      '/projects/ashiana-aaroham/exterior-1.webp',
+      '/projects/ashiana-aaroham/exterior-2.webp',
+      '/projects/ashiana-aaroham/reception.webp',
+      '/projects/ashiana-aaroham/gym.webp',
+      '/projects/ashiana-aaroham/classroom.webp',
+      '/projects/ashiana-aaroham/dance-room.webp',
+      '/projects/ashiana-aaroham/squash.webp',
+      '/projects/ashiana-aaroham/football.webp',
+      '/projects/ashiana-aaroham/kids-1.webp',
+      '/projects/ashiana-aaroham/kids-2.webp',
+      '/projects/ashiana-aaroham/kids-3.webp',
+    ],
+  },
+  {
+    // The Omaxe State, Dwarka (matches both the DB "Omaxe State Dwarka" listing
+    // and the static "Omaxe The State" entry).
+    match: (p) => /omaxe\s*(the\s*)?state/i.test(p.title || ''),
+    images: [
+      '/projects/omaxe-state/aerial.jpg',
+      '/projects/omaxe-state/fashion-street.webp',
+      '/projects/omaxe-state/east-gate.webp',
+      '/projects/omaxe-state/ground-floor.webp',
+      '/projects/omaxe-state/retail-first-floor.webp',
+      '/projects/omaxe-state/master-layout.webp',
+    ],
+  },
+  {
+    // Emaar Serenity Hills, Sector 86 (covers any DB row for the project too).
+    match: (p) => /emaar\s*serenity(\s*hills)?/i.test(p.title || '') || /serenity\s*hills/i.test(p.title || ''),
+    images: [
+      '/projects/emaar-serenity-hills/towers-night.webp',
+      '/projects/emaar-serenity-hills/front-facade.webp',
+      '/projects/emaar-serenity-hills/central-park.webp',
+      '/projects/emaar-serenity-hills/infinity-pool.webp',
+      '/projects/emaar-serenity-hills/clubhouse.webp',
+      '/projects/emaar-serenity-hills/master-bedroom.webp',
+      '/projects/emaar-serenity-hills/villa-type-b-plan.webp',
+      '/projects/emaar-serenity-hills/villa-type-a-plan.webp',
+      '/projects/emaar-serenity-hills/master-plan.webp',
+    ],
+  },
+];
+function applyImageOverrides(p) {
+  const o = PROJECT_IMAGE_OVERRIDES.find((ov) => ov.match(p));
+  return o ? { ...p, images: o.images, media: o.images, thumbnail: o.images[0] } : p;
+}
+
 // Real, project-specific photos (uploaded via admin → Supabase Storage)
 // ALWAYS win. Only listings without real photos get a type-MATCHED unique set.
 function assignUniqueImages(list) {
   const counters = { villa: 0, penthouse: 0, commercial: 0, apartment: 0 };
-  return list.map((p) => {
+  return list.map((raw) => {
+    const p = applyImageOverrides(raw);
     if (hasRealProjectImages(p)) {
       const imgs = (p.media && p.media.length ? p.media : p.images) || [];
       return { ...p, media: imgs, images: imgs, thumbnail: imgs[0] };
