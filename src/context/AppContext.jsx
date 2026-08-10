@@ -271,6 +271,23 @@ const PROJECT_IMAGE_OVERRIDES = [
       '/projects/emaar-serenity-hills/master-plan.webp',
     ],
   },
+  {
+    // Central Park BelaPerla, Sector 48 (covers any DB row for the project too).
+    match: (p) => /belaperla|bela\s*perla/i.test(p.title || ''),
+    images: [
+      '/projects/belaperla/towers-hero.webp',
+      '/projects/belaperla/lobby-entrance.webp',
+      '/projects/belaperla/gazebo-garden.webp',
+      '/projects/belaperla/gym.webp',
+      '/projects/belaperla/balcony-lounge.webp',
+      '/projects/belaperla/terrace-golf-view.webp',
+      '/projects/belaperla/clubhouse-pool.webp',
+      '/projects/belaperla/resort-lobby.webp',
+      '/projects/belaperla/floor-plate-plan.webp',
+      '/projects/belaperla/studio-plan.webp',
+      '/projects/belaperla/location-map.png',
+    ],
+  },
 ];
 function applyImageOverrides(p) {
   const o = PROJECT_IMAGE_OVERRIDES.find((ov) => ov.match(p));
