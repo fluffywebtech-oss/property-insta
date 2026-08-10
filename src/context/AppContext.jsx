@@ -272,8 +272,26 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
-    // Ganga Anantam 85, Sector 85 (covers the DB row for id 20 too).
+    // Ganga Anantam 85, Sector 85 (covers the DB row for id 20 too). The DB row
+    // carries stale "3 & 4 BHK Premium / 2200 sqft / ₹3.5 Cr" copy, so patch it
+    // to the curated Anantam 85 details along with the real brochure renders.
     match: (p) => /anantam\s*85|ganga\s*anantam/i.test(p.title || ''),
+    patch: {
+      title: 'Ganga Anantam 85 – 3 & 4 BHK Luxury High-Rise',
+      price: 39900000,
+      // static-schema keys
+      sqft: 2392, beds: 3, baths: 3,
+      // mapped-DB-schema keys (mapDBProperty renames these)
+      area: 2392, bedrooms: 3, bathrooms: 3, pricePerSqft: 16681,
+      possession: 'New Launch', possessionStatus: 'New Launch',
+      possessionDate: '2029 (Est.)',
+      floor: 'High-rise (up to 60 floors)',
+      emiEstimate: 313355,
+      furnishing: 'Semi-Furnished',
+      featured: true, hot: true, trending: true,
+      badge: 'Hot Deal', badgeType: 'hot',
+      description: 'Ganga Anantam 85 in Sector 85, New Gurgaon is Ganga Realty\'s landmark high-rise development — three unique towers (Tower A, Tower B "Cloud 60" and Tower C) rising up to 60 floors, set over a podium with 45% green area. Configurations: 3 BHK + Servant + Utility at 2,392 sq.ft and 4 BHK + Servant + Utility at 3,101 sq.ft (each includes 2 car parkings), with 1,800mm-wide wraparound balconies. Sky and lifestyle amenities are stacked through the towers — a Cloud 60 rooftop lounge on the 60th floor, a 49th-floor sports club, 13th-floor business centre, 3rd-floor social club, plus a landscaped ground level with infinity pool, yoga deck, 400m jogging track, skating rink, badminton and basketball courts, kids\' play, pet park, gourmet supermarket and knowledge club. Positioned in Sector 85 with quick access to the Dwarka Expressway, NPR and Global City Gurugram. Indicative pricing — RERA and final costing to be confirmed via official sources.',
+    },
     images: [
       '/projects/ganga-anantam-85/towers-hero.webp',
       '/projects/ganga-anantam-85/courtyard.webp',
@@ -310,7 +328,11 @@ const PROJECT_IMAGE_OVERRIDES = [
 ];
 function applyImageOverrides(p) {
   const o = PROJECT_IMAGE_OVERRIDES.find((ov) => ov.match(p));
-  return o ? { ...p, images: o.images, media: o.images, thumbnail: o.images[0] } : p;
+  if (!o) return p;
+  // `patch` lets an override also correct text fields (title, price, sqft, …)
+  // on a matching Supabase row — needed when the DB row carries stale copy
+  // that would otherwise win over our curated static entry.
+  return { ...p, ...(o.patch || {}), images: o.images, media: o.images, thumbnail: o.images[0] };
 }
 
 // Real, project-specific photos (uploaded via admin → Supabase Storage)
