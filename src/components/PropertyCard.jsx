@@ -8,8 +8,7 @@ export default function PropertyCard({ property }) {
     toggleSave,
     likedIds,
     toggleLike,
-    addRecentView,
-    setActiveModal,
+    openProperty,
     compareIds,
     toggleCompare,
   } = useApp();
@@ -20,10 +19,9 @@ export default function PropertyCard({ property }) {
   const maxIdx = media.length - 1;
 
   const handleCardClick = (e) => {
-    // Don't open modal if clicking interactive elements
+    // Don't navigate if clicking interactive elements within the card
     if (e.target.closest('button, .card-save-btn, .ig-card-media-nav, .ig-card-badge')) return;
-    addRecentView(property.id);
-    setActiveModal({ type: 'property', data: { propertyId: property.id } });
+    openProperty(property.id);
   };
 
   const prevSlide = (e) => {
@@ -112,6 +110,18 @@ export default function PropertyCard({ property }) {
               ))}
             </div>
           </>
+        )}
+
+        {/* PropScore™ badge */}
+        {property.propScore && (
+          <div
+            className="ig-propscore-badge"
+            style={{ '--ps-color': property.propScore.color }}
+            title={`PropScore™ ${property.propScore.score}/100 · ${property.propScore.tag}`}
+          >
+            <span className="ig-propscore-num">{property.propScore.score}</span>
+            <span className="ig-propscore-cap">PropScore</span>
+          </div>
         )}
 
         {/* Overlay Info */}

@@ -60,6 +60,7 @@ export default function ReelsView() {
     toggleLike,
     setActiveModal,
     addRecentView,
+    openProperty,
   } = useApp();
 
   const [toast, setToast] = useState(null);
@@ -134,8 +135,7 @@ export default function ReelsView() {
   };
 
   const handleDetails = (reel) => {
-    addRecentView(reel.propertyId || reel.id);
-    setActiveModal({ type: 'property', data: { propertyId: reel.propertyId || reel.id } });
+    openProperty(reel.propertyId || reel.id);
   };
 
   // ── Render ──────────────────────────────────────────────────────────────

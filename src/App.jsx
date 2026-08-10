@@ -1,35 +1,79 @@
+import { lazy, Suspense } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { AuthProvider } from './context/AuthContext';
 import { RoleProvider } from './context/RoleContext';
 import { ToastProvider } from './hooks/useToast';
+
+// Eager: the bits that are always on the initial render
 import Header from './components/Header';
 import HeroBanner from './components/HeroBanner';
 import FeedView from './components/FeedView';
 import FilterSidebar from './components/FilterSidebar';
-import ReelsView from './components/ReelsView';
-import MapView from './components/MapView';
-import SavedView from './components/SavedView';
-import BlogView from './components/BlogView';
-import Modals from './components/Modals';
 import Footer, { MobileNav, ChatWidget } from './components/Footer';
-import OSDashboard from './components/os/OSDashboard';
-import TrustLayer from './components/os/TrustLayer';
-import PropertyPassport from './components/os/PropertyPassport';
-import TransactionLayer from './components/os/TransactionLayer';
-import CRMView from './components/os/CRMView';
-import ChannelPartnerView from './components/os/ChannelPartnerView';
-import AICopilotView from './components/os/AICopilotView';
-import FinancingView from './components/os/FinancingView';
-import LegalView from './components/os/LegalView';
-import InfraView from './components/os/InfraView';
-import DataCloudView from './components/os/DataCloudView';
-import InvestmentView from './components/os/InvestmentView';
-import RentalView from './components/os/RentalView';
-import LocalCommerceView from './components/os/LocalCommerceView';
-import SocialView from './components/os/SocialView';
-import GovIntView from './components/os/GovIntView';
-import AIExchangeView from './components/os/AIExchangeView';
+import ScrollTopButton from './components/ScrollTopButton';
 import './styles/styles.scss';
+
+// Lazy: every secondary view + all 17 OS modules + the modal stack.
+// Cuts the initial JS bundle to roughly the feed-only experience and
+// streams in everything else on demand.
+const BuilderView        = lazy(() => import('./components/BuilderView'));
+const PropertyView       = lazy(() => import('./components/PropertyView'));
+const ReelsView          = lazy(() => import('./components/ReelsView'));
+const MapView            = lazy(() => import('./components/MapView'));
+const SavedView          = lazy(() => import('./components/SavedView'));
+const BlogView           = lazy(() => import('./components/BlogView'));
+const ContentHub         = lazy(() => import('./components/ContentHub'));
+const BuildWithUs        = lazy(() => import('./components/BuildWithUs'));
+const HomeLoans          = lazy(() => import('./components/HomeLoans'));
+const MyJourney          = lazy(() => import('./components/MyJourney'));
+const Localities         = lazy(() => import('./components/Localities'));
+const PostProperty       = lazy(() => import('./components/PostProperty'));
+const AiFinder           = lazy(() => import('./components/AiFinder'));
+const Valuation          = lazy(() => import('./components/Valuation'));
+const Compare            = lazy(() => import('./components/Compare'));
+const RentVsBuy          = lazy(() => import('./components/RentVsBuy'));
+const VastuChecker       = lazy(() => import('./components/VastuChecker'));
+const RentAgreement      = lazy(() => import('./components/RentAgreement'));
+const PosterMaker        = lazy(() => import('./components/PosterMaker'));
+const TenantVerification = lazy(() => import('./components/TenantVerification'));
+const InstantDeal        = lazy(() => import('./components/InstantDeal'));
+const RentCredit         = lazy(() => import('./components/RentCredit'));
+const BankAuction        = lazy(() => import('./components/BankAuction'));
+const StampDuty          = lazy(() => import('./components/StampDuty'));
+const Affordability      = lazy(() => import('./components/Affordability'));
+const MutationGuide      = lazy(() => import('./components/MutationGuide'));
+const GreenScore         = lazy(() => import('./components/GreenScore'));
+const AmeyaSapphire      = lazy(() => import('./components/AmeyaSapphire'));
+const AdminApp           = lazy(() => import('./admin/AdminApp'));
+const BuilderDesk        = lazy(() => import('./components/BuilderDesk'));
+const Modals             = lazy(() => import('./components/Modals'));
+const OSDashboard        = lazy(() => import('./components/os/OSDashboard'));
+const TrustLayer         = lazy(() => import('./components/os/TrustLayer'));
+const PropertyPassport   = lazy(() => import('./components/os/PropertyPassport'));
+const TransactionLayer   = lazy(() => import('./components/os/TransactionLayer'));
+const CRMView            = lazy(() => import('./components/os/CRMView'));
+const ChannelPartnerView = lazy(() => import('./components/os/ChannelPartnerView'));
+const AICopilotView      = lazy(() => import('./components/os/AICopilotView'));
+const FinancingView      = lazy(() => import('./components/os/FinancingView'));
+const LegalView          = lazy(() => import('./components/os/LegalView'));
+const InfraView          = lazy(() => import('./components/os/InfraView'));
+const DataCloudView      = lazy(() => import('./components/os/DataCloudView'));
+const InvestmentView     = lazy(() => import('./components/os/InvestmentView'));
+const RentalView         = lazy(() => import('./components/os/RentalView'));
+const LocalCommerceView  = lazy(() => import('./components/os/LocalCommerceView'));
+const SocialView         = lazy(() => import('./components/os/SocialView'));
+const GovIntView         = lazy(() => import('./components/os/GovIntView'));
+const AIExchangeView     = lazy(() => import('./components/os/AIExchangeView'));
+
+// Lightweight loading skeleton shown while a lazy chunk streams in.
+function ViewLoader() {
+  return (
+    <div className="app-view-loader" aria-busy="true">
+      <div className="app-view-loader-spinner" />
+      <span>Loading…</span>
+    </div>
+  );
+}
 
 function AppLayout() {
   const { currentView, darkMode } = useApp();
@@ -45,10 +89,34 @@ function AppLayout() {
             </main>
           </div>
         );
+      case 'builder': return <BuilderView />;
+      case 'property': return <PropertyView />;
       case 'reels': return <ReelsView />;
       case 'mapView': return <MapView />;
       case 'saved': return <SavedView />;
       case 'blog': return <BlogView />;
+      case 'content-hub': return <ContentHub />;
+      case 'build-with-us': return <BuildWithUs />;
+      case 'home-loans': return <HomeLoans />;
+      case 'my-journey': return <MyJourney />;
+      case 'localities': return <Localities />;
+      case 'post-property': return <PostProperty />;
+      case 'ai-finder': return <AiFinder />;
+      case 'valuation': return <Valuation />;
+      case 'compare': return <Compare />;
+      case 'rent-vs-buy': return <RentVsBuy />;
+      case 'vastu': return <VastuChecker />;
+      case 'rent-agreement': return <RentAgreement />;
+      case 'poster-maker': return <PosterMaker />;
+      case 'tenant-verify': return <TenantVerification />;
+      case 'instant': return <InstantDeal />;
+      case 'rent-credit': return <RentCredit />;
+      case 'auctions': return <BankAuction />;
+      case 'stamp-duty': return <StampDuty />;
+      case 'affordability': return <Affordability />;
+      case 'mutation': return <MutationGuide />;
+      case 'green-score': return <GreenScore />;
+      case 'ameya-sapphire': return <AmeyaSapphire />;
       // OS Modules
       case 'os': return <div className="os-page-wrap"><OSDashboard /></div>;
       case 'trust': return <div className="os-page-wrap"><TrustLayer /></div>;
@@ -79,17 +147,40 @@ function AppLayout() {
     }
   };
 
-  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog'].includes(currentView);
+  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'localities', 'post-property', 'ai-finder', 'valuation', 'compare', 'rent-vs-buy', 'vastu', 'rent-agreement', 'poster-maker', 'tenant-verify', 'instant', 'rent-credit', 'auctions', 'stamp-duty', 'affordability', 'mutation', 'green-score', 'ameya-sapphire', 'builder', 'property'].includes(currentView);
+
+  // Full-screen in-frontend admin console (its own layout — no consumer chrome).
+  if (currentView === 'admin') {
+    return (
+      <div className={`app-root ${darkMode ? 'dark' : ''}`}>
+        <Suspense fallback={<ViewLoader />}><AdminApp /></Suspense>
+      </div>
+    );
+  }
+
+  // Secret, unlisted inventory console — reached only via /builder-desk and a key.
+  if (currentView === 'builder-desk') {
+    return (
+      <div className={`app-root ${darkMode ? 'dark' : ''}`}>
+        <Suspense fallback={<ViewLoader />}><BuilderDesk /></Suspense>
+      </div>
+    );
+  }
 
   return (
     <div className={`app-root ${darkMode ? 'dark' : ''}`}>
       <Header />
       {currentView === 'feed' && <HeroBanner />}
-      {renderView()}
+      <Suspense fallback={<ViewLoader />}>
+        {renderView()}
+      </Suspense>
       {!isOsView && <Footer />}
       <MobileNav />
       <ChatWidget />
-      <Modals />
+      <ScrollTopButton />
+      <Suspense fallback={null}>
+        <Modals />
+      </Suspense>
     </div>
   );
 }

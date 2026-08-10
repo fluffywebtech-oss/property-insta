@@ -3,6 +3,7 @@
 // All Major Builders | All Micro-Markets | Builders Section | May 2026
 // ===================================================================
 import Unsplash from './assets/hero.png';
+import { computePropScore } from './utils/propScore';
 
 // Image IDs legend (9 verified working Unsplash photos):
 //   A = 1600596542815-ffad4c1539a9   B = 1600585154340-be6161a56a0c   C = 1560185007-cde436f6a4d0
@@ -95,9 +96,9 @@ export const allProperties = [
   // 18 – Sobha Aranya  [E,D,K]
   { id:18, title:'Sobha Aranya – 3 & 4 BHK Premium', location:'Sector 80, New Gurgaon', price:71000000, beds:3, baths:3, sqft:2800, type:'apartment', status:'sale', builder:'Sobha Limited', reraId:'HR/RERA/GUR/2026/318', possessionStatus:'New Launch', possessionDate:'Mar 2030', floor:'12th of 26 floors', furnishing:'Semi-Furnished', emiEstimate:557100, bankOffers:true, images:['https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:true, hot:false, liked:false, views:9400, description:'Sobha Aranya in Sector 80 is Sobha Limited\'s nature-inspired premium residential project in New Gurgaon. Featuring 3 & 4 BHK residences set amidst 10 acres of forest-themed landscaping with over 500 trees. Sobha\'s renowned construction quality includes premium marble flooring, modular kitchens, VRV air-conditioning, and a 40,000 sqft clubhouse. A tranquil sanctuary in the heart of New Gurgaon.', agent:{ id:'agent9', name:'Deepak Rao', avatar:'https://i.pravatar.cc/150?img=60', rating:4.6, sales:72, phone:'+91-9810555555', email:'deepak@propertyinsta.com', company:'PropertyInsta Realty', experience:'7+ years', specialization:['Sobha','New Gurgaon','Premium'] }, postDate:'4 hours ago', comments:29, shares:17, lat:28.4200, lng:77.0450, neighborhood:{schools:'Amity / Shalom Hills', transit:'SPR / NH-8', walkScore:55, crimeRate:'Low'}, floorPlan:'https://images.unsplash.com/photo-1628744448840-1fc28d155b8c?w=400&h=300&fit=crop' },
   // 19 – Ashiana Aaroham  [K,E,J]
-  { id:19, title:'Ashiana Aaroham – 3, 4 & 5 BHK Premium', location:'Sector 80, New Gurgaon', price:26300000, beds:3, baths:2, sqft:1900, type:'apartment', status:'sale', builder:'Ashiana Housing', reraId:'HR/RERA/GUR/2026/319', possessionStatus:'New Launch', possessionDate:'Sep 2029', floor:'6th of 20 floors', furnishing:'Semi-Furnished', emiEstimate:206400, bankOffers:true, images:['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security'], featured:false, hot:false, liked:false, views:4500, description:'Ashiana Aaroham in Sector 80 is Ashiana Housing\'s premium multi-generational residential project in New Gurgaon. Featuring 3, 4 & 5 BHK residences designed for evolving Indian families with child-friendly zones, senior citizen amenities, community kitchen, hobby rooms, and landscaped walking paths. Ashiana\'s signature focus on community living makes this a unique offering in New Gurgaon.', agent:{ id:'agent13', name:'Rekha Nair', avatar:'https://i.pravatar.cc/150?img=38', rating:4.5, sales:48, phone:'+91-9811555555', email:'rekha@propertyinsta.com', company:'PropertyInsta Realty', experience:'7+ years', specialization:['Ashiana','New Gurgaon','Community Living'] }, postDate:'1 week ago', comments:10, shares:4, lat:28.4200, lng:77.0450, neighborhood:{schools:'Suncity World / Amity', transit:'SPR', walkScore:50, crimeRate:'Low'}, floorPlan:null },
+  { id:19, title:'Ashiana Aaroham – Curated Kid-Centric 3 & 4 BHK', location:'Sector 80, Gurugram', price:31900000, beds:3, baths:3, sqft:1259, type:'apartment', status:'sale', builder:'Ashiana Housing', reraId:'RC/REP/HARERA/GGM/1014/746/2025/117', possessionStatus:'Under Construction', possessionDate:'Dec 2029', floor:'Low-density, pedestrian-first layout', furnishing:'Semi-Furnished', emiEstimate:250415, bankOffers:true, images:['/projects/ashiana-aaroham/exterior-1.webp','/projects/ashiana-aaroham/exterior-2.webp','/projects/ashiana-aaroham/reception.webp','/projects/ashiana-aaroham/gym.webp','/projects/ashiana-aaroham/classroom.webp','/projects/ashiana-aaroham/dance-room.webp','/projects/ashiana-aaroham/squash.webp','/projects/ashiana-aaroham/football.webp','/projects/ashiana-aaroham/kids-1.webp','/projects/ashiana-aaroham/kids-2.webp','/projects/ashiana-aaroham/kids-3.webp'], amenities:['pool','gym','parking','garden','security'], featured:true, hot:true, liked:false, views:6800, description:'Ashiana Aaroham in Sector 80, Gurugram is one of Ashiana Housing\'s most premium residential developments in New Gurgaon. Spread over 10.8 acres with 542 residential units, this RERA-registered project blends modern architecture, green design, and a curated kid-centric philosophy that encourages learning, play and community living. Just 8 minutes from NH-48, with excellent connectivity to Dwarka Expressway, Southern Peripheral Road (SPR) and KMP Expressway. Homes span 3 BHK and 4 BHK (carpet 1,057–1,521 sq ft, ₹3.19 Cr–₹7.15 Cr) and residents enjoy 9.02 acres of open green space, a HEPA-filtered fresh-air system, an infinity-pool clubhouse, an international-standard sports arena, a curated learning hub, and two dedicated parking spaces per apartment. RERA — Phase I: 117 of 2025 (25.11.2025); Phase II: 10 of 2026 (27.01.2026).', agent:{ id:'agent13', name:'Rekha Nair', avatar:'https://i.pravatar.cc/150?img=38', rating:4.5, sales:48, phone:'+91-9811555555', email:'rekha@propertyinsta.com', company:'PropertyInsta Realty', experience:'7+ years', specialization:['Ashiana','New Gurgaon','Kid-Centric'] }, postDate:'New launch', comments:10, shares:4, lat:28.4090, lng:76.9760, neighborhood:{schools:'St. Xavier\'s (Sec-81) / DPS (Sec-84) / Maitrikiran (Sec-83)', transit:'8 min to NH-48 · Dwarka Expressway · SPR', walkScore:60, crimeRate:'Low'}, floorPlan:null },
   // 20 – Ganga Anantam 85  [C,F,K]
-  { id:20, title:'Ganga Anantam 85 – 3 & 4 BHK Premium', location:'Sector 85, New Gurgaon', price:35000000, beds:3, baths:3, sqft:2200, type:'apartment', status:'sale', builder:'Ganga Realty', reraId:'HR/RERA/GUR/2026/320', possessionStatus:'New Launch', possessionDate:'Mar 2029', floor:'8th of 24 floors', furnishing:'Semi-Furnished', emiEstimate:274700, bankOffers:true, images:['https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security'], featured:false, hot:false, liked:false, views:3900, description:'Ganga Anantam 85 in Sector 85 is Ganga Realty\'s premium residential project in New Gurgaon. Featuring well-designed 3 & 4 BHK apartments with modern layouts, vitrified tile flooring, modular kitchen, and a well-equipped clubhouse. The New Gurgaon location offers a serene environment with developing infrastructure and good connectivity to Golf Course Extension.', agent:{ id:'agent14', name:'Sunita Patel', avatar:'https://i.pravatar.cc/150?img=36', rating:4.4, sales:58, phone:'+91-9810888888', email:'sunita@propertyinsta.com', company:'PropertyInsta Realty', experience:'6+ years', specialization:['Ganga Realty','New Gurgaon','Mid-Premium'] }, postDate:'5 days ago', comments:8, shares:3, lat:28.4400, lng:77.0350, neighborhood:{schools:'Shiv Nadar / Lotus Valley', transit:'Golf Course Ext', walkScore:48, crimeRate:'Low'}, floorPlan:null },
+  { id:20, title:'Ganga Anantam 85 – 3 & 4 BHK Luxury High-Rise', location:'Sector 85, New Gurgaon', price:39900000, beds:3, baths:3, sqft:2392, type:'apartment', status:'sale', builder:'Ganga Realty', reraId:'HR/RERA/GUR/2026/320', possessionStatus:'New Launch', possessionDate:'2029 (Est.)', floor:'High-rise (up to 60 floors)', furnishing:'Semi-Furnished', emiEstimate:313355, bankOffers:true, images:['/projects/ganga-anantam-85/towers-hero.webp','/projects/ganga-anantam-85/courtyard.webp','/projects/ganga-anantam-85/night-tower.webp','/projects/ganga-anantam-85/infinity-pool.webp','/projects/ganga-anantam-85/yoga-deck.webp','/projects/ganga-anantam-85/gym.webp','/projects/ganga-anantam-85/fine-dining.webp','/projects/ganga-anantam-85/bar-restaurant.webp','/projects/ganga-anantam-85/floor-guide.webp','/projects/ganga-anantam-85/site-plan.webp','/projects/ganga-anantam-85/floor-plan-3bhk.webp','/projects/ganga-anantam-85/floor-plan-4bhk.webp','/projects/ganga-anantam-85/location-map.webp'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:true, hot:true, liked:false, views:6400, description:'Ganga Anantam 85 in Sector 85, New Gurgaon is Ganga Realty\'s landmark high-rise development — three unique towers (Tower A, Tower B "Cloud 60" and Tower C) rising up to 60 floors, set over a podium with 45% green area. Configurations: 3 BHK + Servant + Utility at 2,392 sq.ft and 4 BHK + Servant + Utility at 3,101 sq.ft (each includes 2 car parkings), with 1,800mm-wide wraparound balconies. Sky and lifestyle amenities are stacked through the towers — a Cloud 60 rooftop lounge on the 60th floor, a 49th-floor sports club, 13th-floor business centre, 3rd-floor social club, plus a landscaped ground level with infinity pool, yoga deck, 400m jogging track, skating rink, badminton and basketball courts, kids\' play, pet park, gourmet supermarket and knowledge club. Positioned in Sector 85 with quick access to the Dwarka Expressway, NPR and Global City Gurugram. Indicative pricing — RERA and final costing to be confirmed via official sources.', agent:{ id:'agent14', name:'Sunita Patel', avatar:'https://i.pravatar.cc/150?img=36', rating:4.4, sales:58, phone:'+91-9810888888', email:'sunita@propertyinsta.com', company:'PropertyInsta Realty', experience:'6+ years', specialization:['Ganga Realty','New Gurgaon','Luxury High-Rise'] }, postDate:'New launch', comments:8, shares:3, lat:28.4400, lng:77.0350, neighborhood:{schools:'Shiv Nadar / Lotus Valley', transit:'Dwarka Expressway / NPR', walkScore:48, crimeRate:'Low'}, floorPlan:'/projects/ganga-anantam-85/floor-plan-3bhk.webp' },
   // 21 – ROF Pravasa  [J,K,B]
   { id:21, title:'ROF Pravasa – Luxury Independent Floors', location:'Sector 88A, New Gurgaon', price:28000000, beds:3, baths:3, sqft:2400, type:'villa', status:'sale', builder:'ROF Group', reraId:'HR/RERA/GUR/2026/321', possessionStatus:'New Launch', possessionDate:'Jun 2029', floor:'Ground + 1', furnishing:'Semi-Furnished', emiEstimate:219700, bankOffers:true, images:['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop'], amenities:['parking','garden','security'], featured:false, hot:false, liked:false, views:3600, description:'ROF Pravasa in Sector 88A offers luxury independent floors in New Gurgaon by the ROF Group. These premium ground+1 floors feature private gardens, dedicated parking for 2 cars, premium vitrified flooring, modular kitchen, and a gated community with clubhouse, swimming pool, and 24x7 security. Perfect for those seeking independent living with community amenities.', agent:{ id:'agent15', name:'Manisha Tomar', avatar:'https://i.pravatar.cc/150?img=41', rating:4.6, sales:92, phone:'+91-9811222222', email:'manisha@propertyinsta.com', company:'PropertyInsta Realty', experience:'8+ years', specialization:['ROF','New Gurgaon','Floors'] }, postDate:'3 days ago', comments:9, shares:5, lat:28.4450, lng:77.0380, neighborhood:{schools:'DAV / Jiva Public', transit:'Golf Course Ext', walkScore:46, crimeRate:'Low'}, floorPlan:null },
   // 22 – M3M Antalya Hills  [F,B,K]
@@ -218,6 +219,42 @@ export const allProperties = [
   { id:59, title:'DLF Skycourt – 3 & 4 BHK Premium', location:'Sector 86, New Gurgaon', price:48000000, beds:3, baths:3, sqft:2500, type:'apartment', status:'sale', builder:'DLF Limited', reraId:'HR/RERA/GUR/2025/433', possessionStatus:'Under Construction', possessionDate:'Sep 2029', floor:'14th of 28 floors', furnishing:'Semi-Furnished', emiEstimate:376700, bankOffers:true, images:['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:true, hot:true, liked:false, views:9200, description:'DLF Skycourt in Sector 86 is DLF\'s premium residential entry into New Gurgaon. Featuring 3 & 4 BHK residences with DLF\'s trusted quality — Italian marble flooring, modular kitchens, VRV air-conditioning, and a 40,000 sqft clubhouse with temperature-controlled pool, spa, and gym. DLF brings its 75+ year legacy to New Gurgaon\'s emerging residential corridor, making this one of the most anticipated projects in the micro-market.', agent:{ id:'agent1', name:'Rajiv Malhotra', avatar:'https://i.pravatar.cc/150?img=68', rating:4.9, sales:172, phone:'+91-9810111111', email:'rajiv@propertyinsta.com', company:'PropertyInsta Realty', experience:'12+ years', specialization:['DLF','New Gurgaon','Premium'] }, postDate:'3 hours ago', comments:34, shares:18, lat:28.4410, lng:77.0350, neighborhood:{schools:'Shiv Nadar / Lotus Valley', transit:'Golf Course Ext / SPR', walkScore:52, crimeRate:'Low'}, floorPlan:'https://images.unsplash.com/photo-1628744448840-1fc28d155b8c?w=400&h=300&fit=crop' },
   // 60 – M3M Nova  [D,J,F]
   { id:60, title:'M3M Nova – 2 & 3 BHK Mid-Premium', location:'Sector 104, Dwarka Expressway', price:23000000, beds:2, baths:2, sqft:1500, type:'apartment', status:'sale', builder:'M3M India', reraId:'HR/RERA/GUR/2025/434', possessionStatus:'New Launch', possessionDate:'Dec 2030', floor:'5th of 20 floors', furnishing:'Semi-Furnished', emiEstimate:180500, bankOffers:true, images:['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security'], featured:false, hot:true, liked:false, views:4800, description:'M3M Nova in Sector 104 is M3M\'s newest mid-premium launch on Dwarka Expressway. Featuring 2 & 3 BHK apartments with M3M\'s signature quality — VRV air-conditioning, modular kitchen, vitrified tile flooring, and a 25,000 sqft clubhouse. The most accessible M3M launch on Dwarka Expressway, perfect for first-time buyers wanting the M3M brand at an entry-level price.', agent:{ id:'agent2', name:'Priya Sharma', avatar:'https://i.pravatar.cc/150?img=47', rating:4.8, sales:108, phone:'+91-9810222222', email:'priya@propertyinsta.com', company:'PropertyInsta Realty', experience:'8+ years', specialization:['M3M','Dwarka Exp','Mid-Premium'] }, postDate:'12 hours ago', comments:16, shares:8, lat:28.4690, lng:77.0080, neighborhood:{schools:'St. Angelas / DPS', transit:'Dwarka Expressway', walkScore:54, crimeRate:'Low'}, floorPlan:null },
+
+  // ═══ NEW-LAUNCH PIPELINE — from "Gurugram New Launch Projects 2026–2027" starter guide ═══
+  // Indicative entries for developers not previously in the inventory. Pricing, RERA IDs,
+  // sizes and specs are placeholders pending live research (per the source PDF v0.1).
+  // 61 – Omaxe The State
+  { id:9061, title:'Omaxe The State – 3 & 4 BHK (New Launch)', location:'Sector 93, New Gurgaon', price:24500000, beds:3, baths:3, sqft:1850, type:'apartment', status:'sale', builder:'Omaxe', reraId:null, possessionStatus:'New Launch', possessionDate:'2029 (Est.)', floor:'To be announced', furnishing:'Semi-Furnished', emiEstimate:192325, bankOffers:true, images:['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security'], featured:false, hot:true, liked:false, views:1200, description:'Omaxe The State is an upcoming New Gurgaon launch. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent4', name:'Pooja Yadav', avatar:'https://i.pravatar.cc/150?img=32', rating:4.5, sales:235, phone:'+91-9811444444', email:'pooja@propertyinsta.com', company:'PropertyInsta Realty', experience:'7+ years', specialization:['Omaxe','New Gurgaon','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4150, lng:77.0300, neighborhood:{schools:'TBC', transit:'New Gurgaon', walkScore:50, crimeRate:'Low'}, floorPlan:null },
+  // 62 – Anant Raj Estate (The Crescent)
+  { id:9062, title:'Anant Raj The Crescent – 4 BHK (New Launch)', location:'Sector 63A, Golf Course Extension Road', price:42000000, beds:4, baths:4, sqft:3100, type:'apartment', status:'sale', builder:'Anant Raj', reraId:null, possessionStatus:'New Launch', possessionDate:'2030 (Est.)', floor:'To be announced', furnishing:'Semi-Furnished', emiEstimate:329700, bankOffers:true, images:['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:false, hot:true, liked:false, views:1500, description:'Anant Raj The Crescent is an upcoming Golf Course Extension launch. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent11', name:'Sanjay Khanna', avatar:'https://i.pravatar.cc/150?img=70', rating:4.9, sales:138, phone:'+91-9811333333', email:'sanjay@propertyinsta.com', company:'PropertyInsta Realty', experience:'15+ years', specialization:['Anant Raj','Golf Course Ext','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4180, lng:77.0850, neighborhood:{schools:'TBC', transit:'Golf Course Ext', walkScore:55, crimeRate:'Low'}, floorPlan:null },
+  // 63 – Westin Residences Gurugram (Marriott-branded) — real project renders
+  { id:9063, title:'Westin Residences Gurugram – 3 & 4 BHK Branded Residences', location:'Sector 103, Dwarka Expressway', price:65000000, beds:3, baths:3, sqft:2673, type:'apartment', status:'sale', builder:'Westin Residences', reraId:null, possessionStatus:'New Launch', possessionDate:'2030 (Est.)', floor:'High-rise tower', furnishing:'Fully Furnished', emiEstimate:510250, bankOffers:true, images:['/projects/westin-residences/grand-entrance.jpg','/projects/westin-residences/arrival.jpg','/projects/westin-residences/amenity-deck-aerial.jpg','/projects/westin-residences/landscaped-garden.jpg'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:true, hot:true, liked:false, views:1800, description:'Westin Residences Gurugram is a Marriott-branded residential development on the Dwarka Expressway (Sector 103), set over a 20-acre land parcel (10 acres in Phase 1 and 10 acres in Phase 2). Designed around Westin\'s "6 Pillars of Well-Being", it offers 3 & 4 BHK branded residences with personalized hospitality, 24/7 concierge and security. Sizes: 3 BHK from 2,673 sq.ft (Small) to 2,939 sq.ft (Large); 4 BHK from 3,750 sq.ft (Small) to 3,962 sq.ft (Medium), with expansive 338–485 sq.ft balconies. The 1.75-lakh-sq.ft Westin Club anchors wellness, recreation and dining amenities, wrapped in a sculpted multi-level landscape deck with waterfalls, lily ponds and activity tracks. Approximately 13 minutes to the Dwarka Golf Course. Indicative pricing — RERA registration and final costing to be confirmed via official sources.', agent:{ id:'agent12', name:'Rohit Mehra', avatar:'https://i.pravatar.cc/150?img=55', rating:4.9, sales:156, phone:'+91-9810999999', email:'rohit@propertyinsta.com', company:'PropertyInsta Realty', experience:'14+ years', specialization:['Branded Residences','Dwarka Exp','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4720, lng:77.0040, neighborhood:{schools:'TBC', transit:'Dwarka Expressway', walkScore:54, crimeRate:'Low'}, floorPlan:null },
+  // 64 – Landmark The Avenue
+  { id:9064, title:'Landmark The Avenue – 3 BHK (New Launch)', location:'Sector 106, Dwarka Expressway', price:29000000, beds:3, baths:3, sqft:2050, type:'apartment', status:'sale', builder:'Landmark', reraId:null, possessionStatus:'New Launch', possessionDate:'2029 (Est.)', floor:'To be announced', furnishing:'Semi-Furnished', emiEstimate:227650, bankOffers:true, images:['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security'], featured:false, hot:false, liked:false, views:900, description:'Landmark The Avenue is an upcoming Dwarka Expressway launch. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent8', name:'Arun Bhatia', avatar:'https://i.pravatar.cc/150?img=58', rating:4.7, sales:68, phone:'+91-9811666666', email:'arun@propertyinsta.com', company:'PropertyInsta Realty', experience:'10+ years', specialization:['Landmark','Dwarka Exp','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4710, lng:77.0060, neighborhood:{schools:'TBC', transit:'Dwarka Expressway', walkScore:52, crimeRate:'Low'}, floorPlan:null },
+  // 65 – Grace Resilviaa DDJAY Affordable Floors (Sector 78) — real project renders
+  { id:9065, title:'Grace Resilviaa – 3 BHK DDJAY Independent Floors', location:'Sector 78, New Gurgaon', price:17900000, beds:3, baths:3, sqft:1587, type:'apartment', status:'sale', builder:'Grace', reraId:null, possessionStatus:'New Launch', possessionDate:'2028 (Est.)', floor:'Stilt + 4 (Independent Floor)', furnishing:'Semi-Furnished', emiEstimate:140515, bankOffers:true, images:['/projects/grace-resilviaa/facade-hero.png','/projects/grace-resilviaa/facade-day.jpg','/projects/grace-resilviaa/elevation.jpg','/projects/grace-resilviaa/living-room.jpg','/projects/grace-resilviaa/kitchen.png','/projects/grace-resilviaa/kitchen-2.jpg','/projects/grace-resilviaa/bedroom.jpg','/projects/grace-resilviaa/bathroom.jpg','/projects/grace-resilviaa/home-office.jpg','/projects/grace-resilviaa/lobby.jpg','/projects/grace-resilviaa/floor-plan-1.jpg','/projects/grace-resilviaa/floor-plan-2.jpg'], amenities:['gym','parking','garden','security'], featured:true, hot:true, liked:false, views:900, description:'Grace Resilviaa at Sector 78, New Gurgaon is a DDJAY residential low-rise development of 3 BHK independent builder floors (Stilt + 4), ~1,587 sq.ft, Rs 1.79 Cr onwards — booking open. Amenities include a clubhouse, dedicated basement & stilt parking, 24/7 security & maintenance, a landscaped jogging track, health & sports zone, community areas, in-complex daily-needs shop, gymnasium, children\'s play area, landscaped gardens, indoor sports and table tennis. Well positioned on the New Gurgaon (NH-8) corridor. Indicative listing — RERA registration and final costing to be confirmed via official sources.', agent:{ id:'agent13', name:'Rekha Nair', avatar:'https://i.pravatar.cc/150?img=38', rating:4.5, sales:48, phone:'+91-9811555555', email:'rekha@propertyinsta.com', company:'PropertyInsta Realty', experience:'7+ years', specialization:['Grace','New Gurgaon','DDJAY Floors'] }, postDate:'Booking open', comments:0, shares:0, lat:28.4090, lng:77.0250, neighborhood:{schools:'TBC', transit:'New Gurgaon (NH-8)', walkScore:48, crimeRate:'Low'}, floorPlan:'/projects/grace-resilviaa/floor-plan-1.jpg' },
+  // 66 – Orchid Ivy
+  { id:9066, title:'Orchid Ivy – 3 BHK (New Launch)', location:'Sector 51, Golf Course Extension Road', price:32000000, beds:3, baths:3, sqft:2300, type:'apartment', status:'sale', builder:'Orchid', reraId:null, possessionStatus:'New Launch', possessionDate:'2030 (Est.)', floor:'To be announced', furnishing:'Semi-Furnished', emiEstimate:251200, bankOffers:true, images:['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security'], featured:false, hot:false, liked:false, views:850, description:'Orchid Ivy is an upcoming Sector 51 launch near Golf Course Extension. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent3', name:'Neha Agarwal', avatar:'https://i.pravatar.cc/150?img=23', rating:4.9, sales:145, phone:'+91-9810666666', email:'neha@propertyinsta.com', company:'PropertyInsta Realty', experience:'11+ years', specialization:['Orchid','Golf Course Ext','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4350, lng:77.0900, neighborhood:{schools:'TBC', transit:'Golf Course Ext', walkScore:56, crimeRate:'Low'}, floorPlan:null },
+  // 67 – Sunteck City Gurugram
+  { id:9067, title:'Sunteck City Gurugram – 4 BHK (New Launch)', location:'Sector 113, Dwarka Expressway', price:46000000, beds:4, baths:4, sqft:2900, type:'apartment', status:'sale', builder:'Sunteck', reraId:null, possessionStatus:'New Launch', possessionDate:'2030 (Est.)', floor:'To be announced', furnishing:'Semi-Furnished', emiEstimate:361100, bankOffers:true, images:['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:false, hot:true, liked:false, views:1100, description:'Sunteck City is an upcoming Dwarka Expressway launch by the Mumbai-based developer. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent5', name:'Vikram Gupta', avatar:'https://i.pravatar.cc/150?img=52', rating:4.7, sales:82, phone:'+91-9810333333', email:'vikram@propertyinsta.com', company:'PropertyInsta Realty', experience:'10+ years', specialization:['Sunteck','Dwarka Exp','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4745, lng:77.0015, neighborhood:{schools:'TBC', transit:'Dwarka Expressway', walkScore:52, crimeRate:'Low'}, floorPlan:null },
+  // 68 – Eldeco Fairway Residences
+  { id:9068, title:'Eldeco Fairway Residences – 3 BHK (New Launch)', location:'Sector 80, New Gurgaon', price:18500000, beds:3, baths:2, sqft:1650, type:'apartment', status:'sale', builder:'Eldeco', reraId:null, possessionStatus:'New Launch', possessionDate:'2029 (Est.)', floor:'To be announced', furnishing:'Semi-Furnished', emiEstimate:145225, bankOffers:true, images:['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&h=400&fit=crop'], amenities:['gym','parking','garden','security'], featured:false, hot:false, liked:false, views:650, description:'Eldeco Fairway Residences is an upcoming Sector 80, New Gurgaon launch. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent9', name:'Deepak Rao', avatar:'https://i.pravatar.cc/150?img=60', rating:4.6, sales:72, phone:'+91-9810555555', email:'deepak@propertyinsta.com', company:'PropertyInsta Realty', experience:'7+ years', specialization:['Eldeco','New Gurgaon','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4200, lng:77.0450, neighborhood:{schools:'TBC', transit:'New Gurgaon', walkScore:50, crimeRate:'Low'}, floorPlan:null },
+  // 69 – Shri Vardhman Victoria
+  { id:9069, title:'Shri Vardhman Victoria – 3 BHK (New Launch)', location:'Sector 90, New Gurgaon', price:15500000, beds:3, baths:2, sqft:1550, type:'apartment', status:'sale', builder:'Shri Vardhman', reraId:null, possessionStatus:'New Launch', possessionDate:'2029 (Est.)', floor:'To be announced', furnishing:'Unfurnished', emiEstimate:121675, bankOffers:true, images:['https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop'], amenities:['gym','parking','garden'], featured:false, hot:false, liked:false, views:520, description:'Shri Vardhman Victoria is an upcoming Sector 90, New Gurgaon launch. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent6', name:'Sandeep Wadhwa', avatar:'https://i.pravatar.cc/150?img=63', rating:4.6, sales:78, phone:'+91-9811111111', email:'sandeep@propertyinsta.com', company:'PropertyInsta Realty', experience:'9+ years', specialization:['Shri Vardhman','New Gurgaon','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4050, lng:77.0150, neighborhood:{schools:'TBC', transit:'New Gurgaon', walkScore:46, crimeRate:'Low'}, floorPlan:null },
+  // 70 – Conscient Parq
+  { id:9070, title:'Conscient Parq – 3 BHK (New Launch)', location:'Sector 80, New Gurgaon', price:22500000, beds:3, baths:3, sqft:1900, type:'apartment', status:'sale', builder:'Conscient', reraId:null, possessionStatus:'New Launch', possessionDate:'2030 (Est.)', floor:'To be announced', furnishing:'Semi-Furnished', emiEstimate:176625, bankOffers:true, images:['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security'], featured:false, hot:false, liked:false, views:780, description:'Conscient Parq is an upcoming Sector 80, New Gurgaon launch. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent10', name:'Kavita Lalwani', avatar:'https://i.pravatar.cc/150?img=49', rating:4.5, sales:42, phone:'+91-9811000000', email:'kavita@propertyinsta.com', company:'PropertyInsta Realty', experience:'5+ years', specialization:['Conscient','New Gurgaon','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4210, lng:77.0430, neighborhood:{schools:'TBC', transit:'New Gurgaon', walkScore:50, crimeRate:'Low'}, floorPlan:null },
+  // 71 – Aarize The Tessoro
+  { id:9071, title:'Aarize The Tessoro – 4 BHK (New Launch)', location:'Sector 94, New Gurgaon', price:36000000, beds:4, baths:4, sqft:2650, type:'apartment', status:'sale', builder:'AARIZE', reraId:null, possessionStatus:'New Launch', possessionDate:'2030 (Est.)', floor:'To be announced', furnishing:'Semi-Furnished', emiEstimate:282600, bankOffers:true, images:['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:false, hot:true, liked:false, views:960, description:'Aarize The Tessoro is an upcoming New Gurgaon launch. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent1', name:'Rajiv Malhotra', avatar:'https://i.pravatar.cc/150?img=68', rating:4.9, sales:172, phone:'+91-9810111111', email:'rajiv@propertyinsta.com', company:'PropertyInsta Realty', experience:'12+ years', specialization:['AARIZE','New Gurgaon','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4120, lng:77.0350, neighborhood:{schools:'TBC', transit:'New Gurgaon', walkScore:52, crimeRate:'Low'}, floorPlan:null },
+  // 72 – Monsoon Tulip
+  { id:9072, title:'Monsoon Tulip – 3 BHK (New Launch)', location:'Sector 79, New Gurgaon', price:16500000, beds:3, baths:2, sqft:1600, type:'apartment', status:'sale', builder:'Monsoon', reraId:null, possessionStatus:'New Launch', possessionDate:'2029 (Est.)', floor:'To be announced', furnishing:'Unfurnished', emiEstimate:129525, bankOffers:true, images:['https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop'], amenities:['gym','parking','garden'], featured:false, hot:false, liked:false, views:480, description:'Monsoon Tulip is an upcoming Sector 79, New Gurgaon launch. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent13', name:'Rekha Nair', avatar:'https://i.pravatar.cc/150?img=38', rating:4.5, sales:48, phone:'+91-9811555555', email:'rekha@propertyinsta.com', company:'PropertyInsta Realty', experience:'7+ years', specialization:['Monsoon','New Gurgaon','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4070, lng:77.0200, neighborhood:{schools:'TBC', transit:'New Gurgaon', walkScore:46, crimeRate:'Low'}, floorPlan:null },
+  // 73 – Galaxy Residences
+  { id:9073, title:'Galaxy Residences – 2 & 3 BHK (New Launch)', location:'Sector 92, New Gurgaon', price:14500000, beds:2, baths:2, sqft:1400, type:'apartment', status:'sale', builder:'Galaxy', reraId:null, possessionStatus:'New Launch', possessionDate:'2029 (Est.)', floor:'To be announced', furnishing:'Unfurnished', emiEstimate:113825, bankOffers:true, images:['https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&h=400&fit=crop','https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=400&fit=crop'], amenities:['gym','parking','garden'], featured:false, hot:false, liked:false, views:410, description:'Galaxy Residences is an upcoming Sector 92, New Gurgaon launch. Indicative listing — pricing, RERA registration, sizes and specifications are to be confirmed via official sources.', agent:{ id:'agent7', name:'Amit Choudhary', avatar:'https://i.pravatar.cc/150?img=12', rating:4.8, sales:96, phone:'+91-9810777777', email:'amit@propertyinsta.com', company:'PropertyInsta Realty', experience:'9+ years', specialization:['Galaxy','New Gurgaon','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4030, lng:77.0280, neighborhood:{schools:'TBC', transit:'New Gurgaon', walkScore:44, crimeRate:'Low'}, floorPlan:null },
+  // 74 – Emaar Serenity Hills (real project renders in /public/projects/emaar-serenity-hills)
+  { id:9074, title:'Emaar Serenity Hills – 3 & 4 BHK (New Launch)', location:'Sector 86, New Gurgaon', price:29800000, beds:3, baths:3, sqft:1700, type:'apartment', status:'sale', builder:'Emaar India', reraId:null, possessionStatus:'New Launch', possessionDate:'2029 (Est.)', floor:'To be announced', furnishing:'Unfurnished', emiEstimate:233930, bankOffers:true, images:['/projects/emaar-serenity-hills/towers-night.webp','/projects/emaar-serenity-hills/front-facade.webp','/projects/emaar-serenity-hills/central-park.webp','/projects/emaar-serenity-hills/infinity-pool.webp','/projects/emaar-serenity-hills/clubhouse.webp','/projects/emaar-serenity-hills/master-bedroom.webp','/projects/emaar-serenity-hills/floor-plan-3bhk.webp','/projects/emaar-serenity-hills/floor-plan-4bhk.webp','/projects/emaar-serenity-hills/master-plan.webp'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:true, hot:true, liked:false, views:520, description:'Emaar Serenity Hills brings Emaar\'s signature high-rise living to Sector 86, New Gurgaon, with 3 & 4 BHK luxury residences set in landscaped greens. 3 BHK: 1,700–2,200 sq.ft at ₹2.98–3.52 Cr onwards. 4 BHK: 2,700–2,800 sq.ft at ₹4.32–4.48 Cr onwards. The gated community features a grand clubhouse, central park with amphitheatre lawns, yoga and wellness zones, an infinity pool and jacaranda-lined walkways, backed by Emaar\'s Dubai-inspired design and build quality. RERA registration details to be confirmed via official sources.', agent:{ id:'agent5', name:'Vikram Gupta', avatar:'https://i.pravatar.cc/150?img=52', rating:4.7, sales:82, phone:'+91-9810333333', email:'vikram@propertyinsta.com', company:'PropertyInsta Realty', experience:'10+ years', specialization:['Emaar','New Gurgaon','New Launch'] }, postDate:'New launch', comments:0, shares:0, lat:28.4080, lng:76.9880, neighborhood:{schools:'TBC', transit:'NH-8 / IMT corridor', walkScore:42, crimeRate:'Low'}, floorPlan:'/projects/emaar-serenity-hills/floor-plan-3bhk.webp' },
+  // 75 – Central Park BelaPerla (real project renders in /public/projects/belaperla)
+  { id:9075, title:'Central Park BelaPerla – Super Luxe Studios & 1 Bed', location:'Central Park Resorts, Sector 48, Gurugram', price:49900000, beds:1, baths:1, sqft:1100, type:'apartment', status:'sale', builder:'Central Park', reraId:null, possessionStatus:'Under Construction', possessionDate:'Nearing Completion (2026)', floor:'Studio / 1 Bed', furnishing:'Fully Furnished', emiEstimate:346277, bankOffers:true, images:['/projects/belaperla/towers-hero.webp','/projects/belaperla/lobby-entrance.webp','/projects/belaperla/gazebo-garden.webp','/projects/belaperla/gym.webp','/projects/belaperla/balcony-lounge.webp','/projects/belaperla/terrace-golf-view.webp','/projects/belaperla/clubhouse-pool.webp','/projects/belaperla/resort-lobby.webp','/projects/belaperla/floor-plate-plan.webp','/projects/belaperla/studio-plan.webp','/projects/belaperla/location-map.png'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:true, hot:true, liked:false, views:640, description:'Central Park BelaPerla brings super-luxe fully-furnished studios and 1-bed residences to the acclaimed Central Park Resorts township in Sector 48, Gurugram. Nearing completion, with an assured rental income programme. Each residence features a private jacuzzi balcony, 1,800mm-wide wraparound balconies and floor-to-ceiling glazing overlooking the golf-green landscape. Residents enjoy the grand chandelier lobby, Club Bella clubhouse, resort-style pool, fully-equipped gym and landscaped gardens of one of Gurugram\'s most established luxury communities. Starting ₹4.99 Cr. RERA registration details to be confirmed via official sources.', agent:{ id:'agent5', name:'Vikram Gupta', avatar:'https://i.pravatar.cc/150?img=52', rating:4.7, sales:82, phone:'+91-9810333333', email:'vikram@propertyinsta.com', company:'PropertyInsta Realty', experience:'10+ years', specialization:['Central Park','Sector 48','Luxury Studios'] }, postDate:'Nearing completion', comments:0, shares:0, lat:28.4211, lng:77.0469, neighborhood:{schools:'DPS / Lancers', transit:'Sohna Road / Rapid Metro', walkScore:68, crimeRate:'Very Low'}, floorPlan:'/projects/belaperla/studio-plan.webp' },
+  // 77 – Signature Global Tonino Lamborghini Residences (SG SPR Estate, Sector 71) — real renders
+  { id:9077, title:'Tonino Lamborghini Residences (SG SPR Estate) – 3 & 4 BHK', location:'Sector 71, Southern Peripheral Road, Gurugram', price:69900000, beds:3, baths:3, sqft:2900, type:'apartment', status:'sale', builder:'Signature Global', reraId:'RC/REP/HARERA/GGM/1056/788/2026/28', possessionStatus:'New Launch', possessionDate:'2030 (Est.)', floor:'High-rise (up to G+41)', furnishing:'Semi-Furnished', emiEstimate:548715, bankOffers:true, images:['/projects/lamborghini-sg-spr/towers-dusk-hero.jpg','/projects/lamborghini-sg-spr/towers-night.jpg','/projects/lamborghini-sg-spr/lamborghini-facade.jpg','/projects/lamborghini-sg-spr/tennis-court.jpg','/projects/lamborghini-sg-spr/night-pool.jpg','/projects/lamborghini-sg-spr/grand-lobby.jpg','/projects/lamborghini-sg-spr/lobby-piano.jpg','/projects/lamborghini-sg-spr/therapy-room.jpg','/projects/lamborghini-sg-spr/beauty-salon.jpg','/projects/lamborghini-sg-spr/bull-lounge.jpg','/projects/lamborghini-sg-spr/residents-lounge.jpg','/projects/lamborghini-sg-spr/gym.jpg','/projects/lamborghini-sg-spr/lift-lobby.jpg','/projects/lamborghini-sg-spr/site-plan.png','/projects/lamborghini-sg-spr/floor-plan-3bhk.png','/projects/lamborghini-sg-spr/floor-plan-4bhk-type1.png','/projects/lamborghini-sg-spr/floor-plan-4bhk-type2.png','/projects/lamborghini-sg-spr/floor-plan-4bhk-utility.png'], amenities:['pool','gym','parking','garden','security','smartHome'], featured:true, hot:true, liked:false, views:1200, description:'India\'s first Tonino Lamborghini Residences — a Signature Global development at SG SPR Estate, Sector 71 on the Southern Peripheral Road. Three sculpted towers (Tower A cluster G+41 and Tower B-5 G+39) carry the Tonino Lamborghini design signature inside and out, from the copper honeycomb-screened arrival to Italian-designed residences. Configurations span 3 BHK, 4 BHK (Type 1 & Type 2) and 4 BHK with Utility, each with 1,800mm-wide wraparound balconies and a master suite of 3,660 x 5,185 mm. Members-only amenities include a Lamborghini-branded padel/tennis court, a dramatic night pool with a living green wall, a grand chandelier lobby with water feature, a wood-clad gym, a beauty salon, a spa & therapy room with a Tonino Lamborghini soaking tub, and bull-motif residents\' lounges. RERA: RC/REP/HARERA/GGM/1056/788/2026/28 (dated 08.04.2026). Indicative pricing — final costing to be confirmed via official sources.', agent:{ id:'agent4', name:'Pooja Yadav', avatar:'https://i.pravatar.cc/150?img=32', rating:4.5, sales:235, phone:'+91-9811444444', email:'pooja@propertyinsta.com', company:'PropertyInsta Realty', experience:'7+ years', specialization:['Signature Global','SPR','Ultra Luxury'] }, postDate:'New launch', comments:0, shares:0, lat:28.4270, lng:77.0680, neighborhood:{schools:'GD Goenka / Lancers', transit:'SPR / Golf Course Ext', walkScore:56, crimeRate:'Low'}, floorPlan:'/projects/lamborghini-sg-spr/floor-plan-3bhk.png' },
 ];
 
 // ==================== Builders Section (28 Major Gurgaon Builders) ====================
@@ -225,7 +262,7 @@ export const builders = [
   { id:'b1',  name:'DLF Limited',          slug:'dlf',          founded:1946, headquarters:'New Delhi',    totalProjects:50, rating:4.9, reviewCount:2850, description:'India\'s largest real estate developer with iconic projects on Golf Course Road, SPR, and New Gurgaon. Creator of DLF City and the ultra-luxury Camellias.',                            projectIds:[1,27,28,29,59],    logo:'DL' },
   { id:'b2',  name:'Godrej Properties',    slug:'godrej',       founded:1990, headquarters:'Mumbai',        totalProjects:35, rating:4.8, reviewCount:2100, description:'Known for sustainable design and trusted quality. Godrej brings eco-friendly luxury to Golf Course Extension and New Gurgaon.',                                        projectIds:[2,32],              logo:'GP' },
   { id:'b3',  name:'Smartworld Developers',slug:'smartworld',   founded:2015, headquarters:'Gurgaon',       totalProjects:8,  rating:4.7, reviewCount:680,  description:'Japanese-inspired luxury developer with focus on innovative design and smart home integration. The Edition series has redefined luxury living on Golf Course Extension.',       projectIds:[3],                logo:'SW' },
-  { id:'b4',  name:'Signature Global',     slug:'signature',    founded:2014, headquarters:'Gurgaon',       totalProjects:28, rating:4.5, reviewCount:3200, description:'Leading affordable-premium housing developer with multiple projects across Dwarka Expressway and SPR. Known for rapid delivery and government scheme expertise.',projectIds:[4,12,14],           logo:'SG' },
+  { id:'b4',  name:'Signature Global',     slug:'signature',    founded:2014, headquarters:'Gurgaon',       totalProjects:28, rating:4.5, reviewCount:3200, description:'Leading affordable-premium housing developer with multiple projects across Dwarka Expressway and SPR. Known for rapid delivery and government scheme expertise. Now home to India\'s first Tonino Lamborghini Residences on SPR.',projectIds:[4,12,14,9077],      logo:'SG' },
   { id:'b5',  name:'Emaar India',          slug:'emaar',        founded:2005, headquarters:'New Delhi',     totalProjects:18, rating:4.7, reviewCount:1450, description:'Dubai-inspired luxury living in Gurgaon. Emaar brings world-class design, quality, and the iconic Palm/Marbella brand to Gurgaon\'s premium corridors.',                   projectIds:[5,33,34],           logo:'EM' },
   { id:'b6',  name:'Puri Constructions',   slug:'puri',         founded:1980, headquarters:'New Delhi',     totalProjects:22, rating:4.6, reviewCount:980,  description:'Established developer known for timely delivery and quality. Puri Diplomatic Residences brings premium living to Dwarka Expressway.',                                       projectIds:[6],                logo:'PC' },
   { id:'b7',  name:'M3M India',            slug:'m3m',          founded:2008, headquarters:'Gurgaon',       totalProjects:32, rating:4.7, reviewCount:4200, description:'Gurgaon\'s most prolific luxury developer with iconic projects across Golf Course Ext, Dwarka Expressway, and New Gurgaon. Known for opulent design and aggressive pricing.',projectIds:[7,8,22,30,31,60],    logo:'M3' },
@@ -334,6 +371,9 @@ allProperties.forEach(p => { if (!agents[p.agent.id]) agents[p.agent.id] = p.age
 
 // Enrich allProperties with component-expected fields
 allProperties.forEach(p => {
+  // PropScore™ — computed from RAW fields (amenities array, neighborhood object)
+  // before they get reshaped below into display strings.
+  p.propScore = computePropScore(p);
   p.media = p.images;
   p.bedrooms = p.beds;
   p.bathrooms = p.baths;
@@ -387,10 +427,29 @@ allReels.forEach(r => {
   }
 });
 
-// Enrich blogPosts
+// Enrich blogPosts — each gets a unique, SEO-friendly body, slug, ISO date and
+// meta description (no duplicate content across articles).
+const blogSlugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 80);
 blogPosts.forEach(b => {
-  b.content = b.excerpt + '\n\nThe Gurgaon real estate market in 2026 is witnessing unprecedented activity with 60 active projects across all major corridors — Golf Course Road (₹12 Cr+ ultra-luxury), Golf Course Extension (₹4 Cr – ₹10 Cr luxury), SPR (₹3 Cr – ₹9 Cr premium-luxury), Dwarka Expressway (₹1.3 Cr – ₹8 Cr affordable to luxury), and New Gurgaon (₹95L – ₹7 Cr affordable to premium).\n\nKey highlights from our comprehensive analysis:\n• Golf Course Road remains India\'s most expensive residential corridor with DLF The Camellias (₹12 Cr), DLF The Grove (₹9.5 Cr), and Trump Towers (₹10 Cr)\n• SPR has emerged as the hottest new corridor with DLF Privana, Elan The Statement (₹9 Cr), Birla Estates, Tata Primanti (₹6.5 Cr), and Signature Global Titanium\n• Golf Course Extension hosts premium ready-to-move options: M3M Latitude (₹4.5 Cr), Ireo Skyon (₹4.2 Cr), Mahindra Luminare (₹6.8 Cr), and Adani Samsara\n• Dwarka Expressway continues growth with 20+ projects across all segments — Godrej Aristocrat (₹8.5 Cr luxury) to BPTP Park Life (₹1.3 Cr affordable)\n• New Gurgaon (Sectors 76-95) is the value corridor with M3M Antalya Hills (₹1.95 Cr), Sobha Aranya (₹7.1 Cr), Pyramid Urban Homes (₹95L), and DLF Skycourt (₹4.8 Cr)\n\nFor personalized property recommendations, connect with our expert agents at PropertyInsta who specialize in each micro-market.\n\nGurgaon continues to cement its position as the Millennium City with world-class infrastructure and premium residential options across all budget segments.';
-  b.authorAvatar = 'https://i.pravatar.cc/150?u=' + b.author.replace(/\s/g,'');
+  b.slug = blogSlugify(b.title);
+  b.metaDescription = b.excerpt.length > 158 ? b.excerpt.slice(0, 155).trim() + '…' : b.excerpt;
+  try { b.isoDate = new Date(b.date).toISOString(); } catch { b.isoDate = undefined; }
+
+  const topic = b.title.replace(/[:—-].*$/, '').trim();
+  const tagLine = (b.tags || []).slice(0, 4).join(', ');
+  const lead = b.tags?.[0] || 'this segment';
+
+  b.content = [
+    b.excerpt,
+    `In this ${b.readTime.replace(' read', '')} ${b.category.toLowerCase()} guide, the PropertyInsta research desk breaks down everything buyers, investors and NRIs need to know about ${topic} in Gurgaon’s 2026 market.`,
+    `Why it matters: ${b.category.toLowerCase()} like this directly shape pricing, possession timelines and resale value. We analyse location advantages, the developer’s track record, RERA status, available configurations, price per square foot and the long-term appreciation outlook.`,
+    `Key themes covered in this article: ${tagLine}. Each is examined with current ground data — launch pricing, inventory movement, infrastructure triggers (metro, expressway and SPR connectivity) and expected rental yields.`,
+    `Buyer checklist:\n• Compare per-sq.ft pricing across the corridor before committing.\n• Verify the RERA registration number and approved building plans.\n• Factor in possession timelines and construction-linked payment plans.\n• Review the developer’s past delivery record and any litigation history.\n• Model your home loan EMI and total cost of ownership, including stamp duty and registration.`,
+    `Looking ahead, ${lead} is expected to remain a focal point of Gurgaon’s growth story as the Millennium City keeps adding world-class infrastructure across Golf Course Road, SPR, Dwarka Expressway and New Gurgaon.`,
+    `Ready to explore matching projects? Browse RERA-verified listings on PropertyInsta, take an immersive 3D virtual tour, and connect with corridor specialists for a personalised, no-pressure shortlist.`,
+  ].join('\n\n');
+
+  b.authorAvatar = 'https://i.pravatar.cc/150?u=' + b.author.replace(/\s/g, '');
 });
 
 // Enrich propertyReviews with comment alias
@@ -411,6 +470,383 @@ Object.values(agents).forEach(a => {
   if (!a.experience) a.experience = (a.sales || 30) + '+ sales';
   if (!a.specialization) a.specialization = ['Gurgaon', 'Residential', 'Luxury'];
 });
+
+// ==================== Podcasts ====================
+export const podcasts = [
+  {
+    id: 'pod-1',
+    title: 'Golf Course Extension: India\'s Most Expensive Corridor',
+    description: 'Exploring why Golf Course Road in Gurgaon has become the most coveted address in India. We interview a luxury developer and analyze what makes properties here worth ₹20+ Cr per unit.',
+    guest: 'Vikram Sharma, CEO - Luxury Developers Association',
+    guestRole: 'Real Estate Developer',
+    guestAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    videoUrl: 'https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4',
+    poster: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=450&fit=crop',
+    duration: '45:32',
+    date: 'Jun 22, 2026',
+    isoDate: '2026-06-22',
+    listens: 8300,
+    category: 'market-analysis',
+    featured: true,
+    transcript: 'In this episode, we explore the premium real estate landscape of Golf Course Extension. Golf Course Road has consistently remained the most expensive residential corridor in India. We discuss the architectural significance, location advantages, connectivity, and what drives pricing for ultra-luxury properties in this area.',
+    tags: ['Golf Course', 'Luxury', 'Gurgaon', 'Market Analysis'],
+  },
+  {
+    id: 'pod-2',
+    title: 'First-Time Buyer\'s Guide: New Gurgaon vs. Old Gurgaon',
+    description: 'Breaking down the differences between established Old Gurgaon and emerging New Gurgaon. Which corridor should first-time buyers invest in? EMI planning, location, and long-term appreciation.',
+    guest: 'Priya Desai, Financial Advisor',
+    guestRole: 'Investment Strategist',
+    guestAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    videoUrl: 'https://videos.pexels.com/video-files/2911996/2911996-hd_1920_1080_30fps.mp4',
+    poster: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=450&fit=crop',
+    duration: '38:15',
+    date: 'Jun 19, 2026',
+    isoDate: '2026-06-19',
+    listens: 12400,
+    category: 'buyer-guide',
+    featured: true,
+    transcript: 'For first-time homebuyers in Gurgaon, choosing between Old Gurgaon and New Gurgaon is a critical decision. We discuss property appreciation rates, EMI calculations, location proximity to workplaces, and long-term wealth creation potential.',
+    tags: ['First-Time Buyer', 'Investment', 'EMI', 'New Gurgaon'],
+  },
+  {
+    id: 'pod-3',
+    title: 'Dwarka Expressway: The Next Real Estate Boom?',
+    description: 'Analyzing the real estate potential of Dwarka Expressway. New launches, connectivity improvements, and why investors are betting on this corridor. Expert insights from builders and investors.',
+    guest: 'Rohit Kapoor, Real Estate Investor',
+    guestRole: 'Property Investor',
+    guestAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+    videoUrl: 'https://videos.pexels.com/video-files/7710243/7710243-hd_1920_1080_30fps.mp4',
+    poster: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=450&fit=crop',
+    duration: '42:08',
+    date: 'Jun 16, 2026',
+    isoDate: '2026-06-16',
+    listens: 9700,
+    category: 'market-analysis',
+    featured: false,
+    transcript: 'The Dwarka Expressway is reshaping Gurgaon\'s real estate landscape. We discuss new project launches, infrastructure development, and what makes this corridor attractive for both end-users and investors seeking appreciation.',
+    tags: ['Dwarka Expressway', 'New Projects', 'Infrastructure'],
+  },
+  {
+    id: 'pod-4',
+    title: 'Mortgage Myths Busted: EMI Planning & Home Loans',
+    description: 'Clearing up common misconceptions about home loans, EMI calculations, and mortgage strategies. What should your loan-to-value ratio be? How to negotiate rates with banks?',
+    guest: 'Anita Singh, Mortgage Expert',
+    guestRole: 'Home Loan Specialist',
+    guestAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+    videoUrl: 'https://videos.pexels.com/video-files/7578552/7578552-hd_1920_1080_30fps.mp4',
+    poster: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=450&fit=crop',
+    duration: '33:42',
+    date: 'Jun 13, 2026',
+    isoDate: '2026-06-13',
+    listens: 7200,
+    category: 'finance',
+    featured: false,
+    transcript: 'Home loans are complex, but understanding EMI, interest rates, and loan tenure can save you lakhs. We bust myths about down payments, balance transfer, and how to maximize your home loan benefits.',
+    tags: ['Mortgage', 'EMI', 'Home Loan', 'Finance'],
+  },
+  {
+    id: 'pod-5',
+    title: '3D Virtual Tours: The Future of Property Viewing',
+    description: 'How technology is transforming real estate. We discuss 3D tours, AI-powered property recommendations, and what the future of property discovery looks like in India.',
+    guest: 'Arjun Mehta, PropTech Founder',
+    guestRole: 'Technology Entrepreneur',
+    guestAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+    videoUrl: 'https://videos.pexels.com/video-files/3773486/3773486-hd_1920_1080_30fps.mp4',
+    poster: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=800&h=450&fit=crop',
+    duration: '39:55',
+    date: 'Jun 10, 2026',
+    isoDate: '2026-06-10',
+    listens: 6800,
+    category: 'technology',
+    featured: false,
+    transcript: 'Virtual property tours are revolutionizing how buyers discover homes. We explore 3D technology, AI recommendations, voice-guided tours, and what\'s next in property visualization.',
+    tags: ['Technology', 'Virtual Tours', '3D', 'PropTech'],
+  },
+  {
+    id: 'pod-6',
+    title: 'RERA Compliance: Protecting Your Real Estate Investment',
+    description: 'Understanding RERA regulations and how they protect homebuyers. What to check before buying? Red flags to avoid? Expert legal advice for property purchases.',
+    guest: 'Sanjay Verma, Real Estate Lawyer',
+    guestRole: 'Legal Expert',
+    guestAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
+    videoUrl: 'https://videos.pexels.com/video-files/5439915/5439915-hd_1920_1080_25fps.mp4',
+    poster: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=450&fit=crop',
+    duration: '36:20',
+    date: 'Jun 7, 2026',
+    isoDate: '2026-06-07',
+    listens: 5400,
+    category: 'legal',
+    featured: false,
+    transcript: 'RERA has brought transparency to real estate. Learn what RERA registration means, how to verify project credentials, and what protections are available to homebuyers under the law.',
+    tags: ['RERA', 'Legal', 'Buyer Protection', 'Compliance'],
+  },
+];
+
+// ==================== Product Videos ====================
+export const productVideos = [
+  {
+    id: 'vid-1',
+    title: '🏢 DLF The Camellias – Ultra Luxury 4K Tour',
+    description: 'Walk through India\'s most expensive residential complex with 360° views, amenities showcase, and interior finishes.',
+    videoUrl: 'https://videos.pexels.com/video-files/3209828/3209828-hd_1920_1080_25fps.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=450&fit=crop',
+    duration: '4:32',
+    views: 24500,
+    category: 'luxury-tour',
+    featured: true,
+    date: 'Jun 20, 2026',
+  },
+  {
+    id: 'vid-2',
+    title: '🌳 Sobha Aranya – Nature-Inspired Living',
+    description: 'Tour the eco-friendly, nature-centric residential community with landscaped gardens, walking trails, and luxury amenities.',
+    videoUrl: 'https://videos.pexels.com/video-files/2911996/2911996-hd_1920_1080_30fps.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=450&fit=crop',
+    duration: '3:45',
+    views: 18200,
+    category: 'lifestyle',
+    featured: true,
+    date: 'Jun 18, 2026',
+  },
+  {
+    id: 'vid-3',
+    title: '🎨 Smart World The Edition – Japanese Design',
+    description: 'Explore the Japanese-inspired minimalist architecture, serene interiors, and unique design elements of The Edition.',
+    videoUrl: 'https://videos.pexels.com/video-files/7710243/7710243-hd_1920_1080_30fps.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800&h=450&fit=crop',
+    duration: '5:18',
+    views: 14700,
+    category: 'design',
+    featured: false,
+    date: 'Jun 15, 2026',
+  },
+  {
+    id: 'vid-4',
+    title: '🏙️ Emaar Urban Ascent – Dubai-Style Living',
+    description: 'Experience the premium lifestyle of Emaar Urban Ascent on Dwarka Expressway with world-class amenities and contemporary design.',
+    videoUrl: 'https://videos.pexels.com/video-files/4248199/4248199-hd_1920_1080_25fps.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=450&fit=crop',
+    duration: '3:52',
+    views: 12600,
+    category: 'premium',
+    featured: true,
+    date: 'Jun 12, 2026',
+  },
+  {
+    id: 'vid-5',
+    title: '💎 Central Park Delphine – Resort Living',
+    description: 'Discover resort-style luxury with infinity pools, private courtyards, and 5-star amenities in Central Park Delphine.',
+    videoUrl: 'https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=450&fit=crop',
+    duration: '4:10',
+    views: 16800,
+    category: 'luxury-tour',
+    featured: true,
+    date: 'Jun 10, 2026',
+  },
+  {
+    id: 'vid-6',
+    title: '🎯 PropertyInsta 3D Property Showcase',
+    description: 'Experience the future of real estate with our 3D architectural visualization tool. Rotate, explore, and get AI-powered insights.',
+    videoUrl: 'https://videos.pexels.com/video-files/3127273/3127273-hd_1920_1080_30fps.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=800&h=450&fit=crop',
+    duration: '2:28',
+    views: 8900,
+    category: 'platform',
+    featured: false,
+    date: 'Jun 8, 2026',
+  },
+  {
+    id: 'vid-7',
+    title: '🌃 Godrej Aristocrat – Premium Golf Course Living',
+    description: 'Tour one of Golf Course Extension\'s most coveted addresses with premium finishes and exclusive amenities.',
+    videoUrl: 'https://videos.pexels.com/video-files/1788310/1788310-hd_1920_1080_24fps.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=450&fit=crop',
+    duration: '3:34',
+    views: 11400,
+    category: 'luxury-tour',
+    featured: false,
+    date: 'Jun 5, 2026',
+  },
+  {
+    id: 'vid-8',
+    title: '🎬 PropertyInsta Guided Property Tours',
+    description: 'Meet Aarav, your AI guide. Watch him narrate immersive property tours with automated scene transitions and voice narration.',
+    videoUrl: 'https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4',
+    thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=450&fit=crop',
+    duration: '3:15',
+    views: 7600,
+    category: 'platform',
+    featured: false,
+    date: 'Jun 1, 2026',
+  },
+];
+
+// ==================== Build With Us — Materials & Hardware ====================
+const _bwuImg = (id) => `https://images.unsplash.com/photo-${id}?w=600&h=400&fit=crop`;
+export const buildMaterials = [
+  { id: 1, name: 'UltraTech Cement OPC 53 Grade', category: 'Cement', brand: 'UltraTech', supplier: 'BuildMart Gurgaon', unit: '50kg bag', price: 410, stock: 'In Stock', types: ['Residential', 'Commercial', 'Industrial'], image: _bwuImg('1575493438282-4e0fb32d1bdd'), description: 'High-strength OPC for RCC & structural work.' },
+  { id: 2, name: 'TATA Tiscon 550SD TMT Bars (12mm)', category: 'Steel & TMT', brand: 'TATA Steel', supplier: 'Steel Hub Sohna Rd', unit: 'per ton', price: 62500, stock: 'In Stock', types: ['Residential', 'Commercial', 'Industrial'], image: _bwuImg('1582540730843-f4418d96ccbe'), description: 'Earthquake-resistant Fe-550 TMT rebars.' },
+  { id: 3, name: 'AAC Lightweight Blocks (600x200x100)', category: 'Bricks & Blocks', brand: 'Magicrete', supplier: 'New Gurgaon Depot', unit: 'per block', price: 48, stock: 'In Stock', types: ['Residential', 'Commercial', 'Renovation'], image: _bwuImg('1531685250784-7569952593d2'), description: 'Autoclaved aerated concrete — light & insulating.' },
+  { id: 4, name: 'Kajaria Vitrified Floor Tiles (600x600)', category: 'Tiles & Flooring', brand: 'Kajaria', supplier: 'Tile Studio DLF', unit: 'per box (4)', price: 1180, stock: 'Low Stock', types: ['Residential', 'Commercial', 'Renovation'], image: _bwuImg('1678742755904-6c3fc8ba6602'), description: 'Double-charge vitrified tiles, matt finish.' },
+  { id: 5, name: 'Asian Paints Royale Luxury Emulsion', category: 'Paints', brand: 'Asian Paints', supplier: 'ColorWorld SPR', unit: '20L bucket', price: 7600, stock: 'In Stock', types: ['Residential', 'Renovation', 'Interiors'], image: _bwuImg('1623944361530-8a6cd3eb0de8'), description: 'Premium washable interior emulsion.' },
+  { id: 6, name: 'Astral CPVC Pipes & Fittings Set', category: 'Plumbing', brand: 'Astral', supplier: 'AquaFit Traders', unit: 'set', price: 3400, stock: 'In Stock', types: ['Residential', 'Commercial', 'Renovation'], image: _bwuImg('1646009445351-b8192e095f3a'), description: 'Lead-free hot & cold water CPVC system.' },
+  { id: 7, name: 'Havells Modular Switches & MCB Kit', category: 'Electrical', brand: 'Havells', supplier: 'Voltline Gurgaon', unit: 'kit', price: 5200, stock: 'In Stock', types: ['Residential', 'Commercial', 'Renovation'], image: _bwuImg('1781243680870-6d33bf6874c1'), description: 'Complete switchgear + modular plates.' },
+  { id: 8, name: 'Hindware Wall-Hung WC + Cistern', category: 'Sanitaryware', brand: 'Hindware', supplier: 'Bath Gallery', unit: 'piece', price: 9800, stock: 'Out of Stock', types: ['Residential', 'Renovation', 'Interiors'], image: _bwuImg('1587527901949-ab0341697c1e'), description: 'Rimless wall-hung toilet with soft-close.' },
+  { id: 9, name: 'Fevicol Marine Plywood (19mm BWP)', category: 'Wood & Ply', brand: 'Century', supplier: 'Timber Mart', unit: 'per sheet', price: 4200, stock: 'In Stock', types: ['Residential', 'Renovation', 'Interiors'], image: _bwuImg('1611072337226-1140ab367200'), description: 'Boiling-water-proof plywood for kitchens & wardrobes.' },
+  { id: 10, name: 'Saint-Gobain Toughened Glass (12mm)', category: 'Glass & Aluminium', brand: 'Saint-Gobain', supplier: 'GlassLine NCR', unit: 'per sq.ft', price: 320, stock: 'In Stock', types: ['Residential', 'Commercial', 'Interiors'], image: _bwuImg('1523477593243-78bbf626fd3b'), description: 'Tempered safety glass for façades & railings.' },
+  { id: 11, name: 'Godrej Door Hardware & Locks Set', category: 'Hardware & Fittings', brand: 'Godrej', supplier: 'FitWell Hardware', unit: 'set', price: 2850, stock: 'In Stock', types: ['Residential', 'Commercial', 'Renovation', 'Interiors'], image: _bwuImg('1583691028182-e8f01e74bfa2'), description: 'Mortise locks, handles & hinges (SS304).' },
+  { id: 12, name: 'Red Clay Bricks (Class-A)', category: 'Bricks & Blocks', brand: 'Local Kiln', supplier: 'New Gurgaon Depot', unit: 'per 1000', price: 8500, stock: 'In Stock', types: ['Residential', 'Commercial', 'Industrial'], image: _bwuImg('1605296862588-2858174c3e6e'), description: 'Kiln-fired first-class bricks for masonry.' },
+  // ── Commercial / Industrial grade ──
+  { id: 13, name: 'Fire-Rated Steel Door (90-min)', category: 'Hardware & Fittings', brand: 'Shakti Hormann', supplier: 'SafeBuild Systems', unit: 'piece', price: 28500, stock: 'In Stock', types: ['Commercial', 'Industrial'], image: _bwuImg('1583691028182-e8f01e74bfa2'), description: 'BS-476 certified fire door for offices & warehouses.' },
+  { id: 14, name: 'Heavy-Duty Industrial Vitrified Tiles', category: 'Tiles & Flooring', brand: 'Simpolo', supplier: 'Tile Studio DLF', unit: 'per box (4)', price: 1650, stock: 'In Stock', types: ['Commercial', 'Industrial'], image: _bwuImg('1678742755904-6c3fc8ba6602'), description: 'High-abrasion full-body tiles for high-footfall floors.' },
+  { id: 15, name: 'Epoxy Industrial Floor Coating', category: 'Paints', brand: 'Sika', supplier: 'IndCoat Solutions', unit: '20kg pack', price: 9400, stock: 'In Stock', types: ['Industrial', 'Commercial'], image: _bwuImg('1623944361530-8a6cd3eb0de8'), description: 'Seamless, chemical-resistant epoxy for factory floors.' },
+  { id: 16, name: 'Structural ISMB Steel Beams', category: 'Steel & TMT', brand: 'SAIL', supplier: 'Steel Hub Sohna Rd', unit: 'per ton', price: 71000, stock: 'In Stock', types: ['Industrial', 'Commercial'], image: _bwuImg('1582540730843-f4418d96ccbe'), description: 'Hot-rolled I-beams for PEB & structural frames.' },
+  // ── Interior / Premium grade ──
+  { id: 17, name: 'Italian Marble Slabs (Statuario)', category: 'Tiles & Flooring', brand: 'Imported', supplier: 'Stone Gallery', unit: 'per sq.ft', price: 850, stock: 'Low Stock', types: ['Interiors', 'Residential'], image: _bwuImg('1678742755904-6c3fc8ba6602'), description: 'Luxury white Italian marble for living & lobbies.' },
+  { id: 18, name: 'Greenlam Designer Laminates (Hi-Gloss)', category: 'Wood & Ply', brand: 'Greenlam', supplier: 'Timber Mart', unit: 'per sheet', price: 2100, stock: 'In Stock', types: ['Interiors', 'Residential'], image: _bwuImg('1611072337226-1140ab367200'), description: 'Designer laminates for wardrobes & modular kitchens.' },
+];
+
+// ==================== Build With Us — Contractors & Services ====================
+export const buildServices = [
+  { id: 1, name: 'Rajesh Kumar Constructions', profession: 'Civil Contractor', specialization: 'RCC, structural & turnkey residential builds', experience: '18 yrs', rating: 4.9, projects: 240, location: 'Sector 65, Gurgaon', avatar: 'https://i.pravatar.cc/150?img=12', price: '₹1,650', priceUnit: 'per sq.ft', verified: true, tags: ['RCC', 'Turnkey', 'Residential'] },
+  { id: 2, name: 'Ar. Sneha Malhotra', profession: 'Architect', specialization: 'Modern & sustainable residential / commercial design', experience: '12 yrs', rating: 4.8, projects: 95, location: 'DLF Phase 5', avatar: 'https://i.pravatar.cc/150?img=47', price: '₹120', priceUnit: 'per sq.ft', verified: true, tags: ['Modern', 'Sustainable', '3D Design'] },
+  { id: 3, name: 'Priya Interiors Studio', profession: 'Interior Designer', specialization: 'Luxury homes, modular kitchens & wardrobes', experience: '10 yrs', rating: 4.9, projects: 130, location: 'Golf Course Road', avatar: 'https://i.pravatar.cc/150?img=45', price: '₹1,500', priceUnit: 'per sq.ft', verified: true, tags: ['Modular Kitchen', 'Wardrobes', 'Luxury'] },
+  { id: 4, name: 'Eng. Vikram Singh', profession: 'Structural Engineer', specialization: 'High-rise RCC, steel & PEB structural design', experience: '15 yrs', rating: 4.7, projects: 60, location: 'Sector 49, SPR', avatar: 'https://i.pravatar.cc/150?img=52', price: '₹15', priceUnit: 'per sq.ft', verified: true, tags: ['RCC', 'Steel', 'PEB'] },
+  { id: 5, name: 'PowerFlow MEP Consultants', profession: 'MEP Consultant', specialization: 'Electrical, plumbing & HVAC design + execution', experience: '14 yrs', rating: 4.6, projects: 80, location: 'Udyog Vihar', avatar: 'https://i.pravatar.cc/150?img=33', price: '₹40', priceUnit: 'per sq.ft', verified: true, tags: ['HVAC', 'Electrical', 'Plumbing'] },
+  { id: 6, name: 'GreenScape Landscape Studio', profession: 'Landscape Designer', specialization: 'Gardens, terraces & vertical greens', experience: '9 yrs', rating: 4.8, projects: 70, location: 'New Gurgaon', avatar: 'https://i.pravatar.cc/150?img=23', price: '₹250', priceUnit: 'per sq.ft', verified: true, tags: ['Terrace Garden', 'Vertical Green', 'Irrigation'] },
+  { id: 7, name: 'Acharya R. Sharma', profession: 'Vastu Consultant', specialization: 'Residential & commercial Vastu analysis', experience: '20 yrs', rating: 4.9, projects: 500, location: 'Gurgaon', avatar: 'https://i.pravatar.cc/150?img=68', price: '₹11,000', priceUnit: 'per consult', verified: true, tags: ['Vastu', 'Residential', 'Commercial'] },
+  { id: 8, name: 'BuildRight Turnkey', profession: 'Turnkey Builder', specialization: 'End-to-end construction, design to handover', experience: '16 yrs', rating: 4.8, projects: 110, location: 'Sohna Road', avatar: 'https://i.pravatar.cc/150?img=60', price: '₹1,850', priceUnit: 'per sq.ft', verified: true, tags: ['Turnkey', 'Residential', 'Commercial'] },
+  { id: 9, name: 'Ar. Karan Mehta', profession: 'Architect', specialization: 'Contemporary villas & interior architecture', experience: '8 yrs', rating: 4.7, projects: 55, location: 'Sector 71, SPR', avatar: 'https://i.pravatar.cc/150?img=55', price: '₹100', priceUnit: 'per sq.ft', verified: false, tags: ['Contemporary', 'Villas', 'Interiors'] },
+  { id: 10, name: 'FixIt Renovations', profession: 'Renovation Contractor', specialization: 'Home renovation, waterproofing & painting', experience: '11 yrs', rating: 4.6, projects: 320, location: 'Gurgaon', avatar: 'https://i.pravatar.cc/150?img=14', price: '₹800', priceUnit: 'per sq.ft', verified: true, tags: ['Renovation', 'Waterproofing', 'Painting'] },
+];
+
+// ==================== Build With Us — Interior & Exterior Design ====================
+// Curated design looks (images visually verified). scope = Interior | Exterior.
+export const buildDesigns = [
+  // ── Interiors ──
+  { id: 1, title: 'Modern Living Room', scope: 'Interior', zone: 'Living Room', style: 'Modern', designer: 'Priya Interiors Studio', rating: 4.9, priceFrom: 85000, priceUnit: 'per room', timeline: '3–4 weeks', image: _bwuImg('1586023492125-27b2c045efd7'), description: 'Warm minimalist living room with statement accent chair, gallery art & layered lighting.', tags: ['Modern', 'Minimal', 'Accent Decor'] },
+  { id: 2, title: 'Open-Plan Living & Dining', scope: 'Interior', zone: 'Living Room', style: 'Contemporary', designer: 'Ar. Karan Mehta', rating: 4.7, priceFrom: 120000, priceUnit: 'per room', timeline: '4–5 weeks', image: _bwuImg('1522708323590-d24dbb6b0267'), description: 'Space-smart open layout merging kitchen, dining & lounge for compact homes.', tags: ['Contemporary', 'Open-Plan', 'Space-Saving'] },
+  { id: 3, title: 'Luxury Master Bedroom', scope: 'Interior', zone: 'Bedroom', style: 'Luxury', designer: 'Priya Interiors Studio', rating: 4.9, priceFrom: 110000, priceUnit: 'per room', timeline: '4–5 weeks', image: _bwuImg('1616594039964-ae9021a400a0'), description: 'Dark statement wall, upholstered bed, designer chandelier & city-view drapery.', tags: ['Luxury', 'Statement Wall', 'Cozy'] },
+  { id: 4, title: 'Coastal Living Room', scope: 'Interior', zone: 'Living Room', style: 'Coastal', designer: 'Ar. Sneha Malhotra', rating: 4.8, priceFrom: 95000, priceUnit: 'per room', timeline: '3–4 weeks', image: _bwuImg('1505691938895-1758d7feb511'), description: 'Bright, breezy living room with blue accents, natural light & relaxed textures.', tags: ['Coastal', 'Bright', 'Relaxed'] },
+  { id: 5, title: 'Minimal Modular Kitchen', scope: 'Interior', zone: 'Kitchen', style: 'Minimalist', designer: 'Priya Interiors Studio', rating: 4.9, priceFrom: 180000, priceUnit: 'per kitchen', timeline: '5–6 weeks', image: _bwuImg('1556911220-bff31c812dba'), description: 'Handle-less white modular kitchen with marble counters & built-in appliances.', tags: ['Modular', 'Marble', 'Handle-less'] },
+  { id: 6, title: 'Classic Island Kitchen', scope: 'Interior', zone: 'Kitchen', style: 'Classic', designer: 'Priya Interiors Studio', rating: 4.8, priceFrom: 165000, priceUnit: 'per kitchen', timeline: '5–6 weeks', image: _bwuImg('1556912172-45b7abe8b7e1'), description: 'Shaker cabinetry, wood-clad island, hex backsplash & breakfast seating.', tags: ['Modular', 'Island', 'Hex Tile'] },
+  { id: 7, title: 'Spa Bathroom', scope: 'Interior', zone: 'Bathroom', style: 'Spa', designer: 'Ar. Karan Mehta', rating: 4.7, priceFrom: 95000, priceUnit: 'per bath', timeline: '3–4 weeks', image: _bwuImg('1620626011761-996317b8d101'), description: 'Freestanding soaking tub, vessel basin & calm neutral palette with greenery.', tags: ['Spa', 'Freestanding Tub', 'Premium'] },
+  { id: 8, title: 'Modern Bathroom', scope: 'Interior', zone: 'Bathroom', style: 'Modern', designer: 'Priya Interiors Studio', rating: 4.8, priceFrom: 80000, priceUnit: 'per bath', timeline: '3–4 weeks', image: _bwuImg('1584622650111-993a426fbf0a'), description: 'Walk-in glass shower, double vanity & warm wood-tone flooring.', tags: ['Modern', 'Walk-in Shower', 'Vanity'] },
+  // ── Exteriors ──
+  { id: 9, title: 'Modern House Facade', scope: 'Exterior', zone: 'Facade', style: 'Modern', designer: 'Ar. Sneha Malhotra', rating: 4.8, priceFrom: 150, priceUnit: 'per sq.ft', timeline: '6–8 weeks', image: _bwuImg('1600585154340-be6161a56a0c'), description: 'Contemporary elevation in timber cladding, full-height glazing & dusk lighting.', tags: ['Facade', 'Glass', 'Wood Cladding'] },
+  { id: 10, title: 'Pool & Landscape', scope: 'Exterior', zone: 'Landscape', style: 'Contemporary', designer: 'GreenScape Landscape Studio', rating: 4.8, priceFrom: 320, priceUnit: 'per sq.ft', timeline: '6–8 weeks', image: _bwuImg('1564013799919-ab600027ffc6'), description: 'Resort-style backyard with pool deck, tropical planting & outdoor lounge.', tags: ['Pool', 'Garden', 'Outdoor'] },
+  { id: 11, title: 'Mediterranean Courtyard', scope: 'Exterior', zone: 'Landscape', style: 'Mediterranean', designer: 'GreenScape Landscape Studio', rating: 4.8, priceFrom: 280, priceUnit: 'per sq.ft', timeline: '7–9 weeks', image: _bwuImg('1416331108676-a22ccb276e35'), description: 'Arched villa courtyard with circular pool, terracotta accents & ambient lighting.', tags: ['Courtyard', 'Pool', 'Arches'] },
+];
+
+// ==================== Build With Us — Hire a Designer ====================
+// Designer directory. scope = which spaces they design; portfolio reuses verified images.
+export const buildDesigners = [
+  { id: 1, name: 'Priya Interiors Studio', role: 'Interior Designer', scope: ['Interior'], styles: ['Modern', 'Luxury', 'Minimalist'], experience: '10 yrs', rating: 4.9, projects: 130, location: 'Golf Course Road, Gurgaon', avatar: 'https://i.pravatar.cc/150?img=45', price: '₹1,500', priceUnit: 'per sq.ft', verified: true, bio: 'Luxury homes, modular kitchens & bespoke wardrobes with a warm minimalist signature.', portfolio: [_bwuImg('1586023492125-27b2c045efd7'), _bwuImg('1616594039964-ae9021a400a0'), _bwuImg('1556911220-bff31c812dba')] },
+  { id: 2, name: 'Ar. Sneha Malhotra', role: 'Architect', scope: ['Interior', 'Exterior'], styles: ['Modern', 'Sustainable', 'Coastal'], experience: '12 yrs', rating: 4.8, projects: 95, location: 'DLF Phase 5, Gurgaon', avatar: 'https://i.pravatar.cc/150?img=47', price: '₹120', priceUnit: 'per sq.ft', verified: true, bio: 'Modern, sustainable residential & commercial design — from facade to interiors.', portfolio: [_bwuImg('1600585154340-be6161a56a0c'), _bwuImg('1505691938895-1758d7feb511')] },
+  { id: 3, name: 'GreenScape Landscape Studio', role: 'Landscape Designer', scope: ['Exterior'], styles: ['Contemporary', 'Mediterranean', 'Tropical'], experience: '9 yrs', rating: 4.8, projects: 70, location: 'New Gurgaon', avatar: 'https://i.pravatar.cc/150?img=23', price: '₹250', priceUnit: 'per sq.ft', verified: true, bio: 'Pool decks, courtyards, terrace gardens & vertical greens for resort-style outdoors.', portfolio: [_bwuImg('1564013799919-ab600027ffc6'), _bwuImg('1416331108676-a22ccb276e35')] },
+  { id: 4, name: 'Studio Terra Interiors', role: 'Interior Designer', scope: ['Interior'], styles: ['Classic', 'Modern', 'Spa'], experience: '11 yrs', rating: 4.8, projects: 88, location: 'Sohna Road, Gurgaon', avatar: 'https://i.pravatar.cc/150?img=32', price: '₹1,300', priceUnit: 'per sq.ft', verified: true, bio: 'Classic island kitchens, spa bathrooms & timeless living spaces with rich materials.', portfolio: [_bwuImg('1556912172-45b7abe8b7e1'), _bwuImg('1620626011761-996317b8d101'), _bwuImg('1584622650111-993a426fbf0a')] },
+  { id: 5, name: 'Ar. Karan Mehta', role: 'Architect', scope: ['Interior', 'Exterior'], styles: ['Contemporary', 'Compact', 'Villas'], experience: '8 yrs', rating: 4.7, projects: 55, location: 'Sector 71, SPR', avatar: 'https://i.pravatar.cc/150?img=55', price: '₹100', priceUnit: 'per sq.ft', verified: false, bio: 'Contemporary villas & space-smart interior architecture for compact urban homes.', portfolio: [_bwuImg('1522708323590-d24dbb6b0267'), _bwuImg('1586023492125-27b2c045efd7')] },
+  { id: 6, name: 'Elevation Architects', role: 'Facade Architect', scope: ['Exterior', 'Interior'], styles: ['Modern', 'Industrial', 'Glass'], experience: '14 yrs', rating: 4.7, projects: 64, location: 'Sector 49, Gurgaon', avatar: 'https://i.pravatar.cc/150?img=60', price: '₹140', priceUnit: 'per sq.ft', verified: true, bio: 'Striking elevations in glass, stone & timber cladding — kerb appeal that lasts.', portfolio: [_bwuImg('1600585154340-be6161a56a0c'), _bwuImg('1522708323590-d24dbb6b0267')] },
+];
+
+// ==================== Locality Insights ====================
+// Neighbourhood guides for Gurgaon micro-markets. `match` keywords link a
+// locality to live listings (matched against property.location). avgPrice = ₹/sq.ft.
+const _locImg = (id) => `https://images.unsplash.com/photo-${id}?w=800&h=500&fit=crop`;
+export const localities = [
+  {
+    id: 'golf-course-road', name: 'Golf Course Road', city: 'Gurgaon',
+    tagline: 'Gurgaon’s ultra-luxury spine — Rapid Metro, marquee towers & premium retail.',
+    image: _locImg('1600596542815-ffad4c1539a9'), avgPrice: 22000, priceTrend: 9.2, rentalYield: 3.0, livability: 9.0,
+    priceHistory: [{ year: '2022', price: 17500 }, { year: '2023', price: 19000 }, { year: '2024', price: 20600 }, { year: '2025', price: 22000 }],
+    scores: { Connectivity: 9, Safety: 9, Greenery: 7, Amenities: 10, Schools: 9 },
+    connectivity: { metro: 'Rapid Metro (on-corridor)', highway: 'NH-48 / Golf Course Rd', airport: '30 min to IGI' },
+    schools: ['DPS International', 'Shri Ram School', 'Lancers International'],
+    hospitals: ['Max Hospital', 'Paras Hospital', 'Columbia Asia'],
+    malls: ['DLF Galleria', 'Good Earth City Centre', 'South Point Mall'],
+    highlights: ['Best metro connectivity in Gurgaon', 'Highest rental demand from expats & CXOs', 'Walk-to-work for Cyber City'],
+    watchouts: ['Premium pricing — limited value buys', 'Peak-hour congestion'],
+    match: ['Golf Course Road'],
+  },
+  {
+    id: 'spr', name: 'Golf Course Ext. Rd (SPR)', city: 'Gurgaon',
+    tagline: 'The fastest-appreciating corridor — new launches, SPR & wide arterial roads.',
+    image: _locImg('1600585154340-be6161a56a0c'), avgPrice: 15500, priceTrend: 12.5, rentalYield: 3.4, livability: 8.4,
+    priceHistory: [{ year: '2022', price: 10800 }, { year: '2023', price: 12500 }, { year: '2024', price: 14000 }, { year: '2025', price: 15500 }],
+    scores: { Connectivity: 8, Safety: 8, Greenery: 8, Amenities: 8, Schools: 8 },
+    connectivity: { metro: 'Proposed metro extension', highway: 'SPR / Golf Course Ext', airport: '35 min to IGI' },
+    schools: ['Scottish High', 'Amity International', 'GD Goenka'],
+    hospitals: ['Medanta The Medicity', 'Artemis', 'Fortis'],
+    malls: ['Airia Mall', 'M3M Urbana', 'Omaxe Gurgaon Mall'],
+    highlights: ['Highest price appreciation in NCR', 'New-launch supply from top builders', 'Close to Sohna Rd & Medanta'],
+    watchouts: ['Under-construction inventory dominates', 'Some pockets still developing'],
+    match: ['SPR', 'Golf Course Ext', 'Sector 49', 'Sector 65', 'Sector 71', 'Sector 76', 'Sector 77'],
+  },
+  {
+    id: 'sohna-road', name: 'Sohna Road', city: 'Gurgaon',
+    tagline: 'Value-for-money living with malls, offices & quick NH-48 access.',
+    image: _locImg('1560185007-cde436f6a4d0'), avgPrice: 11000, priceTrend: 8.0, rentalYield: 3.6, livability: 8.0,
+    priceHistory: [{ year: '2022', price: 8800 }, { year: '2023', price: 9500 }, { year: '2024', price: 10300 }, { year: '2025', price: 11000 }],
+    scores: { Connectivity: 8, Safety: 8, Greenery: 7, Amenities: 8, Schools: 7 },
+    connectivity: { metro: 'Nearest: HUDA City Centre', highway: 'Sohna Rd / NH-48', airport: '40 min to IGI' },
+    schools: ['Pathways School', 'Euro International', 'KR Mangalam'],
+    hospitals: ['Park Hospital', 'Medanta (nearby)', 'Signature Advanced'],
+    malls: ['Omaxe Gurgaon', 'Tata Primanti Retail', 'Vatika Town Square'],
+    highlights: ['Strong rental yields', 'Ready-to-move options', 'Established social infra'],
+    watchouts: ['Traffic on Sohna Rd at peak hours', 'Older stock in some sectors'],
+    match: ['Sohna'],
+  },
+  {
+    id: 'new-gurgaon', name: 'New Gurgaon', city: 'Gurgaon',
+    tagline: 'Affordable, planned sectors along Dwarka Expressway & NPR.',
+    image: _locImg('1600210492486-724fe5c67fb0'), avgPrice: 9500, priceTrend: 14.0, rentalYield: 3.2, livability: 7.8,
+    priceHistory: [{ year: '2022', price: 6500 }, { year: '2023', price: 7600 }, { year: '2024', price: 8600 }, { year: '2025', price: 9500 }],
+    scores: { Connectivity: 7, Safety: 8, Greenery: 8, Amenities: 7, Schools: 7 },
+    connectivity: { metro: 'Proposed along Dwarka E-way', highway: 'Dwarka Expressway / NPR', airport: '25 min to IGI' },
+    schools: ['Delhi Public School', 'St. Xavier’s', 'Imperial Heritage'],
+    hospitals: ['Aarvy Healthcare', 'Genesis Hospital', 'CK Birla'],
+    malls: ['Sapphire Ninety', 'Reach Airia (nearby)', 'Vatika INXT'],
+    highlights: ['Best entry price in Gurgaon', 'Dwarka Expressway boost', 'Newer, planned sectors'],
+    watchouts: ['Infra still maturing', 'Longer commute to Cyber City'],
+    match: ['New Gurgaon', 'Dwarka Expressway', 'Sector 76', 'Sector 77', 'Sector 79', 'Sector 81', 'Sector 84', 'Sector 88', 'Sector 89', 'Sector 90', 'Sector 92', 'Sector 95'],
+  },
+  {
+    id: 'dlf-phase-5', name: 'DLF Phase 5', city: 'Gurgaon',
+    tagline: 'Established premium enclave — The Crest, Camellias & Aralias.',
+    image: _locImg('1564013799919-ab600027ffc6'), avgPrice: 24000, priceTrend: 7.5, rentalYield: 2.8, livability: 8.8,
+    priceHistory: [{ year: '2022', price: 19500 }, { year: '2023', price: 21000 }, { year: '2024', price: 22800 }, { year: '2025', price: 24000 }],
+    scores: { Connectivity: 9, Safety: 9, Greenery: 8, Amenities: 9, Schools: 9 },
+    connectivity: { metro: 'Rapid Metro (Phase 5)', highway: 'Golf Course Rd', airport: '30 min to IGI' },
+    schools: ['The Shri Ram School', 'Pathways Aravali', 'DPS Sector 45'],
+    hospitals: ['Max Super Speciality', 'Paras', 'Aakash Healthcare'],
+    malls: ['DLF Galleria', 'Suncity Trade Tower', 'The Crescent'],
+    highlights: ['Most prestigious address in Gurgaon', 'Strong capital preservation', 'Top schools within reach'],
+    watchouts: ['Lowest rental yield (high capital values)', 'Resale-heavy, few new launches'],
+    match: ['DLF Phase 5', 'DLF Phase', 'Golf Course Road'],
+  },
+  {
+    id: 'mg-road', name: 'MG Road & Sushant Lok', city: 'Gurgaon',
+    tagline: 'Central, metro-connected & vibrant — Gurgaon’s original hub.',
+    image: _locImg('1600607687939-ce8a6c25118c'), avgPrice: 13000, priceTrend: 6.0, rentalYield: 3.8, livability: 7.6,
+    priceHistory: [{ year: '2022', price: 11000 }, { year: '2023', price: 11800 }, { year: '2024', price: 12400 }, { year: '2025', price: 13000 }],
+    scores: { Connectivity: 10, Safety: 7, Greenery: 6, Amenities: 9, Schools: 7 },
+    connectivity: { metro: 'Yellow Line (MG Road, IFFCO Chowk)', highway: 'MG Road / NH-48', airport: '25 min to IGI' },
+    schools: ['Blue Bells', 'Vidya Niketan', 'Salwan Public'],
+    hospitals: ['Fortis Memorial', 'Privat Hospital', 'Umkal'],
+    malls: ['Ambience Mall', 'MGF Metropolitan', 'Sahara Mall'],
+    highlights: ['Direct Delhi Metro access', 'Highest rental yields', 'Walk-to nightlife & malls'],
+    watchouts: ['Ageing buildings', 'Crowded & high footfall'],
+    match: ['MG Road', 'Sushant Lok', 'Sector 28', 'Sector 14'],
+  },
+];
 
 // ==================== Utility ====================
 export const formatPriceIndian = (price) => {

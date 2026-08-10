@@ -10,6 +10,7 @@ export default function SavedView() {
     addRecentView,
     setActiveModal,
     setCurrentView,
+    openProperty,
   } = useApp();
 
   const [sortBy, setSortBy] = useState('newest');
@@ -64,10 +65,7 @@ export default function SavedView() {
                 <div
                   key={prop.id}
                   className="ig-saved-card"
-                  onClick={() => {
-                    addRecentView(prop.id);
-                    setActiveModal({ type: 'property', data: { propertyId: prop.id } });
-                  }}
+                  onClick={() => openProperty(prop.id)}
                 >
                   <div className="ig-card-media">
                     {prop.media && prop.media.length > 0 ? (

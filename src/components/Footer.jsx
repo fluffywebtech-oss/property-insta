@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 
 // ==================== Mobile Navigation ====================
 export function MobileNav() {
-  const { currentView, setCurrentView, toggleSearchPanel } = useApp();
+  const { currentView, setCurrentView } = useApp();
 
   const tabs = [
     { id: 'feed', icon: 'home', label: 'Feed' },
@@ -205,7 +205,7 @@ export default function Footer() {
               <li><a onClick={() => setActiveModal({ type: 'mortgage' })}>Mortgage Calculator</a></li>
               <li><a onClick={() => setActiveModal({ type: 'roi' })}>ROI Calculator</a></li>
               <li><a onClick={() => setActiveModal({ type: 'currency' })}>Currency Converter</a></li>
-              <li><a onClick={() => setActiveModal({ type: 'compare' })}>Compare Properties</a></li>
+              <li><a onClick={() => setCurrentView('compare')}>Compare Properties</a></li>
             </ul>
           </div>
 

@@ -1,0 +1,7 @@
+# PropertyInsta robots.txt
+# NOTE: replace https://propertyinsta.in with your production domain.
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://propertyinsta.in/sitemap.xml

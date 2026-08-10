@@ -249,7 +249,7 @@
 }
 
 .ig-card-price {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 4px;
@@ -259,6 +259,47 @@
   font-size: 12px;
   opacity: 0.8;
   font-weight: 500;
+}
+
+// PropScore™ badge — sits bottom-right of the media, opposite the price
+.ig-propscore-badge {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 6px 11px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  border: 1.5px solid var(--ps-color, #16a34a);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  .ig-card:hover & {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
+  }
+}
+
+.ig-propscore-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ps-color, #16a34a);
+}
+
+.ig-propscore-cap {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #4b5563;
 }
 
 .ig-card-location {
@@ -497,7 +538,7 @@
   position: absolute;
   bottom: 8px;
   left: 8px;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: white;
@@ -587,7 +628,7 @@
     border-radius: var(--radius-sm);
     font-size: 14px;
     font-weight: 700;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
   }
 }
 

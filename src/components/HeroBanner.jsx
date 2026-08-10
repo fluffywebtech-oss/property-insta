@@ -78,7 +78,7 @@ export default function HeroBanner() {
       <video
         ref={videoRef}
         className="hero-video"
-        src="/33.mp4"
+        src="/hero.mp4"
         autoPlay
         muted
         loop
@@ -86,13 +86,19 @@ export default function HeroBanner() {
         id="heroVideo"
       />
       <div className="hero-overlay-gradient" />
+      <div className="hero-mesh" />
       <div className="hero-floating-orb hero-orb-1" />
       <div className="hero-floating-orb hero-orb-2" />
+      <div className="hero-floating-orb hero-orb-3" />
 
       <div className="hero-banner-content">
         <div className="hero-content-left">
+          <div className="hero-eyebrow">
+            <span className="hero-eyebrow-dot" />
+            India&apos;s most visual property platform
+          </div>
           <h1 className="hero-banner-title">
-            with PropertyInsta — Look · Visit · Book
+            Look Visit Book
           </h1>
           <p className="hero-banner-subtitle">
             Premium listings with virtual tours, reels & AI-powered recommendations
@@ -112,52 +118,67 @@ export default function HeroBanner() {
               ))}
             </div>
 
-            {/* Search Fields */}
-            <form className="hero-search-input-row" onSubmit={handleSearch}>
-              <div className="hero-search-field">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {/* Unified search bar — labeled segments */}
+            <form className="hero-usb" onSubmit={handleSearch}>
+              <label className="hero-usb-seg hero-usb-loc">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" />
                 </svg>
-                <input
-                  type="text"
-                  placeholder="Search city, locality, or project..."
-                  value={filters.search || ''}
-                  onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                />
-              </div>
+                <span className="hero-usb-body">
+                  <span className="hero-usb-lbl">Location</span>
+                  <input
+                    type="text"
+                    placeholder="City, locality or project"
+                    value={filters.search || ''}
+                    onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                  />
+                </span>
+              </label>
 
-              <div className="hero-search-field hero-search-price">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+              <span className="hero-usb-div" />
+
+              <label className="hero-usb-seg hero-usb-budget">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 3h12" /><path d="M6 8h12" /><path d="m6 13 8.5 8" /><path d="M6 13h3" /><path d="M9 13c6.667 0 6.667-10 0-10" />
                 </svg>
-                <select
-                  id="heroSearchBudget"
-                  value={filters.priceRange || ''}
-                  onChange={(e) => setFilters(prev => ({ ...prev, priceRange: e.target.value }))}
-                >
-                  <option value="">Budget</option>
-                  {BUDGETS.map(b => <option key={b} value={b}>{b}</option>)}
-                </select>
-              </div>
+                <span className="hero-usb-body">
+                  <span className="hero-usb-lbl">Budget</span>
+                  <select
+                    id="heroSearchBudget"
+                    value={filters.priceRange || ''}
+                    onChange={(e) => setFilters(prev => ({ ...prev, priceRange: e.target.value }))}
+                  >
+                    <option value="">Any budget</option>
+                    {BUDGETS.map(b => <option key={b} value={b}>{b}</option>)}
+                  </select>
+                </span>
+                <svg className="hero-usb-chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+              </label>
 
-              <div className="hero-search-field hero-search-type">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <span className="hero-usb-div" />
+
+              <label className="hero-usb-seg hero-usb-type">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
-                <select
-                  id="heroSearchType"
-                  value={filters.propertyType?.[0] || ''}
-                  onChange={(e) => setFilters(prev => ({ ...prev, propertyType: e.target.value ? [e.target.value] : [] }))}
-                >
-                  {PROPERTY_TYPES.map(t => <option key={t} value={t === 'All Types' ? '' : t}>{t}</option>)}
-                </select>
-              </div>
+                <span className="hero-usb-body">
+                  <span className="hero-usb-lbl">Property type</span>
+                  <select
+                    id="heroSearchType"
+                    value={filters.propertyType?.[0] || ''}
+                    onChange={(e) => setFilters(prev => ({ ...prev, propertyType: e.target.value ? [e.target.value] : [] }))}
+                  >
+                    {PROPERTY_TYPES.map(t => <option key={t} value={t === 'All Types' ? '' : t}>{t}</option>)}
+                  </select>
+                </span>
+                <svg className="hero-usb-chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+              </label>
 
-              <button type="submit" className="hero-search-btn">
+              <button type="submit" className="hero-usb-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
-                Search
+                <span>Search</span>
               </button>
             </form>
 
@@ -169,6 +190,22 @@ export default function HeroBanner() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Trust strip */}
+          <div className="hero-trust-strip">
+            <span className="hero-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4" /><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.66 0 3.22.45 4.56 1.24" /></svg>
+              100% Verified Listings
+            </span>
+            <span className="hero-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" /></svg>
+              HD Virtual Tours
+            </span>
+            <span className="hero-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21.4 8 14 2 9.4h7.6z" /></svg>
+              Zero Brokerage Options
+            </span>
           </div>
         </div>
 

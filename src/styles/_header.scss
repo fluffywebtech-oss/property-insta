@@ -23,9 +23,388 @@
   height: 60px;
 }
 
-.ig-logo { margin-right: 8px; }
+.ig-logo { margin-right: 8px; flex-shrink: 0; }
 .ig-nav-tabs { margin: 0 auto 0 0; }
-.ig-header-actions { margin-left: auto; }
+.ig-header-actions { margin-left: auto; flex-shrink: 0; }
+
+// ===== Mobile hamburger + all-options drawer =====
+.ig-hamburger-btn {
+  display: none; // shown only on mobile (see media query)
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  margin-right: 2px;
+  border: none;
+  background: transparent;
+  color: var(--ig-text);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover { background: var(--ig-hover, rgba(0,0,0,0.05)); }
+}
+
+.ig-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(8, 10, 20, 0.5);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &.open { opacity: 1; visibility: visible; }
+}
+
+.ig-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 201;
+  width: 86%;
+  max-width: 348px;
+  height: 100%;
+  background: var(--card-bg);
+  border-right: 1px solid var(--ig-border);
+  box-shadow: 8px 0 48px rgba(8, 10, 20, 0.28);
+  transform: translateX(-102%);
+  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overscroll-behavior: contain;
+
+  &.open { transform: translateX(0); }
+}
+
+// Brand header
+.ig-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 14px 18px;
+  border-bottom: 1px solid var(--ig-border);
+}
+
+.ig-drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+
+  svg { flex-shrink: 0; border-radius: 9px; box-shadow: 0 4px 12px rgba(27, 77, 177, 0.28); }
+}
+
+.ig-drawer-brand-text {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ig-text);
+
+  b { font-weight: 700; color: #ea6a0c; }
+}
+
+.ig-drawer-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ig-border);
+  background: transparent;
+  color: var(--ig-text);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+
+  &:hover { background: var(--ig-hover, rgba(0,0,0,0.05)); }
+  &:active { transform: scale(0.92); }
+}
+
+// Profile card
+.ig-drawer-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 14px 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(46, 111, 224, 0.12), rgba(234, 106, 12, 0.08));
+  border: 1px solid var(--ig-border);
+}
+
+.ig-drawer-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--card-bg);
+  box-shadow: 0 0 0 2px rgba(46, 111, 224, 0.4);
+  flex-shrink: 0;
+}
+
+.ig-drawer-profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+
+  strong { font-size: 14px; font-weight: 700; color: var(--ig-text); }
+}
+
+.ig-drawer-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ig-text-secondary, #6b7280);
+
+  .role-dot { width: 7px; height: 7px; border-radius: 50%; }
+}
+
+.ig-drawer-chip {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ig-text-secondary, #6b7280);
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--card-bg);
+  border: 1px solid var(--ig-border);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ig-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px 16px;
+}
+
+.ig-drawer-section {
+  padding: 8px 0;
+
+  & + .ig-drawer-section {
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--ig-border);
+  }
+}
+
+.ig-drawer-label {
+  display: block;
+  padding: 6px 12px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ig-text-secondary, #9aa0ab);
+}
+
+.ig-drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ig-drawer-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  background: transparent;
+  color: var(--ig-text);
+  font-size: 14.5px;
+  font-weight: 600;
+  text-align: left;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+
+  // staggered reveal when the drawer opens
+  .ig-drawer.open & {
+    animation: drawerItemIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 0.035s + 0.08s);
+  }
+
+  .ig-drawer-link-label { flex: 1; min-width: 0; }
+
+  .ig-drawer-chev {
+    color: var(--ig-text-secondary, #b6bcc6);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: var(--ig-hover, rgba(0,0,0,0.045));
+    .ig-drawer-chev { opacity: 1; transform: translateX(0); }
+  }
+  &:active { transform: scale(0.985); }
+
+  &.active {
+    background: linear-gradient(135deg, #2e6fe0, #1b4db1);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(27, 77, 177, 0.32);
+
+    .ig-drawer-ico {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+    }
+    .ig-drawer-chev { color: rgba(255,255,255,0.85); opacity: 1; transform: translateX(0); }
+  }
+}
+
+// Icon chip
+.ig-drawer-ico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--ig-hover, rgba(0,0,0,0.05));
+  color: var(--ig-text);
+  flex-shrink: 0;
+  transition: background 0.18s ease, color 0.18s ease;
+
+  .ig-nav-icon { width: 18px; height: 18px; }
+  &.ig-drawer-ico-emoji { font-size: 17px; }
+}
+
+.ig-drawer-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 6px 12px 2px;
+}
+
+.ig-drawer-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1.5px solid var(--ig-border);
+  background: transparent;
+  color: var(--ig-text);
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+
+  .role-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  &.active {
+    border-color: var(--rc);
+    background: color-mix(in srgb, var(--rc) 12%, transparent);
+  }
+}
+
+// Footer
+.ig-drawer-foot {
+  border-top: 1px solid var(--ig-border);
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ig-drawer-theme {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  background: var(--ig-hover, rgba(0,0,0,0.04));
+  color: var(--ig-text);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+
+  &:hover { background: var(--ig-hover, rgba(0,0,0,0.07)); }
+
+  .ig-drawer-theme-ico { font-size: 17px; width: 22px; text-align: center; }
+  .ig-drawer-theme-label { flex: 1; text-align: left; }
+}
+
+.ig-drawer-switch {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--ig-border);
+  transition: background 0.22s ease;
+  flex-shrink: 0;
+
+  i {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+    transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &.on {
+    background: linear-gradient(135deg, #2e6fe0, #1b4db1);
+    i { transform: translateX(18px); }
+  }
+}
+
+.ig-drawer-admin {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--ig-border);
+  background: transparent;
+  color: var(--ig-text);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+
+  &:hover { background: var(--ig-hover, rgba(0,0,0,0.04)); border-color: var(--ig-link); }
+
+  .ig-drawer-theme-ico { font-size: 17px; width: 22px; text-align: center; }
+  .ig-drawer-theme-label { flex: 1; text-align: left; }
+  .ig-drawer-admin-arrow { color: var(--ig-text-secondary, #9aa0ab); font-weight: 700; }
+}
+
+.ig-drawer-version {
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ig-text-secondary, #9aa0ab);
+}
+
+@keyframes drawerItemIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ig-drawer { transition: transform 0.001s; }
+  .ig-drawer.open .ig-drawer-link { animation: none; }
+}
 
 // Logo
 .ig-logo {
@@ -52,10 +431,11 @@
 }
 
 .ig-logo-text {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 22px;
   font-weight: 800;
-  background: linear-gradient(135deg, #E02D5C 0%, #FF6B35 100%);
+  letter-spacing: -0.02em;
+  background: linear-gradient(120deg, #1b4db1 0%, #2e6fe0 46%, #ea6a0c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -70,6 +450,29 @@
   border-radius: var(--radius-full);
   padding: 4px;
   transition: background 0.3s ease;
+}
+// Secondary destinations live in a "More ▾" dropdown so the row never overflows
+// (and the absolutely-positioned menus aren't clipped). Tabs don't shrink/wrap.
+.ig-nav-tab { flex-shrink: 0; }
+
+.ig-more-dropdown { position: relative; flex-shrink: 0; }
+.ig-more-menu {
+  position: absolute; top: calc(100% + 10px); left: 0; z-index: 200;
+  min-width: 184px; padding: 6px;
+  background: var(--card-bg); border: 1px solid var(--ig-border); border-radius: 14px;
+  box-shadow: 0 14px 36px rgba(20,22,43,0.16);
+  display: flex; flex-direction: column; gap: 2px;
+  animation: igMoreIn 0.16s ease;
+}
+@keyframes igMoreIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.ig-more-item {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  padding: 9px 12px; border-radius: 10px; border: none; background: transparent; cursor: pointer;
+  color: var(--ig-text); font-size: 13.5px; font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease;
+  .ig-nav-icon { width: 16px; height: 16px; }
+  &:hover { background: var(--muted-bg); }
+  &.active { background: var(--ig-gradient); color: #fff; box-shadow: 0 6px 16px rgba(31,86,196,0.3); }
 }
 
 .ig-nav-tab {
@@ -97,6 +500,22 @@
   }
 
   .ig-nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
+}
+
+// Headline "Instant Buy/Sell" tab — accent-tinted so it reads as a promoted CTA.
+// Declared after .ig-nav-tab so its colour wins on equal specificity.
+.ig-nav-tab.ig-nav-tab-hot {
+  color: #ea6a0c;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.14), rgba(234, 106, 12, 0.12));
+  box-shadow: inset 0 0 0 1px rgba(234, 106, 12, 0.32);
+  .ig-nav-icon { color: #ea6a0c; }
+  &:hover { color: #ea6a0c; background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(234, 106, 12, 0.18)); }
+  &.active {
+    color: #fff;
+    background: linear-gradient(135deg, #f59e0b, #ea6a0c);
+    box-shadow: 0 6px 16px rgba(234, 106, 12, 0.4);
+    .ig-nav-icon { color: #fff; }
+  }
 }
 
 // Header Actions
@@ -395,14 +814,14 @@
 }
 
 // ==================== Responsive Header ====================
+// Below ~1180px the row (logo + tabs + actions) can't fit, so switch to the
+// hamburger drawer instead of letting the actions overflow off-screen.
+@media (max-width: 1179px) {
+  .ig-nav-tabs { display: none; }
+  .ig-hamburger-btn { display: flex; }
+}
+
 @media (max-width: 1023px) {
-  .ig-nav-tab {
-    padding: 8px 12px;
-    font-size: 12px;
-
-    .ig-nav-icon { width: 14px; height: 14px; }
-  }
-
   .ig-logo-text { font-size: 18px; }
   .ig-logo-icon { width: 32px; height: 32px; font-size: 16px; }
 }
@@ -410,8 +829,11 @@
 @media (max-width: 767px) {
   .ig-header-inner { padding: 0 12px; height: 56px; }
 
-  // Hide nav tabs on mobile (mobile nav bar at bottom handles navigation)
+  // Hide nav tabs on mobile (the hamburger drawer + bottom bar handle navigation)
   .ig-nav-tabs { display: none; }
+
+  // Show the hamburger that opens the all-options drawer
+  .ig-hamburger-btn { display: flex; }
 
   .ig-logo-text { font-size: 16px; }
   .ig-logo-icon { width: 28px; height: 28px; font-size: 14px; }
