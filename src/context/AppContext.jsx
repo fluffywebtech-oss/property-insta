@@ -309,6 +309,30 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // Tonino Lamborghini Residences (SG SPR Estate), Sector 71 (covers any DB row too).
+    match: (p) => /tonino\s*lamborghini|lamborghini\s*residences|sg\s*spr\s*estate/i.test(p.title || ''),
+    images: [
+      '/projects/lamborghini-sg-spr/towers-dusk-hero.jpg',
+      '/projects/lamborghini-sg-spr/towers-night.jpg',
+      '/projects/lamborghini-sg-spr/lamborghini-facade.jpg',
+      '/projects/lamborghini-sg-spr/tennis-court.jpg',
+      '/projects/lamborghini-sg-spr/night-pool.jpg',
+      '/projects/lamborghini-sg-spr/grand-lobby.jpg',
+      '/projects/lamborghini-sg-spr/lobby-piano.jpg',
+      '/projects/lamborghini-sg-spr/therapy-room.jpg',
+      '/projects/lamborghini-sg-spr/beauty-salon.jpg',
+      '/projects/lamborghini-sg-spr/bull-lounge.jpg',
+      '/projects/lamborghini-sg-spr/residents-lounge.jpg',
+      '/projects/lamborghini-sg-spr/gym.jpg',
+      '/projects/lamborghini-sg-spr/lift-lobby.jpg',
+      '/projects/lamborghini-sg-spr/site-plan.png',
+      '/projects/lamborghini-sg-spr/floor-plan-3bhk.png',
+      '/projects/lamborghini-sg-spr/floor-plan-4bhk-type1.png',
+      '/projects/lamborghini-sg-spr/floor-plan-4bhk-type2.png',
+      '/projects/lamborghini-sg-spr/floor-plan-4bhk-utility.png',
+    ],
+  },
+  {
     // Grace Resilviaa DDJAY floors, Sector 78 (covers any DB row too).
     match: (p) => /grace\s*resilviaa|grace\s*residences/i.test(p.title || ''),
     patch: {
