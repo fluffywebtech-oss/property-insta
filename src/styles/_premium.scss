@@ -1184,8 +1184,16 @@ textarea:focus-visible {
 .pi-prop-gallery-thumbs {
   display: flex; gap: 10px;
   margin-top: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+  &::-webkit-scrollbar { height: 6px; }
+  &::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 3px; }
 }
 .pi-prop-thumb {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
   width: 100px; height: 72px;
   border: 2.5px solid transparent;
   border-radius: 10px;

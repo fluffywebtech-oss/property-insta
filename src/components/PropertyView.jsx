@@ -153,7 +153,7 @@ export default function PropertyView() {
         </div>
         {media.length > 1 && (
           <div className="pi-prop-gallery-thumbs">
-            {media.slice(0, 5).map((src, i) => (
+            {media.map((src, i) => (
               <button
                 key={i}
                 className={`pi-prop-thumb ${i === activeImg ? 'active' : ''}`}
