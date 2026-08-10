@@ -272,6 +272,25 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // Ganga Anantam 85, Sector 85 (covers the DB row for id 20 too).
+    match: (p) => /anantam\s*85|ganga\s*anantam/i.test(p.title || ''),
+    images: [
+      '/projects/ganga-anantam-85/towers-hero.webp',
+      '/projects/ganga-anantam-85/courtyard.webp',
+      '/projects/ganga-anantam-85/night-tower.webp',
+      '/projects/ganga-anantam-85/infinity-pool.webp',
+      '/projects/ganga-anantam-85/yoga-deck.webp',
+      '/projects/ganga-anantam-85/gym.webp',
+      '/projects/ganga-anantam-85/fine-dining.webp',
+      '/projects/ganga-anantam-85/bar-restaurant.webp',
+      '/projects/ganga-anantam-85/floor-guide.webp',
+      '/projects/ganga-anantam-85/site-plan.webp',
+      '/projects/ganga-anantam-85/floor-plan-3bhk.webp',
+      '/projects/ganga-anantam-85/floor-plan-4bhk.webp',
+      '/projects/ganga-anantam-85/location-map.webp',
+    ],
+  },
+  {
     // Central Park BelaPerla, Sector 48 (covers any DB row for the project too).
     match: (p) => /belaperla|bela\s*perla/i.test(p.title || ''),
     images: [
