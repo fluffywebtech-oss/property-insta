@@ -333,6 +333,23 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // Westin Residences Gurugram, Sector 103 (covers any DB row too).
+    match: (p) => /westin\s*residences/i.test(p.title || ''),
+    patch: {
+      title: 'Westin Residences Gurugram – 3 & 4 BHK Branded Residences',
+      sqft: 2673, beds: 3, baths: 3,
+      area: 2673, bedrooms: 3, bathrooms: 3, pricePerSqft: 24317,
+      floor: 'High-rise tower',
+      featured: true, hot: true, trending: true,
+    },
+    images: [
+      '/projects/westin-residences/grand-entrance.jpg',
+      '/projects/westin-residences/arrival.jpg',
+      '/projects/westin-residences/amenity-deck-aerial.jpg',
+      '/projects/westin-residences/landscaped-garden.jpg',
+    ],
+  },
+  {
     // Grace Resilviaa DDJAY floors, Sector 78 (covers any DB row too).
     match: (p) => /grace\s*resilviaa|grace\s*residences/i.test(p.title || ''),
     patch: {
