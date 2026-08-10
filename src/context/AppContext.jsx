@@ -309,6 +309,32 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // Grace Resilviaa DDJAY floors, Sector 78 (covers any DB row too).
+    match: (p) => /grace\s*resilviaa|grace\s*residences/i.test(p.title || ''),
+    patch: {
+      title: 'Grace Resilviaa – 3 BHK DDJAY Independent Floors',
+      price: 17900000,
+      sqft: 1587, beds: 3, baths: 3,
+      area: 1587, bedrooms: 3, bathrooms: 3, pricePerSqft: 11279,
+      floor: 'Stilt + 4 (Independent Floor)',
+      featured: true, hot: true, trending: true,
+    },
+    images: [
+      '/projects/grace-resilviaa/facade-hero.png',
+      '/projects/grace-resilviaa/facade-day.jpg',
+      '/projects/grace-resilviaa/elevation.jpg',
+      '/projects/grace-resilviaa/living-room.jpg',
+      '/projects/grace-resilviaa/kitchen.png',
+      '/projects/grace-resilviaa/kitchen-2.jpg',
+      '/projects/grace-resilviaa/bedroom.jpg',
+      '/projects/grace-resilviaa/bathroom.jpg',
+      '/projects/grace-resilviaa/home-office.jpg',
+      '/projects/grace-resilviaa/lobby.jpg',
+      '/projects/grace-resilviaa/floor-plan-1.jpg',
+      '/projects/grace-resilviaa/floor-plan-2.jpg',
+    ],
+  },
+  {
     // Central Park BelaPerla, Sector 48 (covers any DB row for the project too).
     match: (p) => /belaperla|bela\s*perla/i.test(p.title || ''),
     images: [
