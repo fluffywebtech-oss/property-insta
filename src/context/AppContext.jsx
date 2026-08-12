@@ -399,7 +399,8 @@ function applyImageOverrides(p) {
   // `patch` lets an override also correct text fields (title, price, sqft, …)
   // on a matching Supabase row — needed when the DB row carries stale copy
   // that would otherwise win over our curated static entry.
-  return { ...p, ...(o.patch || {}), images: o.images, media: o.images, thumbnail: o.images[0] };
+  // `pinned` surfaces every curated real-photo project at the top of the feed.
+  return { ...p, ...(o.patch || {}), pinned: true, images: o.images, media: o.images, thumbnail: o.images[0] };
 }
 
 // Real, project-specific photos (uploaded via admin → Supabase Storage)
@@ -730,10 +731,14 @@ export function AppProvider({ children }) {
 
   const sortProperties = useCallback((props) => {
     const sorted = [...props];
+    // Curated real-photo projects (pinned via PROJECT_IMAGE_OVERRIDES) always
+    // lead the default feed so new launches land on the first page. Explicit
+    // sorts (price/popular/area) respect the user's chosen order instead.
+    const pinRank = (p) => (p.pinned ? 1 : 0);
     switch (filters.sortBy) {
       case 'price_asc': sorted.sort((a, b) => a.price - b.price); break;
       case 'price_desc': sorted.sort((a, b) => b.price - a.price); break;
-      case 'newest': sorted.sort((a, b) => b.id - a.id); break;
+      case 'newest': sorted.sort((a, b) => (pinRank(b) - pinRank(a)) || ((Number(b.id) || 0) - (Number(a.id) || 0))); break;
       case 'popular': sorted.sort((a, b) => (b.views || 0) - (a.views || 0)); break;
       case 'area_desc': sorted.sort((a, b) => (b.area || 0) - (a.area || 0)); break;
       default: break;
