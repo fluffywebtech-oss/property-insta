@@ -362,8 +362,12 @@ export default function FeedView() {
   // Get recently viewed properties from context allProperties
   const recentProps = allProperties.filter(p => recentlyViewed.includes(p.id)).slice(0, 4);
 
-  // Trending properties
-  const trendingProps = allProperties.filter(p => p.trending).slice(0, TRENDING_COUNT);
+  // Trending properties — curated real-photo projects (pinned) lead the strip,
+  // then the rest of the trending listings fill in behind them.
+  const trendingProps = [
+    ...allProperties.filter(p => p.pinned),
+    ...allProperties.filter(p => p.trending && !p.pinned),
+  ].slice(0, TRENDING_COUNT);
 
   // Spotlight — landscape auto-slider. Lead with the curated real-photo
   // projects (pinned), then fill remaining slots with other featured/trending
@@ -401,7 +405,7 @@ export default function FeedView() {
   // Top featured listings for the active location (city) page.
   const cityTopFeatures = useMemo(() => {
     if (!filters.city) return [];
-    const score = (p) => (p.featured ? 3 : 0) + (p.trending ? 2 : 0) + (p.rera ? 1 : 0);
+    const score = (p) => (p.pinned ? 10 : 0) + (p.featured ? 3 : 0) + (p.trending ? 2 : 0) + (p.rera ? 1 : 0);
     return allProperties
       .filter(p => (p.city || deriveCity(p.location || '')) === filters.city)
       .sort((a, b) => (score(b) - score(a)) || (b.price || 0) - (a.price || 0))
