@@ -105,6 +105,24 @@
   cursor: pointer;
 
   &:hover { box-shadow: var(--shadow-md); }
+
+  /* Curated real-photo projects — highlighted everywhere they appear */
+  &.pinned {
+    border: 2px solid transparent;
+    background:
+      linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+      linear-gradient(135deg, #f59e0b, #d4af37 45%, #b8860b) border-box;
+    box-shadow: 0 6px 22px rgba(212, 175, 55, 0.28);
+
+    &:hover { box-shadow: 0 10px 30px rgba(212, 175, 55, 0.42); }
+  }
+}
+
+.ig-card-badge.pinned-badge {
+  background: linear-gradient(135deg, #f59e0b, #b8860b);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(184, 134, 11, 0.5);
+  letter-spacing: 0.03em;
 }
 
 .ig-card-media {

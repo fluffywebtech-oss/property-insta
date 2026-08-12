@@ -44,11 +44,14 @@ export default function PropertyCard({ property }) {
   const isRera = property.rera;
 
   return (
-    <div className="ig-card" onClick={handleCardClick}>
+    <div className={`ig-card${property.pinned ? ' pinned' : ''}`} onClick={handleCardClick}>
       {/* Media Section */}
       <div className="ig-card-media" style={{ aspectRatio: property.mediaAspectRatio || '4/3' }}>
         {/* Badges */}
         <div className="ig-card-badges">
+          {property.pinned && (
+            <span className="ig-card-badge pinned-badge" title="Curated project — real photos">★ Featured</span>
+          )}
           {property.badge && (
             <span className={`ig-card-badge ${property.badgeType || ''}`}>{property.badge}</span>
           )}
