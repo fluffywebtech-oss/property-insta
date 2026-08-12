@@ -365,10 +365,16 @@ export default function FeedView() {
   // Trending properties
   const trendingProps = allProperties.filter(p => p.trending).slice(0, TRENDING_COUNT);
 
-  // Spotlight — featured/trending listings for the landscape auto-slider
+  // Spotlight — landscape auto-slider. Lead with the curated real-photo
+  // projects (pinned), then fill remaining slots with other featured/trending
+  // listings, so the hero slider showcases our launches instead of stock rows.
   const spotlightProps = useMemo(() => {
-    const picked = allProperties.filter(p => p.featured || p.trending);
-    return (picked.length ? picked : allProperties).slice(0, 6);
+    const pinned = allProperties
+      .filter(p => p.pinned)
+      .sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0));
+    const others = allProperties.filter(p => !p.pinned && (p.featured || p.trending));
+    const combined = [...pinned, ...others];
+    return (combined.length ? combined : allProperties).slice(0, 6);
   }, [allProperties]);
 
   // Open House property (first property with open house)
