@@ -338,7 +338,7 @@ const PROJECT_IMAGE_OVERRIDES = [
     patch: {
       title: 'Westin Residences Gurugram – 3 & 4 BHK Branded Residences',
       sqft: 2673, beds: 3, baths: 3,
-      area: 2673, bedrooms: 3, bathrooms: 3, pricePerSqft: 24317,
+      area: 2673, bedrooms: 3, bathrooms: 3, price: 45000000, pricePerSqft: 16835,
       floor: 'High-rise tower',
       featured: true, hot: true, trending: true,
     },
