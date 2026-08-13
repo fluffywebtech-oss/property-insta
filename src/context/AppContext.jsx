@@ -350,6 +350,28 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // Birla Navya (Avik) low-rise floors, Sector 63A (covers any DB row for id 15).
+    match: (p) => /birla\s*navya|birla\s*estates/i.test(p.title || ''),
+    patch: {
+      title: 'Birla Navya (Avik) – 3 & 4 BHK Duplex Low-Rise Floors',
+      price: 57700000,
+      sqft: 2800, beds: 3, baths: 3,
+      area: 2800, bedrooms: 3, bathrooms: 3, pricePerSqft: 20607, emiEstimate: 452945,
+      floor: 'Low-rise premium floor (Duplex option)',
+      possession: 'Under Construction', possessionStatus: 'Under Construction',
+      featured: true, hot: true, trending: true,
+    },
+    images: [
+      '/projects/birla-navya/facade-hero.webp',
+      '/projects/birla-navya/facade-angle.webp',
+      '/projects/birla-navya/front-elevation.webp',
+      '/projects/birla-navya/courtyard-facade.webp',
+      '/projects/birla-navya/sports-aerial.webp',
+      '/projects/birla-navya/living-room.webp',
+      '/projects/birla-navya/location-aerial.webp',
+    ],
+  },
+  {
     // Orchid Ivy low-rise floors, Sector 51 (covers any DB row too).
     match: (p) => /orchid\s*ivy/i.test(p.title || ''),
     patch: {
