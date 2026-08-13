@@ -228,19 +228,33 @@ const COMBINED_POOL = {
 // Files live under /public/projects/... and ship with the build.
 const PROJECT_IMAGE_OVERRIDES = [
   {
+    // Ashiana Aaroham (Phase 2), Sector 80 — official renders + booking-open pricing.
     match: (p) => /ashiana\s*aaroham/i.test(p.title || '') || (p.builder === 'Ashiana Housing' && /aaroham/i.test(p.title || '')),
+    patch: {
+      title: 'Ashiana Aaroham – Luxury 3 & 4 BHK (Phase 2)',
+      price: 29900000,
+      sqft: 1700, beds: 3, baths: 3,
+      area: 1700, bedrooms: 3, bathrooms: 3, pricePerSqft: 17588, emiEstimate: 234715,
+      possession: 'New Launch', possessionStatus: 'New Launch',
+      featured: true, hot: true, trending: true,
+    },
     images: [
-      '/projects/ashiana-aaroham/exterior-1.webp',
-      '/projects/ashiana-aaroham/exterior-2.webp',
-      '/projects/ashiana-aaroham/reception.webp',
-      '/projects/ashiana-aaroham/gym.webp',
+      '/projects/ashiana-aaroham/entrance-gate-night.webp',
+      '/projects/ashiana-aaroham/towers-aerial.webp',
+      '/projects/ashiana-aaroham/masterplan-aerial.webp',
+      '/projects/ashiana-aaroham/living-dining.webp',
+      '/projects/ashiana-aaroham/master-bedroom-new.webp',
+      '/projects/ashiana-aaroham/kitchen.webp',
+      '/projects/ashiana-aaroham/balcony-view.webp',
+      '/projects/ashiana-aaroham/clubhouse.webp',
+      '/projects/ashiana-aaroham/gym-new.webp',
+      '/projects/ashiana-aaroham/sports-court.webp',
+      '/projects/ashiana-aaroham/tennis-court.webp',
+      '/projects/ashiana-aaroham/kids-area.webp',
+      '/projects/ashiana-aaroham/art-craft-room.webp',
+      '/projects/ashiana-aaroham/open-space.webp',
       '/projects/ashiana-aaroham/classroom.webp',
       '/projects/ashiana-aaroham/dance-room.webp',
-      '/projects/ashiana-aaroham/squash.webp',
-      '/projects/ashiana-aaroham/football.webp',
-      '/projects/ashiana-aaroham/kids-1.webp',
-      '/projects/ashiana-aaroham/kids-2.webp',
-      '/projects/ashiana-aaroham/kids-3.webp',
     ],
   },
   {
