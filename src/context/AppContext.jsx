@@ -350,6 +350,34 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // Orchid Ivy low-rise floors, Sector 51 (covers any DB row too).
+    match: (p) => /orchid\s*ivy/i.test(p.title || ''),
+    patch: {
+      title: 'Orchid Ivy – 3 & 4 BHK + Study Low-Rise Floors',
+      price: 37500000,
+      sqft: 2300, beds: 3, baths: 3,
+      area: 2300, bedrooms: 3, bathrooms: 3, pricePerSqft: 16304,
+      floor: 'Low-rise (Stilt + 4)',
+      featured: true, hot: true, trending: true,
+    },
+    images: [
+      '/projects/orchid-ivy/facade-hero.jpg',
+      '/projects/orchid-ivy/street-view.jpg',
+      '/projects/orchid-ivy/entrance-gate.jpg',
+      '/projects/orchid-ivy/roadside.jpg',
+      '/projects/orchid-ivy/rooftop-garden.jpg',
+      '/projects/orchid-ivy/balcony.jpg',
+      '/projects/orchid-ivy/living-dining.jpg',
+      '/projects/orchid-ivy/master-bedroom.jpg',
+      '/projects/orchid-ivy/bedroom.jpg',
+      '/projects/orchid-ivy/kids-bedroom.jpg',
+      '/projects/orchid-ivy/building-1.jpg',
+      '/projects/orchid-ivy/building-2.jpg',
+      '/projects/orchid-ivy/floor-plan-3bhk.png',
+      '/projects/orchid-ivy/floor-plan-4bhk.jpg',
+    ],
+  },
+  {
     // Grace Resilviaa DDJAY floors, Sector 78 (covers any DB row too).
     match: (p) => /grace\s*resilviaa|grace\s*residences/i.test(p.title || ''),
     patch: {
