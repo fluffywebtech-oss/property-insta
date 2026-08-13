@@ -364,6 +364,18 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // Ganga Realty Nine Zero, Sector 90 (covers any DB row too).
+    match: (p) => /nine\s*zero|ganga\s*(realty\s*)?nine/i.test(p.title || ''),
+    images: [
+      '/projects/ganga-nine-zero/towers-hero.jpg',
+      '/projects/ganga-nine-zero/penthouse-living.webp',
+      '/projects/ganga-nine-zero/sky-balcony.webp',
+      '/projects/ganga-nine-zero/rooftop-pool-night.webp',
+      '/projects/ganga-nine-zero/rooftop-pool.webp',
+      '/projects/ganga-nine-zero/location-map.png',
+    ],
+  },
+  {
     // Birla Navya (Avik) low-rise floors, Sector 63A (covers any DB row for id 15).
     match: (p) => /birla\s*navya|birla\s*estates/i.test(p.title || ''),
     patch: {
