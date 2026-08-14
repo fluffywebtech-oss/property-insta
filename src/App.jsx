@@ -27,6 +27,7 @@ const BuildWithUs        = lazy(() => import('./components/BuildWithUs'));
 const HomeLoans          = lazy(() => import('./components/HomeLoans'));
 const MyJourney          = lazy(() => import('./components/MyJourney'));
 const Localities         = lazy(() => import('./components/Localities'));
+const Penthouses         = lazy(() => import('./components/Penthouses'));
 const PostProperty       = lazy(() => import('./components/PostProperty'));
 const AiFinder           = lazy(() => import('./components/AiFinder'));
 const Valuation          = lazy(() => import('./components/Valuation'));
@@ -100,6 +101,7 @@ function AppLayout() {
       case 'home-loans': return <HomeLoans />;
       case 'my-journey': return <MyJourney />;
       case 'localities': return <Localities />;
+      case 'penthouses': return <Penthouses />;
       case 'post-property': return <PostProperty />;
       case 'ai-finder': return <AiFinder />;
       case 'valuation': return <Valuation />;
@@ -147,7 +149,7 @@ function AppLayout() {
     }
   };
 
-  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'localities', 'post-property', 'ai-finder', 'valuation', 'compare', 'rent-vs-buy', 'vastu', 'rent-agreement', 'poster-maker', 'tenant-verify', 'instant', 'rent-credit', 'auctions', 'stamp-duty', 'affordability', 'mutation', 'green-score', 'ameya-sapphire', 'builder', 'property'].includes(currentView);
+  const isOsView = !['feed', 'reels', 'mapView', 'saved', 'blog', 'content-hub', 'build-with-us', 'home-loans', 'my-journey', 'localities', 'penthouses', 'post-property', 'ai-finder', 'valuation', 'compare', 'rent-vs-buy', 'vastu', 'rent-agreement', 'poster-maker', 'tenant-verify', 'instant', 'rent-credit', 'auctions', 'stamp-duty', 'affordability', 'mutation', 'green-score', 'ameya-sapphire', 'builder', 'property'].includes(currentView);
 
   // Full-screen in-frontend admin console (its own layout — no consumer chrome).
   if (currentView === 'admin') {

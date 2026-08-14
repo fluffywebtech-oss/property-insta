@@ -646,6 +646,7 @@ export function AppProvider({ children }) {
     if (/^\/blog(\/|$)/.test(path)) return 'blog';
     if (/^\/ameya-sapphire(-82a)?(\/|$)/.test(path)) return 'ameya-sapphire';
     if (/^\/builder-desk(\/|$)/.test(path)) return 'builder-desk';
+    if (/^\/penthouses?(\/|$)/.test(path)) return 'penthouses';
     return 'feed';
   });
   // Which builder's microsite is being shown (set when `currentView === 'builder'`)

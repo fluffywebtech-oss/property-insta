@@ -6,6 +6,7 @@ import { useRole, ROLES } from '../context/RoleContext';
 const PRIMARY_TABS = [
   { id: 'feed', icon: 'home', label: 'Discover' },
   { id: 'instant', icon: 'bolt', label: 'Instant Buy/Sell', hot: true },
+  { id: 'penthouses', icon: 'penthouse', label: 'Penthouses' },
   { id: 'reels', icon: 'play', label: 'Reels' },
   { id: 'mapView', icon: 'map', label: 'Map' },
   { id: 'saved', icon: 'bookmark', label: 'Saved' },
@@ -93,6 +94,7 @@ function NavIcon({ icon }) {
       {icon === 'gavel' && <><path d="m14 13-7.5 7.5a2.12 2.12 0 0 1-3-3L11 10" /><path d="m16 16 6-6" /><path d="m8 8 6-6" /><path d="m9 7 8 8" /><path d="m21 11-8-8" /></>}
       {icon === 'transfer' && <><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></>}
       {icon === 'leaf' && <><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6" /></>}
+      {icon === 'penthouse' && <><path d="M3 21h18" /><path d="M5 21V9l7-5 7 5v12" /><path d="M9 21v-6h6v6" /><path d="M9 11h.01M15 11h.01" /></>}
     </svg>
   );
 }
