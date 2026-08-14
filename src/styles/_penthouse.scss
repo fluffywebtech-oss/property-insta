@@ -9,6 +9,7 @@ $ink-2: #121216;
 .ph-lux {
   --pg: #{$gold};
   --pg-hi: #{$gold-hi};
+  position: relative;
   background:
     radial-gradient(1400px 700px at 78% -20%, rgba(217, 184, 113, 0.14), transparent 62%),
     linear-gradient(180deg, #{$ink} 0%, #{$ink-2} 100%);
@@ -19,9 +20,18 @@ $ink-2: #121216;
   overflow: hidden;
 
   // Refined serif for display type (no external font — system serif stack)
-  h1, h2, h3, h4 { font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif; }
+  h1, h2, h3, h4 { font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif; font-weight: 500; }
 
   ::selection { background: rgba(217, 184, 113, 0.3); color: #fff; }
+
+  // Fine film grain across the whole collection
+  &::before {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    opacity: 0.5; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  }
+  // Content sits above grain
+  > * { position: relative; z-index: 2; }
 }
 
 @keyframes ph-rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
@@ -58,7 +68,8 @@ $ink-2: #121216;
   position: absolute; inset: 0; z-index: -1;
   background:
     linear-gradient(90deg, rgba(8,8,10,0.94) 0%, rgba(8,8,10,0.7) 42%, rgba(8,8,10,0.28) 100%),
-    linear-gradient(180deg, rgba(8,8,10,0.5) 0%, transparent 30%, rgba(8,8,10,0.85) 100%);
+    linear-gradient(180deg, rgba(8,8,10,0.5) 0%, transparent 30%, rgba(8,8,10,0.85) 100%),
+    radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(0,0,0,0.55) 100%); // vignette
 }
 .ph-hero-content { max-width: 760px; animation: ph-rise 1s ease both; }
 
@@ -146,9 +157,18 @@ $ink-2: #121216;
   &:hover { gap: 14px; color: var(--pg-hi); }
 }
 
+// ───────── Ornamental divider ─────────
+.ph-rule {
+  display: flex; align-items: center; justify-content: center; gap: 18px;
+  max-width: 520px; margin: 76px auto 8px;
+  span { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(217,184,113,0.5));
+    &:last-child { background: linear-gradient(90deg, rgba(217,184,113,0.5), transparent); } }
+  b { color: var(--pg); font-size: 14px; letter-spacing: 0.1em; }
+}
+
 // ───────── Collection bar ─────────
 .ph-bar {
-  max-width: 1200px; margin: 70px auto 26px; padding: 0 24px;
+  max-width: 1200px; margin: 30px auto 26px; padding: 0 24px;
   display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;
 }
 .ph-bar-head { display: flex; align-items: center; gap: 16px; }
@@ -172,12 +192,19 @@ $ink-2: #121216;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px;
 }
 .ph-card {
-  cursor: pointer; border-radius: 16px; overflow: hidden;
+  position: relative; cursor: pointer; border-radius: 16px; overflow: hidden;
   background: rgba(18, 18, 22, 0.7);
   border: 1px solid rgba(255,255,255,0.06);
   animation: ph-rise .7s ease both; animation-delay: var(--d, 0ms);
   transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s ease, box-shadow .35s ease;
+  // Gold top-edge reveal on hover
+  &::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 3;
+    background: linear-gradient(90deg, transparent, var(--pg), transparent);
+    transform: scaleX(0); transform-origin: center; transition: transform .4s ease;
+  }
   &:hover { transform: translateY(-6px); border-color: rgba(217,184,113,0.45); box-shadow: 0 26px 60px rgba(0,0,0,0.5); }
+  &:hover::before { transform: scaleX(1); }
   &:hover .ph-card-media img { transform: scale(1.07); }
   &:hover .ph-card-view { gap: 12px; color: var(--pg-hi); }
   &.is-pinned { border-color: rgba(217,184,113,0.4); }
@@ -224,8 +251,13 @@ $ink-2: #121216;
   button { margin-top: 18px; padding: 12px 24px; border-radius: 999px; border: 1px solid var(--pg); background: transparent; color: var(--pg-hi); font-weight: 700; cursor: pointer; } }
 
 .ph-concierge {
-  max-width: 900px; margin: 90px auto 0; padding: 60px 32px; text-align: center;
+  position: relative;
+  max-width: 900px; margin: 90px auto 0; padding: 70px 32px; text-align: center;
   border-top: 1px solid rgba(217,184,113,0.22);
+  &::before {
+    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(600px 260px at 50% 8%, rgba(217,184,113,0.12), transparent 70%);
+  }
   h3 { font-size: clamp(28px, 4vw, 44px); color: #fff; font-weight: 600; margin: 18px 0 14px; }
   p { max-width: 560px; margin: 0 auto 28px; font-size: 16px; line-height: 1.7; color: rgba(234,231,223,0.66); }
   button {

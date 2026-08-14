@@ -116,6 +116,9 @@ export default function Penthouses() {
         </section>
       )}
 
+      {/* ───────── Ornamental divider ───────── */}
+      <div className="ph-rule" aria-hidden="true"><span /><b>❖</b><span /></div>
+
       {/* ───────── Collection toolbar ───────── */}
       <div className="ph-bar">
         <div className="ph-bar-head">
