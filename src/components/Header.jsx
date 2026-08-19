@@ -13,7 +13,6 @@ const PRIMARY_TABS = [
   { id: 'build-with-us', icon: 'build', label: 'Build With Us' },
 ];
 const MORE_TABS = [
-  { id: 'ameya-sapphire', icon: 'build', label: 'Ameya Sapphire 82A' },
   { id: 'ai-finder', icon: 'sparkle', label: 'AI Home Finder' },
   { id: 'compare', icon: 'compare', label: 'Compare' },
   { id: 'valuation', icon: 'valuation', label: 'Home Valuation' },
