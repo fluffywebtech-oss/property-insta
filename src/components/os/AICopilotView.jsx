@@ -333,18 +333,21 @@ export default function AICopilotView() {
             <div className="ai-chips-block">
               <div className="ai-chips-head">
                 <span className="ai-chips-title">💡 Try asking</span>
-                <div className="ai-chips-tabs">
-                  {QUESTION_CATEGORIES.map(c => (
-                    <button
-                      key={c.label}
-                      className={`ai-chips-tab ${activeCat === c.label ? 'active' : ''}`}
-                      onClick={() => setActiveCat(c.label)}
-                    >
-                      {c.label}
-                    </button>
-                  ))}
-                </div>
+                <span className="ai-chips-caption">Pick a topic, then tap a question</span>
                 <button className="ai-chips-hide" onClick={() => setShowChips(false)} title="Hide suggestions">✕</button>
+              </div>
+              <div className="ai-chips-tabs" role="tablist" aria-label="Question topics">
+                {QUESTION_CATEGORIES.map(c => (
+                  <button
+                    key={c.label}
+                    role="tab"
+                    aria-selected={activeCat === c.label}
+                    className={`ai-chips-tab ${activeCat === c.label ? 'active' : ''}`}
+                    onClick={() => setActiveCat(c.label)}
+                  >
+                    {c.label}
+                  </button>
+                ))}
               </div>
               <div className="ai-chips-row">
                 {currentChips.map((q, i) => (

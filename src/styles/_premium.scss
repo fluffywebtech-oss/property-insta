@@ -925,9 +925,8 @@ textarea:focus-visible {
 .ai-chips-head {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 .ai-chips-title {
   font-size: 12px;
@@ -937,12 +936,22 @@ textarea:focus-visible {
   text-transform: uppercase;
   flex-shrink: 0;
 }
-.ai-chips-tabs {
+.ai-chips-caption {
   flex: 1;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ig-text-secondary);
+  text-transform: none;
+  letter-spacing: 0;
+}
+// Topic filter — its own full-width row so it clearly reads as a selector.
+.ai-chips-tabs {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: wrap;
-  min-width: 0;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--ig-border);
 }
 .ai-chips-tab {
   padding: 5px 11px;
