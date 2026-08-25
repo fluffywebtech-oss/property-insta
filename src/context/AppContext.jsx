@@ -364,6 +364,26 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // Godrej Verano, Sector 63A (covers any DB row too).
+    match: (p) => /godrej\s*verano/i.test(p.title || ''),
+    images: [
+      '/projects/godrej-verano/towers-hero.webp',
+      '/projects/godrej-verano/entrance.webp',
+      '/projects/godrej-verano/living-golf-view.webp',
+      '/projects/godrej-verano/living-room.webp',
+      '/projects/godrej-verano/dining-room.webp',
+      '/projects/godrej-verano/kitchen.webp',
+      '/projects/godrej-verano/master-bedroom.webp',
+      '/projects/godrej-verano/balcony-sunset.webp',
+      '/projects/godrej-verano/balcony-view.webp',
+      '/projects/godrej-verano/pool.webp',
+      '/projects/godrej-verano/gym.webp',
+      '/projects/godrej-verano/yoga.webp',
+      '/projects/godrej-verano/party-lawn.webp',
+      '/projects/godrej-verano/theatre.webp',
+    ],
+  },
+  {
     // Ganga Realty Nine Zero, Sector 90 (covers any DB row too).
     match: (p) => /nine\s*zero|ganga\s*(realty\s*)?nine/i.test(p.title || ''),
     images: [
