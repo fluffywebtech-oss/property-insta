@@ -364,6 +364,23 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // Satya Levante Residences, Sector 104 (covers any DB row too).
+    match: (p) => /levante/i.test(p.title || ''),
+    images: [
+      '/projects/satya-levante/tower-night-hero.webp',
+      '/projects/satya-levante/tower-sunset.jpg',
+      '/projects/satya-levante/pool-dusk.jpg',
+      '/projects/satya-levante/rooftop-terrace.jpg',
+      '/projects/satya-levante/festival-plaza.webp',
+      '/projects/satya-levante/gym.webp',
+      '/projects/satya-levante/cards-room.webp',
+      '/projects/satya-levante/yoga-studio.jpg',
+      '/projects/satya-levante/reading-area.jpg',
+      '/projects/satya-levante/floor-plan-3bhk.webp',
+      '/projects/satya-levante/location-map.webp',
+    ],
+  },
+  {
     // M3M Jacob & Co Residences, Sector 111 (covers any DB row too).
     match: (p) => /jacob\s*&?\s*co/i.test(p.title || ''),
     images: [
