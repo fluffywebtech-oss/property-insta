@@ -557,6 +557,36 @@ const PROJECT_IMAGE_OVERRIDES = [
       '/projects/smartworld-one-dxp/8.jpg_2.jpeg',
     ],
   },
+  {
+    // Adani The Marq, Sector 102A — official renders + Morphogenesis architecture.
+    match: (p) => /adani.*marq/i.test(p.title || '') || (p.id === 9098),
+    patch: {
+      title: 'Adani The Marq – 3 & 4 BHK Luxury Residences',
+      price: 40000000,
+      sqft: 2350, beds: 3, baths: 3,
+      area: 2350, bedrooms: 3, bathrooms: 3, pricePerSqft: 17021, emiEstimate: 314000,
+      possession: 'New Launch', possessionStatus: 'New Launch',
+      featured: true, hot: true, trending: true,
+    },
+    images: [
+      '/projects/adani-the-marq/deskb2.webp',
+      '/projects/adani-the-marq/1.webp',
+      '/projects/adani-the-marq/2.webp',
+      '/projects/adani-the-marq/3.webp',
+      '/projects/adani-the-marq/4.webp',
+      '/projects/adani-the-marq/deskb1.webp',
+      '/projects/adani-the-marq/halfolympicsizedpool.webp',
+      '/projects/adani-the-marq/indoorgameszone.webp',
+      '/projects/adani-the-marq/library.webp',
+      '/projects/adani-the-marq/restaurantcafe.webp',
+      '/projects/adani-the-marq/seniorcitizenspace.webp',
+      '/projects/adani-the-marq/yogameditationroom.webp',
+      '/projects/adani-the-marq/4bhk-3250.webp',
+      '/projects/adani-the-marq/masterplan.webp',
+      '/projects/adani-the-marq/locationmap.webp',
+      '/projects/adani-the-marq/businesscentre.webp',
+    ],
+  },
 ];
 function applyImageOverrides(p) {
   const o = PROJECT_IMAGE_OVERRIDES.find((ov) => ov.match(p));
