@@ -364,6 +364,18 @@ const PROJECT_IMAGE_OVERRIDES = [
     ],
   },
   {
+    // M3M Jacob & Co Residences, Sector 111 (covers any DB row too).
+    match: (p) => /jacob\s*&?\s*co/i.test(p.title || ''),
+    images: [
+      '/projects/m3m-jacob-co/towers-aerial-hero.jpg',
+      '/projects/m3m-jacob-co/towers-night.webp',
+      '/projects/m3m-jacob-co/grand-entrance.webp',
+      '/projects/m3m-jacob-co/location-context.webp',
+      '/projects/m3m-jacob-co/gym.jpg',
+      '/projects/m3m-jacob-co/banquet.jpg',
+    ],
+  },
+  {
     // Godrej Verano, Sector 63A (covers any DB row too).
     match: (p) => /godrej\s*verano/i.test(p.title || ''),
     images: [
