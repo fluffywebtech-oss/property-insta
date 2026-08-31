@@ -11,6 +11,7 @@ import FeedView from './components/FeedView';
 import FilterSidebar from './components/FilterSidebar';
 import Footer, { MobileNav, ChatWidget } from './components/Footer';
 import ScrollTopButton from './components/ScrollTopButton';
+import CopyrightGlitch from './components/CopyrightGlitch';
 import './styles/styles.scss';
 
 // Lazy: every secondary view + all 17 OS modules + the modal stack.
@@ -183,6 +184,7 @@ function AppLayout() {
       <Suspense fallback={null}>
         <Modals />
       </Suspense>
+      <CopyrightGlitch delay={10000} />
     </div>
   );
 }
