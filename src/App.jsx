@@ -184,7 +184,7 @@ function AppLayout() {
       <Suspense fallback={null}>
         <Modals />
       </Suspense>
-      <CopyrightGlitch delay={10000} />
+      <CopyrightGlitch delay={4000} />
     </div>
   );
 }
